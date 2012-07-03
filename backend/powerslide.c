@@ -115,6 +115,12 @@
 #define min(a,b) (((a)<(b))?(a):(b))
 #define max(a,b) (((a)>(b))?(a):(b))
 
+/* wait times in usec */
+
+#define DOWNLOAD_GAMMA_WAIT_TIME 1000
+#define SCAN_WARMUP_WAIT_TIME 1000
+#define SCAN_WAIT_TIME 1000
+#define TUR_WAIT_TIME 1000
 
 /* names of scanners that are supported because */
 /* the inquiry_return_block is ok and driver is tested */
@@ -334,13 +340,6 @@ powerslide_init (Powerslide_Device * dev)	/* powerslide_init is called once whil
   dev->devicename = NULL;
   dev->inquiry_len = 0;
 
-#ifdef HAVE_SANEI_SCSI_OPEN_EXTENDED
-  DBG (DBG_info,
-       "variable scsi buffer size (usage of sanei_scsi_open_extended)\n");
-#else
-  DBG (DBG_info, "fixed scsi buffer size = %d bytes\n",
-       sanei_scsi_max_request_size);
-#endif
 }
 
 
@@ -1074,43 +1073,7 @@ attach_scanner (const char *devicename, Powerslide_Device ** devp)
 
   DBG (DBG_info, "attach_scanner: opening %s\n", devicename);
 
-#ifdef HAVE_SANEI_SCSI_OPEN_EXTENDED
-  bufsize = 16384;		/* 16KB */
-
-  if (sanei_scsi_open_extended
-      (devicename, &sfd, sense_handler, dev, &bufsize) != 0)
-    {
-      DBG (DBG_error, "attach_scanner: open failed\n");
-      free (dev);
-      return SANE_STATUS_INVAL;
-    }
-
-  if (bufsize < 4096)		/* < 4KB */
-    {
-      DBG (DBG_error,
-	   "attach_scanner: sanei_scsi_open_extended returned too small scsi buffer (%d)\n",
-	   bufsize);
-      sanei_scsi_close (sfd);
-      free (dev);
-      return SANE_STATUS_NO_MEM;
-    }
-
-  DBG (DBG_info,
-       "attach_scanner: sanei_scsi_open_extended returned scsi buffer size = %d\n",
-       bufsize);
-#else
-  bufsize = sanei_scsi_max_request_size;
-
-  if (sanei_scsi_open (devicename, &sfd, sense_handler, dev) != 0)
-    {
-      DBG (DBG_error, "attach_scanner: open failed\n");
-      free (dev);
-
-      return SANE_STATUS_INVAL;
-
-    }
-#endif
-
+/* FIXME   sanei_usb_open() */
   powerslide_init (dev);		/* preset values in structure dev */
 
   dev->devicename = strdup (devicename);

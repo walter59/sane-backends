@@ -867,7 +867,8 @@ libpowerslide_la_CPPFLAGS = $(AM_CPPFLAGS) -DBACKEND_NAME=powerslide
 
 nodist_libsane_powerslide_la_SOURCES = powerslide-s.c 
 libsane_powerslide_la_CPPFLAGS = $(AM_CPPFLAGS) -DBACKEND_NAME=powerslide
-libsane_powerslide_la_LDFLAGS = $(DIST_SANELIBS_LDFLAGS) libsane_powerslide_la_LIBADD = $(COMMON_LIBS) libpowerslide.la ../sanei/sanei_init_debug.lo ../sanei/sanei_constrain_value.lo ../sanei/sanei_config.lo ../sanei/sanei_config2.lo sane_strstatus.lo ../sanei/sanei_isb.lo ../sanei/sanei_thread.lo $(SCSI_LIBS) $(PTHREAD_LIBS) $(RESMGR_LIBS)
+libsane_powerslide_la_LDFLAGS = $(DIST_SANELIBS_LDFLAGS)
+libsane_powerslide_la_LIBADD = $(COMMON_LIBS) libpowerslide.la ../sanei/sanei_init_debug.lo ../sanei/sanei_constrain_value.lo ../sanei/sanei_config.lo ../sanei/sanei_config2.lo sane_strstatus.lo ../sanei/sanei_usb.lo  ../sanei/sanei_scsi.lo ../sanei/sanei_thread.lo $(SCSI_LIBS) $(USB_LIBS) $(PTHREAD_LIBS) $(RESMGR_LIBS)
 EXTRA_DIST += powerslide.conf.in
 
 libqcam_la_SOURCES = qcam.c qcam.h
