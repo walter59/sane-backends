@@ -92,7 +92,7 @@
 #define DBG_sane_option 13
 #define DBG_dump	14
 
-#define BUILD 9
+#define BUILD 1
 
 #define POWERSLIDE_CONFIG_FILE "powerslide.conf"
 
@@ -1073,7 +1073,7 @@ attach_scanner (const char *devicename, Powerslide_Device ** devp)
 
   DBG (DBG_info, "attach_scanner: opening %s\n", devicename);
 
-/* FIXME   sanei_usb_open() */
+  sanei_usb_init();
   powerslide_init (dev);		/* preset values in structure dev */
 
   dev->devicename = strdup (devicename);
@@ -1096,7 +1096,6 @@ attach_scanner (const char *devicename, Powerslide_Device ** devp)
   dev->scan_mode_list[3] = HALFTONE_STR;
   dev->scan_mode_list[4] = 0;
 
-  sanei_scsi_close (sfd);
 
   dev->sane.name = dev->devicename;
   dev->sane.vendor = dev->vendor;
@@ -2861,8 +2860,8 @@ sane_init (SANE_Int * version_code, SANE_Auth_Callback __sane_unused__ authorize
   fp = sanei_config_open (POWERSLIDE_CONFIG_FILE);
   if (!fp)
     {
-      attach_scanner ("/dev/scanner", 0);	/* no config-file: /dev/scanner */
-      return SANE_STATUS_GOOD;
+      DBG(1, "Could not open config file: %s: %s\n", POWERSLIDE_CONFIG_FILE, strerror(errno));
+      return SANE_STATUS_INVAL;
     }
 
   while (sanei_config_read (dev_name, sizeof (dev_name), fp))
