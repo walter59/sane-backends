@@ -91,6 +91,7 @@ BACKEND_CONFS= abaton.conf agfafocus.conf apple.conf artec.conf \
 	       mustek_pp.conf mustek_usb.conf nec.conf net.conf \
 	       p5.conf \
 	       pie.conf pixma.conf plustek.conf plustek_pp.conf \
+               powerslide.conf \
 	       qcam.conf ricoh.conf rts8891.conf s9036.conf sceptre.conf \
 	       sharp.conf sm3840.conf snapscan.conf sp15c.conf \
 	       st400.conf stv680.conf tamarack.conf \
@@ -184,6 +185,7 @@ be_convenience_libs = libabaton.la libagfafocus.la \
     libniash.la libp5.la \
     libpie.la libpint.la libpixma.la \
     libplustek.la libplustek_pp.la libpnm.la \
+    libpowerslide.la \
     libqcam.la libricoh.la librts8891.la \
     libs9036.la libsceptre.la libsharp.la \
     libsm3600.la libsm3840.la libsnapscan.la \
@@ -218,6 +220,7 @@ be_dlopen_libs = libsane-abaton.la libsane-agfafocus.la \
     libsane-niash.la libsane-p5.la \
     libsane-pie.la libsane-pint.la libsane-pixma.la \
     libsane-plustek.la libsane-plustek_pp.la libsane-pnm.la \
+    libsane-powerslide.la \
     libsane-qcam.la libsane-ricoh.la libsane-rts8891.la \
     libsane-s9036.la libsane-sceptre.la libsane-sharp.la \
     libsane-sm3600.la libsane-sm3840.la libsane-snapscan.la \
@@ -858,6 +861,14 @@ nodist_libsane_pnm_la_SOURCES = pnm-s.c
 libsane_pnm_la_CPPFLAGS = $(AM_CPPFLAGS) -DBACKEND_NAME=pnm
 libsane_pnm_la_LDFLAGS = $(DIST_SANELIBS_LDFLAGS)
 libsane_pnm_la_LIBADD = $(COMMON_LIBS) libpnm.la ../sanei/sanei_init_debug.lo ../sanei/sanei_constrain_value.lo ../sanei/sanei_config.lo  sane_strstatus.lo 
+
+libpowerslide_la_SOURCES = powerslide.c powerslide-scsidef.h
+libpowerslide_la_CPPFLAGS = $(AM_CPPFLAGS) -DBACKEND_NAME=powerslide
+
+nodist_libsane_powerslide_la_SOURCES = powerslide-s.c 
+libsane_powerslide_la_CPPFLAGS = $(AM_CPPFLAGS) -DBACKEND_NAME=powerslide
+libsane_powerslide_la_LDFLAGS = $(DIST_SANELIBS_LDFLAGS) libsane_powerslide_la_LIBADD = $(COMMON_LIBS) libpowerslide.la ../sanei/sanei_init_debug.lo ../sanei/sanei_constrain_value.lo ../sanei/sanei_config.lo ../sanei/sanei_config2.lo sane_strstatus.lo ../sanei/sanei_isb.lo ../sanei/sanei_thread.lo $(SCSI_LIBS) $(PTHREAD_LIBS) $(RESMGR_LIBS)
+EXTRA_DIST += powerslide.conf.in
 
 libqcam_la_SOURCES = qcam.c qcam.h
 libqcam_la_CPPFLAGS = $(AM_CPPFLAGS) -DBACKEND_NAME=qcam
