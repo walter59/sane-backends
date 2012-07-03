@@ -195,6 +195,7 @@ typedef struct Powerslide_Device
   struct Powerslide_Device *next;
 
   char *devicename;		/* name of the scanner device */
+  SANE_Int usb;                 /* opened USB device, -1 if closed */
 
   char vendor[9];		/* will be xxxxx */
   char product[17];		/* e.g. "SuperVista_S12" or so */
@@ -338,6 +339,7 @@ powerslide_init (Powerslide_Device * dev)	/* powerslide_init is called once whil
   dev->cal_info = NULL;
 
   dev->devicename = NULL;
+  dev->usb = -1;
   dev->inquiry_len = 0;
 
 }
@@ -800,7 +802,7 @@ powerslide_do_inquiry (int sfd, unsigned char *buffer)
 
 
 static int
-powerslide_identify_scanner (Powerslide_Device * dev, int sfd)
+powerslide_identify_scanner (Powerslide_Device * dev)
 {
   char vendor[9];
   char product[0x11];
@@ -811,7 +813,7 @@ powerslide_identify_scanner (Powerslide_Device * dev, int sfd)
 
   DBG (DBG_proc, "identify_scanner\n");
 
-  powerslide_do_inquiry (sfd, inquiry_block);	/* get inquiry */
+  powerslide_do_inquiry (i, inquiry_block);	/* get inquiry */
 
   if (get_inquiry_periph_devtype (inquiry_block) != IN_periph_devtype_scanner)
     {
@@ -904,16 +906,16 @@ powerslide_get_speeds (Powerslide_Device * dev)
 /* ------------------------------- GET HALFTONES ----------------------------- */
 
 static void
-powerslide_get_halftones (Powerslide_Device * dev, int sfd)
+powerslide_get_halftones (Powerslide_Device * dev)
 {
-  int i;
+  int i = 0;
   size_t size;
   SANE_Status status;
   unsigned char *data;
   unsigned char buffer[128];
 
   DBG (DBG_proc, "get_halftones\n");
-
+#if 0 /*DISABLED*/
   for (i = 0; i < dev->inquiry_halftones; i++)
     {
       size = 6;
@@ -965,12 +967,13 @@ powerslide_get_halftones (Powerslide_Device * dev, int sfd)
 	}
     }
   dev->halftone_list[i] = NULL;
+#endif /*DISABLED*/
 }
 
 /* ------------------------------- GET CAL DATA ----------------------------- */
 
 static void
-powerslide_get_cal_info (Powerslide_Device * dev, int sfd)
+powerslide_get_cal_info (Powerslide_Device * dev)
 {
   size_t size;
   SANE_Status status;
@@ -978,6 +981,7 @@ powerslide_get_cal_info (Powerslide_Device * dev, int sfd)
   unsigned char buffer[280];
 
   DBG (DBG_proc, "get_cal_info\n");
+#if 0 /*DISABLED*/
 
   if (!(dev->inquiry_scan_capability & INQ_CAP_EXT_CAL))
     return;
@@ -1040,6 +1044,7 @@ powerslide_get_cal_info (Powerslide_Device * dev, int sfd)
 	    }
 	}
     }
+#endif /*DISABLED*/
 }
 
 /* ------------------------------- ATTACH SCANNER ----------------------------- */
@@ -1048,8 +1053,6 @@ static SANE_Status
 attach_scanner (const char *devicename, Powerslide_Device ** devp)
 {
   Powerslide_Device *dev;
-  int sfd;
-  int bufsize;
 
   DBG (DBG_sane_proc, "attach_scanner: %s\n", devicename);
 
@@ -1078,16 +1081,25 @@ attach_scanner (const char *devicename, Powerslide_Device ** devp)
 
   dev->devicename = strdup (devicename);
 
-  if (powerslide_identify_scanner (dev, sfd) != 0)
+  if (sanei_usb_open (dev->devicename, &dev->usb) != SANE_STATUS_GOOD)
     {
-      DBG (DBG_error, "attach_scanner: scanner-identification failed\n");
-      sanei_scsi_close (sfd);
+      DBG (DBG_error, "attach_scanner: Cannot open scanner device %s\n", dev->devicename);
+      free (dev->devicename);
       free (dev);
       return SANE_STATUS_INVAL;
     }
 
-  powerslide_get_halftones (dev, sfd);
-  powerslide_get_cal_info (dev, sfd);
+  if (powerslide_identify_scanner (dev) != 0)
+    {
+      DBG (DBG_error, "attach_scanner: scanner-identification failed\n");
+      sanei_usb_close (dev->usb);
+      free (dev->devicename);
+      free (dev);
+      return SANE_STATUS_INVAL;
+    }
+
+  powerslide_get_halftones (dev);
+  powerslide_get_cal_info (dev);
   powerslide_get_speeds (dev);
 
   dev->scan_mode_list[0] = COLOR_STR;
