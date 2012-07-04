@@ -769,33 +769,13 @@ powerslide_get_inquiry_values (Powerslide_Device * dev, unsigned char *buffer)
 
 
 static void
-powerslide_do_inquiry (int sfd, unsigned char *buffer)
+powerslide_do_inquiry (int usb, unsigned char *buffer)
 {
   size_t size;
   SANE_Status status;
 
   DBG (DBG_proc, "do_inquiry\n");
-  memset (buffer, '\0', 256);	/* clear buffer */
 
-  size = 5;
-
-  set_inquiry_return_size (inquiry.cmd, size);	/* first get only 5 bytes to get size of inquiry_return_block */
-  status = sanei_scsi_cmd (sfd, inquiry.cmd, inquiry.size, buffer, &size);
-  if (status)
-    {
-      DBG (DBG_error, "powerslide_do_inquiry: command returned status %s\n",
-	   sane_strstatus (status));
-    }
-
-  size = get_inquiry_additional_length (buffer) + 5;
-
-  set_inquiry_return_size (inquiry.cmd, size);	/* then get inquiry with actual size */
-  status = sanei_scsi_cmd (sfd, inquiry.cmd, inquiry.size, buffer, &size);
-  if (status)
-    {
-      DBG (DBG_error, "powerslide_do_inquiry: command returned status %s\n",
-	   sane_strstatus (status));
-    }
 }
 
 /* ---------------------- POWERSLIDE IDENTIFY SCANNER ---------------------- */
@@ -810,10 +790,11 @@ powerslide_identify_scanner (Powerslide_Device * dev)
   char *pp;
   int i = 0;
   unsigned char inquiry_block[256];
+  memset (inquiry_block, '\0', 256);	/* clear buffer */
 
   DBG (DBG_proc, "identify_scanner\n");
 
-  powerslide_do_inquiry (i, inquiry_block);	/* get inquiry */
+  powerslide_do_inquiry (dev->usb, inquiry_block);	/* get inquiry */
 
   if (get_inquiry_periph_devtype (inquiry_block) != IN_periph_devtype_scanner)
     {
@@ -1047,12 +1028,27 @@ powerslide_get_cal_info (Powerslide_Device * dev)
 #endif /*DISABLED*/
 }
 
+/* ------------------------------- ATTACH POWERSLIDE ----------------------------- */
+
+static const char *attachName;
+
+/* called from attach_scanner() via sanei_usb_find_devices() */
+static SANE_Status
+attach_powerslide (const char *usbname)
+{
+  DBG (DBG_sane_proc, "attach_powerslide: %s\n", usbname);
+  attachName = strdup(usbname);
+  return SANE_STATUS_GOOD;
+}
+
 /* ------------------------------- ATTACH SCANNER ----------------------------- */
 
 static SANE_Status
 attach_scanner (const char *devicename, Powerslide_Device ** devp)
 {
   Powerslide_Device *dev;
+  SANE_Int vendor;
+  SANE_Int product;
 
   DBG (DBG_sane_proc, "attach_scanner: %s\n", devicename);
 
@@ -1078,8 +1074,21 @@ attach_scanner (const char *devicename, Powerslide_Device ** devp)
 
   sanei_usb_init();
   powerslide_init (dev);		/* preset values in structure dev */
+  if (sscanf(devicename, "usb 0x%x 0x%x", &vendor, &product) == 2)
+    {
+      if (sanei_usb_find_devices (vendor, product, attach_powerslide) != SANE_STATUS_GOOD)
+        {
+	  DBG (DBG_error, "attach_scanner: Cannot find USB vendor 0x%04x, product 0x%04x'\n", vendor, product);
+	  return SANE_STATUS_INVAL;
+	}
+    }
+  else
+    {
+      DBG (DBG_error, "attach_scanner: Bad config line '%s', should be 'usb 0xVVVV 0xPPPP'\n", devicename);
+      return SANE_STATUS_INVAL;
+    }
 
-  dev->devicename = strdup (devicename);
+  dev->devicename = attachName;
 
   if (sanei_usb_open (dev->devicename, &dev->usb) != SANE_STATUS_GOOD)
     {
@@ -2784,18 +2793,6 @@ reader_process ( void *data )	/* executed as a child process */
 }
 
 
-/* -------------------------------- ATTACH_ONE ---------------------------------- */
-
-
-/* callback function for sanei_config_attach_matching_devices(dev_name, attach_one) */
-static SANE_Status
-attach_one (const char *name)
-{
-  attach_scanner (name, 0);
-  return SANE_STATUS_GOOD;
-}
-
-
 /* ----------------------------- CLOSE PIPE ---------------------------------- */
 
 
@@ -2890,7 +2887,7 @@ sane_init (SANE_Int * version_code, SANE_Auth_Callback __sane_unused__ authorize
 	  continue;
 	}
 
-      sanei_config_attach_matching_devices (dev_name, attach_one);
+      sanei_config_attach_matching_devices (dev_name, attach_scanner);
     }
 
   fclose (fp);
