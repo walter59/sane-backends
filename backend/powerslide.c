@@ -194,7 +194,8 @@ typedef struct Powerslide_Device
 {
   struct Powerslide_Device *next;
 
-  char *devicename;		/* name of the scanner device */
+  char *devicename;		/* name of the scanner device from powerslide.conf */
+  char *usbname;		/* usb name of the scanner device, for sanei_usb_open() */
   SANE_Int usb;                 /* opened USB device, -1 if closed */
 
   char vendor[9];		/* will be xxxxx */
@@ -1030,21 +1031,21 @@ powerslide_get_cal_info (Powerslide_Device * dev)
 
 /* ------------------------------- ATTACH POWERSLIDE ----------------------------- */
 
-static const char *attachName;
+static const char *usbName;
 
 /* called from attach_scanner() via sanei_usb_find_devices() */
 static SANE_Status
 attach_powerslide (const char *usbname)
 {
   DBG (DBG_sane_proc, "attach_powerslide: %s\n", usbname);
-  attachName = strdup(usbname);
+  usbName = strdup(usbname);
   return SANE_STATUS_GOOD;
 }
 
 /* ------------------------------- ATTACH SCANNER ----------------------------- */
 
 static SANE_Status
-attach_scanner (const char *devicename, Powerslide_Device ** devp)
+attach_scanner (const char *devicename)
 {
   Powerslide_Device *dev;
   SANE_Int vendor;
@@ -1054,56 +1055,57 @@ attach_scanner (const char *devicename, Powerslide_Device ** devp)
 
   for (dev = first_dev; dev; dev = dev->next)
     {
-      if (strcmp (dev->sane.name, devicename) == 0)
+      if (strcmp (dev->devicename, devicename) == 0)
 	{
-	  if (devp)
-	    {
-	      *devp = dev;
-	    }
 	  return SANE_STATUS_GOOD;
 	}
     }
 
-  dev = malloc (sizeof (*dev));
-  if (!dev)
-    {
-      return SANE_STATUS_NO_MEM;
-    }
-
-  DBG (DBG_info, "attach_scanner: opening %s\n", devicename);
-
-  sanei_usb_init();
-  powerslide_init (dev);		/* preset values in structure dev */
-  if (sscanf(devicename, "usb 0x%x 0x%x", &vendor, &product) == 2)
-    {
-      if (sanei_usb_find_devices (vendor, product, attach_powerslide) != SANE_STATUS_GOOD)
-        {
-	  DBG (DBG_error, "attach_scanner: Cannot find USB vendor 0x%04x, product 0x%04x'\n", vendor, product);
-	  return SANE_STATUS_INVAL;
-	}
-    }
-  else
+  if (sscanf(devicename, "usb 0x%x 0x%x", &vendor, &product) != 2)
     {
       DBG (DBG_error, "attach_scanner: Bad config line '%s', should be 'usb 0xVVVV 0xPPPP'\n", devicename);
       return SANE_STATUS_INVAL;
     }
 
-  dev->devicename = attachName;
-
-  if (sanei_usb_open (dev->devicename, &dev->usb) != SANE_STATUS_GOOD)
+  if (sanei_usb_find_devices (vendor, product, attach_powerslide) != SANE_STATUS_GOOD)
     {
-      DBG (DBG_error, "attach_scanner: Cannot open scanner device %s\n", dev->devicename);
-      free (dev->devicename);
-      free (dev);
+      DBG (DBG_error, "attach_scanner: Cannot find USB vendor 0x%04x, product 0x%04x'\n", vendor, product);
+      return SANE_STATUS_INVAL;
+    }
+      
+  dev = calloc (1, sizeof (*dev));
+  if (!dev)
+    { 
+      return SANE_STATUS_NO_MEM;
+    }
+
+  powerslide_init (dev);		/* preset values in structure dev */
+
+  dev->devicename = strdup(devicename);
+  dev->usbname = usbName;
+
+  dev->next = first_dev;
+  first_dev = dev;
+
+  return SANE_STATUS_GOOD;
+}
+
+
+static SANE_Status
+powerslide_open( Powerslide_Device *dev)
+{
+  DBG (DBG_info, "powerslide_open: opening %s\n", dev->usbname);
+
+  if (sanei_usb_open (dev->usbname, &dev->usb) != SANE_STATUS_GOOD)
+    {
+      DBG (DBG_error, "powerslide_open: Cannot open scanner device %s\n", dev->usbname);
       return SANE_STATUS_INVAL;
     }
 
   if (powerslide_identify_scanner (dev) != 0)
     {
-      DBG (DBG_error, "attach_scanner: scanner-identification failed\n");
+      DBG (DBG_error, "powerslide_open: scanner-identification failed\n");
       sanei_usb_close (dev->usb);
-      free (dev->devicename);
-      free (dev);
       return SANE_STATUS_INVAL;
     }
 
@@ -1154,14 +1156,6 @@ attach_scanner (const char *devicename, Powerslide_Device ** devp)
   dev->analog_gamma_range.max = SANE_FIX (2.0);
 
 #endif
-
-  dev->next = first_dev;
-  first_dev = dev;
-
-  if (devp)
-    {
-      *devp = dev;
-    }
 
   return SANE_STATUS_GOOD;
 }
@@ -2873,6 +2867,8 @@ sane_init (SANE_Int * version_code, SANE_Auth_Callback __sane_unused__ authorize
       return SANE_STATUS_INVAL;
     }
 
+  sanei_usb_init();
+
   while (sanei_config_read (dev_name, sizeof (dev_name), fp))
     {
       if (dev_name[0] == '#')
@@ -2906,6 +2902,8 @@ sane_exit (void)
   int i;
 
   DBG (DBG_sane_init, "sane_exit()\n");
+
+  /* sanei_usb_exit(); */
 
   for (dev = first_dev; dev; dev = next)
     {
@@ -2989,7 +2987,7 @@ sane_open (SANE_String_Const devicename, SANE_Handle * handle)
     {
       for (dev = first_dev; dev; dev = dev->next)
 	{
-	  if (strcmp (dev->sane.name, devicename) == 0)
+	  if (strcmp (dev->devicename, devicename) == 0)
 	    {
 	      break;
 	    }
@@ -2997,7 +2995,7 @@ sane_open (SANE_String_Const devicename, SANE_Handle * handle)
 
       if (!dev)
 	{
-	  status = attach_scanner (devicename, &dev);
+	  status = attach_scanner (devicename);
 	  if (status != SANE_STATUS_GOOD)
 	    {
 	      return status;
@@ -3013,6 +3011,14 @@ sane_open (SANE_String_Const devicename, SANE_Handle * handle)
   if (!dev)
     {
       return SANE_STATUS_INVAL;
+    }
+
+  DBG (DBG_sane_init, "sane_open: using %s (usb %s)\n", devicename, dev->usbname);
+  
+  status = powerslide_open (dev);
+  if (status != SANE_STATUS_GOOD)
+    {
+      return status;
     }
 
   scanner = malloc (sizeof (*scanner));
@@ -3106,6 +3112,12 @@ sane_close (SANE_Handle handle)
   else
     {
       first_handle = scanner->next;
+    }
+
+  if (scanner->device->usb >= 0)
+    {
+      sanei_usb_close(scanner->device->usb);
+      scanner->device->usb = -1;
     }
 
   free (scanner->gamma_table[0]);	/* free custom gamma tables */
