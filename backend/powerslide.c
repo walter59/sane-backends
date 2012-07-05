@@ -1,6 +1,6 @@
 /* sane - Scanner Access Now Easy.
 
-   powerslide.c, based on pie.c
+   powerslide.c, roughly based on pie.c
 
    Backend for Pacific Image Electronics PowerSlide 3600/5000
    (Sold in Germany a Reflecta DigitDia 4000/5000)
@@ -95,25 +95,6 @@
 #define BUILD 1
 
 #define POWERSLIDE_CONFIG_FILE "powerslide.conf"
-
-#define LINEART_STR         SANE_VALUE_SCAN_MODE_LINEART
-#define HALFTONE_STR        SANE_VALUE_SCAN_MODE_HALFTONE
-#define GRAY_STR            SANE_VALUE_SCAN_MODE_GRAY
-#define COLOR_STR           SANE_VALUE_SCAN_MODE_COLOR
-
-#define LINEART             1
-#define HALFTONE            2
-#define GRAYSCALE           3
-#define RGB                 4
-
-#define CAL_MODE_PREVIEW        (INQ_CAP_FAST_PREVIEW)
-#define CAL_MODE_FLATBED        0x00
-#define CAL_MODE_ADF            (INQ_OPT_DEV_ADF)
-#define CAL_MODE_TRANPSARENCY   (INQ_OPT_DEV_TP)
-#define CAL_MODE_TRANPSARENCY1  (INQ_OPT_DEV_TP1)
-
-#define min(a,b) (((a)<(b))?(a):(b))
-#define max(a,b) (((a)>(b))?(a):(b))
 
 /* wait times in usec */
 
@@ -330,21 +311,6 @@ powerslide_dump_buffer (int level, unsigned char *buf, int n)
 }
 
 /* ---------------------------------- POWERSLIDE INIT ---------------------------------- */
-
-static void
-powerslide_init (Powerslide_Device * dev)	/* powerslide_init is called once while driver-initialization */
-{
-  DBG (DBG_proc, "init\n");
-
-  dev->cal_info_count = 0;
-  dev->cal_info = NULL;
-
-  dev->devicename = NULL;
-  dev->usb = -1;
-  dev->inquiry_len = 0;
-
-}
-
 
 /* ---------------------------- SENSE_HANDLER ------------------------------ */
 
@@ -851,184 +817,6 @@ powerslide_identify_scanner (Powerslide_Device * dev)
   return 1;			/* NO SUPPORTED SCANNER: short inquiry-block and unknown scanner */
 }
 
-
-/* ------------------------------- GET SPEEDS ----------------------------- */
-
-static void
-powerslide_get_speeds (Powerslide_Device * dev)
-{
-  int speeds = dev->inquiry_scan_capability & INQ_CAP_SPEEDS;
-
-  DBG (DBG_proc, "get_speeds\n");
-
-  if (speeds == 3)
-    {
-      dev->speed_list[0] = strdup ("Normal");
-      dev->speed_list[1] = strdup ("Fine");
-      dev->speed_list[2] = strdup ("Pro");
-      dev->speed_list[3] = NULL;
-    }
-  else
-    {
-      int i;
-      char buf[2];
-
-      buf[1] = '\0';
-
-      for (i = 0; i < speeds; i++)
-	{
-	  buf[0] = '1' + i;
-	  dev->speed_list[i] = strdup (buf);
-	}
-
-      dev->speed_list[i] = NULL;
-    }
-}
-
-/* ------------------------------- GET HALFTONES ----------------------------- */
-
-static void
-powerslide_get_halftones (Powerslide_Device * dev)
-{
-  int i = 0;
-  size_t size;
-  SANE_Status status;
-  unsigned char *data;
-  unsigned char buffer[128];
-
-  DBG (DBG_proc, "get_halftones\n");
-#if 0 /*DISABLED*/
-  for (i = 0; i < dev->inquiry_halftones; i++)
-    {
-      size = 6;
-
-      set_write_length (swrite.cmd, size);
-
-      memcpy (buffer, swrite.cmd, swrite.size);
-
-      data = buffer + swrite.size;
-      memset (data, 0, size);
-
-      set_command (data, READ_HALFTONE);
-      set_data_length (data, 2);
-      data[4] = i;
-
-      status = sanei_scsi_cmd (sfd, buffer, swrite.size + size, NULL, NULL);
-      if (status)
-	{
-	  DBG (DBG_error,
-	       "powerslide_get_halftones: write command returned status %s\n",
-	       sane_strstatus (status));
-	}
-      else
-	{
-	  /* now read the halftone data */
-	  memset (buffer, '\0', sizeof buffer);	/* clear buffer */
-
-	  size = 128;
-	  set_read_length (sread.cmd, size);
-
-	  DBG (DBG_info, "doing read\n");
-	  status = sanei_scsi_cmd (sfd, sread.cmd, sread.size, buffer, &size);
-	  if (status)
-	    {
-	      DBG (DBG_error,
-		   "powerslide_get_halftones: read command returned status %s\n",
-		   sane_strstatus (status));
-	    }
-	  else
-	    {
-	      unsigned char *s;
-
-	      s = buffer + 8 + buffer[6] * buffer[7];
-
-	      DBG (DBG_info, "halftone %d: %s\n", i, s);
-
-	      dev->halftone_list[i] = strdup ((char *)s);
-	    }
-	}
-    }
-  dev->halftone_list[i] = NULL;
-#endif /*DISABLED*/
-}
-
-/* ------------------------------- GET CAL DATA ----------------------------- */
-
-static void
-powerslide_get_cal_info (Powerslide_Device * dev)
-{
-  size_t size;
-  SANE_Status status;
-  unsigned char *data;
-  unsigned char buffer[280];
-
-  DBG (DBG_proc, "get_cal_info\n");
-#if 0 /*DISABLED*/
-
-  if (!(dev->inquiry_scan_capability & INQ_CAP_EXT_CAL))
-    return;
-
-  size = 6;
-
-  set_write_length (swrite.cmd, size);
-
-  memcpy (buffer, swrite.cmd, swrite.size);
-
-  data = buffer + swrite.size;
-  memset (data, 0, size);
-
-  set_command (data, READ_CAL_INFO);
-
-  status = sanei_scsi_cmd (sfd, buffer, swrite.size + size, NULL, NULL);
-  if (status)
-    {
-      DBG (DBG_error, "powerslide_get_cal_info: write command returned status %s\n",
-	   sane_strstatus (status));
-    }
-  else
-    {
-      /* now read the cal data */
-      memset (buffer, '\0', sizeof buffer);	/* clear buffer */
-
-      size = 128;
-      set_read_length (sread.cmd, size);
-
-      DBG (DBG_info, "doing read\n");
-      status = sanei_scsi_cmd (sfd, sread.cmd, sread.size, buffer, &size);
-      if (status)
-	{
-	  DBG (DBG_error,
-	       "powerslide_get_cal_info: read command returned status %s\n",
-	       sane_strstatus (status));
-	}
-      else
-	{
-	  int i;
-
-	  dev->cal_info_count = buffer[4];
-	  dev->cal_info =
-	    malloc (sizeof (struct Powerslide_cal_info) * dev->cal_info_count);
-
-	  for (i = 0; i < dev->cal_info_count; i++)
-	    {
-	      dev->cal_info[i].cal_type = buffer[8 + i * buffer[5]];
-	      dev->cal_info[i].send_bits = buffer[9 + i * buffer[5]];
-	      dev->cal_info[i].receive_bits = buffer[10 + i * buffer[5]];
-	      dev->cal_info[i].num_lines = buffer[11 + i * buffer[5]];
-	      dev->cal_info[i].pixels_per_line =
-		(buffer[13 + i * buffer[5]] << 8) + buffer[12 +
-							   i * buffer[5]];
-
-	      DBG (DBG_info2, "%02x %2d %2d %2d %d\n",
-		   dev->cal_info[i].cal_type, dev->cal_info[i].send_bits,
-		   dev->cal_info[i].receive_bits, dev->cal_info[i].num_lines,
-		   dev->cal_info[i].pixels_per_line);
-	    }
-	}
-    }
-#endif /*DISABLED*/
-}
-
 /* ------------------------------- ATTACH POWERSLIDE ----------------------------- */
 
 static const char *usbName;
@@ -1079,7 +867,7 @@ attach_scanner (const char *devicename)
       return SANE_STATUS_NO_MEM;
     }
 
-  powerslide_init (dev);		/* preset values in structure dev */
+  dev->usb = -1;
 
   dev->devicename = strdup(devicename);
   dev->usbname = usbName;
@@ -1109,53 +897,10 @@ powerslide_open( Powerslide_Device *dev)
       return SANE_STATUS_INVAL;
     }
 
-  powerslide_get_halftones (dev);
-  powerslide_get_cal_info (dev);
-  powerslide_get_speeds (dev);
-
-  dev->scan_mode_list[0] = COLOR_STR;
-  dev->scan_mode_list[1] = GRAY_STR;
-  dev->scan_mode_list[2] = LINEART_STR;
-  dev->scan_mode_list[3] = HALFTONE_STR;
-  dev->scan_mode_list[4] = 0;
-
-
   dev->sane.name = dev->devicename;
   dev->sane.vendor = dev->vendor;
   dev->sane.model = dev->product;
-  dev->sane.type = "flatbed scanner";
-
-  dev->x_range.min = SANE_FIX (0);
-  dev->x_range.quant = SANE_FIX (0);
-  dev->x_range.max = SANE_FIX (dev->inquiry_fb_width * MM_PER_INCH);
-
-  dev->y_range.min = SANE_FIX (0);
-  dev->y_range.quant = SANE_FIX (0);
-  dev->y_range.max = SANE_FIX (dev->inquiry_fb_length * MM_PER_INCH);
-
-  dev->dpi_range.min = SANE_FIX (25);
-  dev->dpi_range.quant = SANE_FIX (1);
-  dev->dpi_range.max =
-    SANE_FIX (max (dev->inquiry_x_res, dev->inquiry_y_res));
-
-  dev->shadow_range.min = SANE_FIX (0);
-  dev->shadow_range.quant = SANE_FIX (1);
-  dev->shadow_range.max = SANE_FIX (dev->inquiry_max_shadow);
-
-  dev->highlight_range.min = SANE_FIX (dev->inquiry_min_highlight);
-  dev->highlight_range.quant = SANE_FIX (1);
-  dev->highlight_range.max = SANE_FIX (100);
-
-  dev->exposure_range.min = SANE_FIX (dev->inquiry_min_exp);
-  dev->exposure_range.quant = SANE_FIX (1);
-  dev->exposure_range.max = SANE_FIX (dev->inquiry_max_exp);
-
-#if 0
-  dev->analog_gamma_range.min = SANE_FIX (1.0);
-  dev->analog_gamma_range.quant = SANE_FIX (0.01);
-  dev->analog_gamma_range.max = SANE_FIX (2.0);
-
-#endif
+  dev->sane.type = "Multiple slide scanner";
 
   return SANE_STATUS_GOOD;
 }
@@ -1552,22 +1297,6 @@ powerslide_send_highlight_shadow_one (Powerslide_Scanner * scanner, int filter,
 static SANE_Status
 powerslide_send_highlight_shadow (Powerslide_Scanner * scanner)
 {
-  SANE_Status status;
-
-  DBG (DBG_proc, "powerslide_send_highlight_shadow\n");
-
-  status = powerslide_send_highlight_shadow_one (scanner, FILTER_RED, 100, 0);
-  if (status)
-    return status;
-
-  status = powerslide_send_highlight_shadow_one (scanner, FILTER_GREEN, 100, 0);
-  if (status)
-    return status;
-
-  status = powerslide_send_highlight_shadow_one (scanner, FILTER_BLUE, 100, 0);
-  if (status)
-    return status;
-
   return SANE_STATUS_GOOD;
 }
 
@@ -1576,286 +1305,6 @@ powerslide_send_highlight_shadow (Powerslide_Scanner * scanner)
 static SANE_Status
 powerslide_perform_cal (Powerslide_Scanner * scanner, int cal_index)
 {
-  long *red_result;
-  long *green_result;
-  long *blue_result;
-  long *neutral_result;
-  long *result = NULL;
-  int rcv_length, send_length;
-  int rcv_lines, rcv_bits, send_bits;
-  int pixels_per_line;
-  int i;
-  unsigned char *rcv_buffer, *rcv_ptr;
-  unsigned char *send_buffer, *send_ptr;
-  size_t size;
-  int fullscale;
-  int cal_limit;
-  int k;
-  int filter;
-  SANE_Status status;
-
-  DBG (DBG_proc, "powerslide_perform_cal\n");
-
-  pixels_per_line = scanner->device->cal_info[cal_index].pixels_per_line;
-  rcv_length = pixels_per_line;
-  send_length = pixels_per_line;
-
-  rcv_bits = scanner->device->cal_info[cal_index].receive_bits;
-  if (rcv_bits > 8)
-    rcv_length *= 2;		/* 2 bytes / sample */
-
-  send_bits = scanner->device->cal_info[cal_index].send_bits;
-  if (send_bits > 8)
-    send_length *= 2;		/* 2 bytes / sample */
-
-  rcv_lines = scanner->device->cal_info[cal_index].num_lines;
-
-  send_length += 2;		/* space for filter at start */
-
-  if (scanner->colormode == RGB)
-    {
-      rcv_lines *= 3;
-      send_length *= 3;
-      rcv_length += 2;		/* 2 bytes for index at front of data (only in RGB??) */
-    }
-
-  send_length += 4;		/* space for header at start of data */
-
-  /* alllocate buffers for the receive data, the result buffers, and for the send data */
-  rcv_buffer = (unsigned char *) malloc (rcv_length);
-
-  red_result = (long *) calloc (pixels_per_line, sizeof (long));
-  green_result = (long *) calloc (pixels_per_line, sizeof (long));
-  blue_result = (long *) calloc (pixels_per_line, sizeof (long));
-  neutral_result = (long *) calloc (pixels_per_line, sizeof (long));
-
-  if (!rcv_buffer || !red_result || !green_result || !blue_result
-      || !neutral_result)
-    {
-      /* at least one malloc failed, so free all buffers (free accepts NULL) */
-      free (rcv_buffer);
-      free (red_result);
-      free (green_result);
-      free (blue_result);
-      free (neutral_result);
-      return SANE_STATUS_NO_MEM;
-    }
-
-  /* read the cal data a line at a time, and accumulate into the result arrays */
-  while (rcv_lines--)
-    {
-      /* TUR */
-      status = powerslide_wait_scanner (scanner);
-      if (status)
-	{
-	  free (rcv_buffer);
-	  free (red_result);
-	  free (green_result);
-	  free (blue_result);
-	  free (neutral_result);
-	  return status;
-	}
-
-      set_read_length (sread.cmd, 1);
-      size = rcv_length;
-
-      DBG (DBG_info, "powerslide_perform_cal: reading 1 line (%lu bytes)\n", (u_long) size);
-
-      status =
-	sanei_scsi_cmd (scanner->sfd, sread.cmd, sread.size, rcv_buffer,
-			&size);
-
-      if (status)
-	{
-	  DBG (DBG_error,
-	       "powerslide_perform_cal: read command returned status %s\n",
-	       sane_strstatus (status));
-	  free (rcv_buffer);
-	  free (red_result);
-	  free (green_result);
-	  free (blue_result);
-	  free (neutral_result);
-	  return status;
-	}
-
-      DBG_DUMP (DBG_dump, rcv_buffer, 32);
-
-      /* which result buffer does this line belong to? */
-      if (scanner->colormode == RGB)
-	{
-	  if (*rcv_buffer == 'R')
-	    result = red_result;
-	  else if (*rcv_buffer == 'G')
-	    result = green_result;
-	  else if (*rcv_buffer == 'B')
-	    result = blue_result;
-	  else if (*rcv_buffer == 'N')
-	    result = neutral_result;
-	  else
-	    {
-	      DBG (DBG_error, "powerslide_perform_cal: invalid index byte (%02x)\n",
-		   *rcv_buffer);
-	      DBG_DUMP (DBG_error, rcv_buffer, 32);
-	      free (rcv_buffer);
-	      free (red_result);
-	      free (green_result);
-	      free (blue_result);
-	      free (neutral_result);
-	      return SANE_STATUS_INVAL;
-	    }
-	  rcv_ptr = rcv_buffer + 2;
-	}
-      else
-	{
-	  /* monochrome - no bytes indicating filter here */
-	  result = neutral_result;
-	  rcv_ptr = rcv_buffer;
-	}
-
-      /* now add the values in this line to the result array */
-      for (i = 0; i < pixels_per_line; i++)
-	{
-	  result[i] += *rcv_ptr++;
-	  if (rcv_bits > 8)
-	    {
-	      result[i] += (*rcv_ptr++) << 8;
-	    }
-	}
-    }
-
-  /* got all the cal data, now process it ready to send back */
-  free (rcv_buffer);
-  send_buffer = (unsigned char *) malloc (send_length + swrite.size);
-
-  if (!send_buffer)
-    {
-      free (red_result);
-      free (green_result);
-      free (blue_result);
-      free (neutral_result);
-      return SANE_STATUS_NO_MEM;
-    }
-
-  rcv_lines = scanner->device->cal_info[cal_index].num_lines;
-  fullscale = (1 << rcv_bits) - 1;
-  cal_limit = fullscale / (1 << scanner->device->inquiry_cal_eqn);
-  k = (1 << scanner->device->inquiry_cal_eqn) - 1;
-
-  /* set up scsi command and data */
-  size = send_length;
-
-  memcpy (send_buffer, swrite.cmd, swrite.size);
-  set_write_length (send_buffer, size);
-
-  set_command (send_buffer + swrite.size, SEND_CAL_DATA);
-  set_data_length (send_buffer + swrite.size, size - 4);
-
-  send_ptr = send_buffer + swrite.size + 4;
-
-  for (filter = FILTER_NEUTRAL; filter <= FILTER_BLUE; filter <<= 1)
-    {
-
-      /* only send data for filter we expect to send */
-      if (!(filter & scanner->cal_filter))
-	continue;
-
-      set_data (send_ptr, 0, filter, 2);
-      send_ptr += 2;
-
-      if (scanner->colormode == RGB)
-	{
-	  switch (filter)
-	    {
-	    case FILTER_RED:
-	      result = red_result;
-	      break;
-
-	    case FILTER_GREEN:
-	      result = green_result;
-	      break;
-
-	    case FILTER_BLUE:
-	      result = blue_result;
-	      break;
-
-	    case FILTER_NEUTRAL:
-	      result = neutral_result;
-	      break;
-	    }
-	}
-      else
-	result = neutral_result;
-
-      /* for each pixel */
-      for (i = 0; i < pixels_per_line; i++)
-	{
-	  long x;
-
-	  /* make average */
-	  x = result[i] / rcv_lines;
-
-	  /* ensure not overflowed */
-	  if (x > fullscale)
-	    x = fullscale;
-
-	  /* process according to required calibration equation */
-	  if (scanner->device->inquiry_cal_eqn)
-	    {
-	      if (x <= cal_limit)
-		x = fullscale;
-	      else
-		x = ((fullscale - x) * fullscale) / (x * k);
-	    }
-
-	  if (rcv_bits > send_bits)
-	    x >>= (rcv_bits - send_bits);
-	  else if (send_bits > rcv_bits)
-	    x <<= (send_bits - rcv_bits);
-
-	  /* put result into send buffer */
-	  *send_ptr++ = x;
-	  if (send_bits > 8)
-	    *send_ptr++ = x >> 8;
-	}
-    }
-
-  /* now send the data back to scanner */
-
-  /* TUR */
-  status = powerslide_wait_scanner (scanner);
-  if (status)
-    {
-      free (red_result);
-      free (green_result);
-      free (blue_result);
-      free (neutral_result);
-      free (send_buffer);
-      return status;
-    }
-
-  DBG (DBG_info, "powerslide_perform_cal: sending cal data (%lu bytes)\n", (u_long) size);
-  DBG_DUMP (DBG_dump, send_buffer, 64);
-
-  status =
-    sanei_scsi_cmd (scanner->sfd, send_buffer, swrite.size + size, NULL,
-		    NULL);
-  if (status)
-    {
-      DBG (DBG_error, "powerslide_perform_cal: write command returned status %s\n",
-	   sane_strstatus (status));
-      free (red_result);
-      free (green_result);
-      free (blue_result);
-      free (neutral_result);
-      free (send_buffer);
-      return status;
-    }
-
-  free (red_result);
-  free (green_result);
-  free (blue_result);
-  free (neutral_result);
-  free (send_buffer);
 
   return SANE_STATUS_GOOD;
 }
@@ -1865,24 +1314,6 @@ powerslide_perform_cal (Powerslide_Scanner * scanner, int cal_index)
 static SANE_Status
 powerslide_do_cal (Powerslide_Scanner * scanner)
 {
-  SANE_Status status;
-  int cal_index;
-
-  DBG (DBG_proc, "powerslide_do_cal\n");
-
-  if (scanner->device->inquiry_scan_capability & INQ_CAP_EXT_CAL)
-    {
-      for (cal_index = 0; cal_index < scanner->device->cal_info_count;
-	   cal_index++)
-	if (scanner->device->cal_info[cal_index].cal_type ==
-	    scanner->cal_mode)
-	  {
-	    status = powerslide_perform_cal (scanner, cal_index);
-	    if (status != SANE_STATUS_GOOD)
-	      return status;
-	  }
-    }
-
   return SANE_STATUS_GOOD;
 }
 
@@ -1891,68 +1322,8 @@ powerslide_do_cal (Powerslide_Scanner * scanner)
 static SANE_Status
 powerslide_dwnld_gamma_one (Powerslide_Scanner * scanner, int filter, SANE_Int * table)
 {
-  unsigned char *buffer;
-  size_t size;
-  SANE_Status status;
-  unsigned char *data;
-  int i;
 
-  DBG (DBG_proc, "powerslide_dwnld_gamma_one\n");
-
-  /* TUR */
-  status = powerslide_wait_scanner (scanner);
-  if (status)
-    {
-      return status;
-    }
-
-  if (scanner->device->inquiry_gamma_bits > 8)
-    size = scanner->gamma_length * 2 + 6;
-  else
-    size = scanner->gamma_length + 6;
-
-  buffer = malloc (size + swrite.size);
-  if (!buffer)
-    return SANE_STATUS_NO_MEM;
-
-  set_write_length (swrite.cmd, size);
-
-  memcpy (buffer, swrite.cmd, swrite.size);
-
-  data = buffer + swrite.size;
-  memset (data, 0, size);
-
-  set_command (data, DWNLD_GAMMA_TABLE);
-  set_data_length (data, size - 4);
-
-  data[4] = filter;
-
-  for (i = 0; i < scanner->gamma_length; i++)
-    {
-      if (scanner->device->inquiry_gamma_bits > 8)
-	{
-	  set_data (data, 6 + 2 * i, table ? table[i] : i, 2);
-	}
-      else
-	{
-	  set_data (data, 6 + i, table ? table[i] : i, 1);
-	}
-    }
-
-  DBG_DUMP (DBG_dump, data, 128);
-
-  status =
-    sanei_scsi_cmd (scanner->sfd, buffer, swrite.size + size, NULL, NULL);
-  if (status)
-    {
-      DBG (DBG_error,
-	   "powerslide_dwnld_gamma_one: write command returned status %s\n",
-	   sane_strstatus (status));
-    }
-
-  free (buffer);
-
-  return status;
+  return SANE_STATUS_GOOD;
 }
 
 /*------------------------- POWERSLIDE DWNLD GAMMA -----------------------------*/
@@ -1960,44 +1331,7 @@ powerslide_dwnld_gamma_one (Powerslide_Scanner * scanner, int filter, SANE_Int *
 static SANE_Status
 powerslide_dwnld_gamma (Powerslide_Scanner * scanner)
 {
-  SANE_Status status;
-
   DBG (DBG_proc, "powerslide_dwnld_gamma\n");
-
-  if (scanner->colormode == RGB)
-    {
-      status =
-	powerslide_dwnld_gamma_one (scanner, FILTER_RED, scanner->gamma_table[1]);
-      if (status)
-	return status;
-
-
-      status =
-	powerslide_dwnld_gamma_one (scanner, FILTER_GREEN, scanner->gamma_table[2]);
-      if (status)
-	return status;
-
-      status =
-	powerslide_dwnld_gamma_one (scanner, FILTER_BLUE, scanner->gamma_table[3]);
-      if (status)
-	return status;
-    }
-  else
-    {
-      SANE_Int *table;
-
-      /* if lineart or half tone, force gamma to be one to one by passing NULL */
-      if (scanner->colormode == GRAYSCALE)
-	table = scanner->gamma_table[0];
-      else
-	table = NULL;
-
-      status = powerslide_dwnld_gamma_one (scanner, FILTER_GREEN, table);
-      if (status)
-	return status;
-    }
-
-  usleep (DOWNLOAD_GAMMA_WAIT_TIME);
 
   return SANE_STATUS_GOOD;
 }
@@ -2007,55 +1341,9 @@ powerslide_dwnld_gamma (Powerslide_Scanner * scanner)
 static SANE_Status
 powerslide_set_window (Powerslide_Scanner * scanner)
 {
-  unsigned char buffer[128];
-  size_t size;
-  SANE_Status status;
-  unsigned char *data;
-  double x, dpmm;
+  SANE_Status status = SANE_STATUS_GOOD;
 
   DBG (DBG_proc, "powerslide_set_window\n");
-
-  size = 14;
-
-  set_write_length (swrite.cmd, size);
-
-  memcpy (buffer, swrite.cmd, swrite.size);
-
-  data = buffer + swrite.size;
-  memset (data, 0, size);
-
-  set_command (data, SET_SCAN_FRAME);
-  set_data_length (data, size - 4);
-
-  data[4] = 0x80;
-  if (scanner->colormode == HALFTONE)
-    data[4] |= 0x40;
-
-  dpmm = (double) scanner->device->inquiry_pixel_resolution / MM_PER_INCH;
-
-  x = SANE_UNFIX (scanner->val[OPT_TL_X].w) * dpmm;
-  set_data (data, 6, (int) x, 2);
-  DBG (DBG_info, "TL_X: %d\n", (int) x);
-
-  x = SANE_UNFIX (scanner->val[OPT_TL_Y].w) * dpmm;
-  set_data (data, 8, (int) x, 2);
-  DBG (DBG_info, "TL_Y: %d\n", (int) x);
-
-  x = SANE_UNFIX (scanner->val[OPT_BR_X].w) * dpmm;
-  set_data (data, 10, (int) x, 2);
-  DBG (DBG_info, "BR_X: %d\n", (int) x);
-
-  x = SANE_UNFIX (scanner->val[OPT_BR_Y].w) * dpmm;
-  set_data (data, 12, (int) x, 2);
-  DBG (DBG_info, "BR_Y: %d\n", (int) x);
-
-  status =
-    sanei_scsi_cmd (scanner->sfd, buffer, swrite.size + size, NULL, NULL);
-  if (status)
-    {
-      DBG (DBG_error, "powerslide_set_window: write command returned status %s\n",
-	   sane_strstatus (status));
-    }
 
   return status;
 }
@@ -2067,166 +1355,9 @@ static SANE_Status
 powerslide_mode_select (Powerslide_Scanner * scanner)
 {
 
-  SANE_Status status;
-  unsigned char buffer[128];
-  size_t size;
-  unsigned char *data;
-  int i;
+  SANE_Status status = SANE_STATUS_GOOD;
 
   DBG (DBG_proc, "powerslide_mode_select\n");
-
-  size = 14;
-
-  set_mode_length (smode.cmd, size);
-
-  memcpy (buffer, smode.cmd, smode.size);
-
-  data = buffer + smode.size;
-  memset (data, 0, size);
-
-  /* size of data */
-  data[1] = size - 2;
-
-  /* set resolution required */
-  set_data (data, 2, scanner->resolution, 2);
-
-  /* set color filter and color depth */
-  switch (scanner->colormode)
-    {
-    case RGB:
-      if (scanner->device->inquiry_filters & INQ_ONE_PASS_COLOR)
-	{
-	  data[4] = INQ_ONE_PASS_COLOR;
-	  scanner->cal_filter = FILTER_RED | FILTER_GREEN | FILTER_BLUE;
-	}
-      else
-	{
-	  DBG (DBG_error,
-	       "powerslide_mode_select: support for multipass color not yet implemented\n");
-	  return SANE_STATUS_UNSUPPORTED;
-	}
-      data[5] = INQ_COLOR_DEPTH_8;
-      break;
-
-    case GRAYSCALE:
-    case LINEART:
-    case HALFTONE:
-      /* choose which filter to use for monochrome mode */
-      if (scanner->device->inquiry_filters & INQ_FILTER_NEUTRAL)
-	{
-	  data[4] = FILTER_NEUTRAL;
-	  scanner->cal_filter = FILTER_NEUTRAL;
-	}
-      else if (scanner->device->inquiry_filters & INQ_FILTER_GREEN)
-	{
-	  data[4] = FILTER_GREEN;
-	  scanner->cal_filter = FILTER_GREEN;
-	}
-      else if (scanner->device->inquiry_filters & INQ_FILTER_RED)
-	{
-	  data[4] = FILTER_RED;
-	  scanner->cal_filter = FILTER_RED;
-	}
-      else if (scanner->device->inquiry_filters & INQ_FILTER_BLUE)
-	{
-	  data[4] = FILTER_BLUE;
-	  scanner->cal_filter = FILTER_BLUE;
-	}
-      else
-	{
-	  DBG (DBG_error,
-	       "powerslide_mode_select: scanner doesn't appear to support monochrome\n");
-	  return SANE_STATUS_UNSUPPORTED;
-	}
-
-      if (scanner->colormode == GRAYSCALE)
-	data[5] = INQ_COLOR_DEPTH_8;
-      else
-	data[5] = INQ_COLOR_DEPTH_1;
-      break;
-    }
-
-  /* choose color packing method */
-  if (scanner->device->inquiry_color_format & INQ_COLOR_FORMAT_LINE)
-    data[6] = INQ_COLOR_FORMAT_LINE;
-  else if (scanner->device->inquiry_color_format & INQ_COLOR_FORMAT_INDEX)
-    data[6] = INQ_COLOR_FORMAT_INDEX;
-  else
-    {
-      DBG (DBG_error,
-	   "powerslide_mode_select: support for pixel packing not yet implemented\n");
-      return SANE_STATUS_UNSUPPORTED;
-    }
-
-  /* choose data format */
-  if (scanner->device->inquiry_image_format & INQ_IMG_FMT_INTEL)
-    data[8] = INQ_IMG_FMT_INTEL;
-  else
-    {
-      DBG (DBG_error,
-	   "powerslide_mode_select: support for Motorola format not yet implemented\n");
-      return SANE_STATUS_UNSUPPORTED;
-    }
-
-  /* set required speed */
-  i = 0;
-  while (scanner->device->speed_list[i] != NULL)
-    {
-      if (strcmp (scanner->device->speed_list[i], scanner->val[OPT_SPEED].s)
-	  == 0)
-	break;
-      i++;
-    }
-
-  if (scanner->device->speed_list[i] == NULL)
-    data[9] = 0;
-  else
-    data[9] = i;
-
-  scanner->cal_mode = CAL_MODE_FLATBED;
-
-  /* if preview supported, ask for preview, limit resolution to max for fast preview */
-  if (scanner->val[OPT_PREVIEW].w
-      && (scanner->device->inquiry_scan_capability & INQ_CAP_FAST_PREVIEW))
-    {
-      DBG (DBG_info, "powerslide_mode_select: setting preview\n");
-      scanner->cal_mode |= CAL_MODE_PREVIEW;
-      data[9] |= INQ_CAP_FAST_PREVIEW;
-      data[9] &= ~INQ_CAP_SPEEDS;
-      if (scanner->resolution > scanner->device->inquiry_fast_preview_res)
-	set_data (data, 2, scanner->device->inquiry_fast_preview_res, 2);
-    }
-
-
-  /* set required halftone pattern */
-  i = 0;
-  while (scanner->device->halftone_list[i] != NULL)
-    {
-      if (strcmp
-	  (scanner->device->halftone_list[i],
-	   scanner->val[OPT_HALFTONE_PATTERN].s) == 0)
-	break;
-      i++;
-    }
-
-  if (scanner->device->halftone_list[i] == NULL)
-    data[12] = 0;		/* halftone pattern */
-  else
-    data[12] = i;
-
-  data[13] = SANE_UNFIX (scanner->val[OPT_THRESHOLD].w) * 255 / 100;	/* lineart threshold */
-
-  DBG (DBG_info, "powerslide_mode_select: speed %02x\n", data[9]);
-  DBG (DBG_info, "powerslide_mode_select: halftone %d\n", data[12]);
-  DBG (DBG_info, "powerslide_mode_select: threshold %02x\n", data[13]);
-
-  status =
-    sanei_scsi_cmd (scanner->sfd, buffer, smode.size + size, NULL, NULL);
-  if (status)
-    {
-      DBG (DBG_error, "powerslide_mode_select: write command returned status %s\n",
-	   sane_strstatus (status));
-    }
 
   return status;
 }
@@ -2237,32 +1368,10 @@ powerslide_mode_select (Powerslide_Scanner * scanner)
 static SANE_Status
 powerslide_scan (Powerslide_Scanner * scanner, int start)
 {
-  SANE_Status status;
+  SANE_Status status = SANE_STATUS_GOOD;
 
   DBG (DBG_proc, "powerslide_scan\n");
 
-  /* TUR */
-  status = powerslide_wait_scanner (scanner);
-  if (status)
-    {
-      return status;
-    }
-
-  set_scan_cmd (scan.cmd, start);
-
-  do
-    {
-      status = sanei_scsi_cmd (scanner->sfd, scan.cmd, scan.size, NULL, NULL);
-      if (status)
-	{
-	  DBG (DBG_error, "powerslide_scan: write command returned status %s\n",
-	       sane_strstatus (status));
-	  usleep (SCAN_WARMUP_WAIT_TIME);
-	}
-    }
-  while (start && status);
-
-  usleep (SCAN_WAIT_TIME);
 
   return status;
 }
@@ -2287,9 +1396,7 @@ powerslide_wait_scanner (Powerslide_Scanner * scanner)
 	  return -1;
 	}
       /* test unit ready */
-      status =
-	sanei_scsi_cmd (scanner->sfd, test_unit_ready.cmd,
-			test_unit_ready.size, NULL, NULL);
+      /* FIXME */
       cnt++;
 
       if (status)
@@ -2311,328 +1418,14 @@ powerslide_wait_scanner (Powerslide_Scanner * scanner)
   return status;
 }
 
-
-/* -------------------------------------- POWERSLIDE GET PARAMS -------------------------- */
-
-
-static SANE_Status
-powerslide_get_params (Powerslide_Scanner * scanner)
-{
-  SANE_Status status;
-  size_t size;
-  unsigned char buffer[128];
-
-  DBG (DBG_proc, "powerslide_get_params\n");
-
-  status = powerslide_wait_scanner (scanner);
-  if (status)
-    return status;
-
-  if (scanner->device->inquiry_image_format & INQ_IMG_FMT_OKLINE)
-    size = 16;
-  else
-
-    size = 14;
-
-  set_param_length (param.cmd, size);
-
-  status =
-    sanei_scsi_cmd (scanner->sfd, param.cmd, param.size, buffer, &size);
-
-  if (status)
-    {
-      DBG (DBG_error, "powerslide_get_params: command returned status %s\n",
-	   sane_strstatus (status));
-    }
-  else
-    {
-      DBG (DBG_info, "Scan Width:  %d\n", get_param_scan_width (buffer));
-      DBG (DBG_info, "Scan Lines:  %d\n", get_param_scan_lines (buffer));
-      DBG (DBG_info, "Scan bytes:  %d\n", get_param_scan_bytes (buffer));
-
-      DBG (DBG_info, "Offset 1:    %d\n",
-	   get_param_scan_filter_offset1 (buffer));
-      DBG (DBG_info, "Offset 2:    %d\n",
-	   get_param_scan_filter_offset2 (buffer));
-      DBG (DBG_info, "Scan period: %d\n", get_param_scan_period (buffer));
-      DBG (DBG_info, "Xfer rate:   %d\n", get_param_scsi_xfer_rate (buffer));
-      if (scanner->device->inquiry_image_format & INQ_IMG_FMT_OKLINE)
-	DBG (DBG_info, "Avail lines: %d\n",
-	     get_param_scan_available_lines (buffer));
-
-      scanner->filter_offset1 = get_param_scan_filter_offset1 (buffer);
-      scanner->filter_offset2 = get_param_scan_filter_offset2 (buffer);
-      scanner->bytes_per_line = get_param_scan_bytes (buffer);
-
-      scanner->params.pixels_per_line = get_param_scan_width (buffer);
-      scanner->params.lines = get_param_scan_lines (buffer);
-
-      switch (scanner->colormode)
-	{
-	case RGB:
-	  scanner->params.format = SANE_FRAME_RGB;
-	  scanner->params.depth = 8;
-	  scanner->params.bytes_per_line = 3 * get_param_scan_bytes (buffer);
-	  break;
-
-	case GRAYSCALE:
-	  scanner->params.format = SANE_FRAME_GRAY;
-	  scanner->params.depth = 8;
-	  scanner->params.bytes_per_line = get_param_scan_bytes (buffer);
-	  break;
-
-	case HALFTONE:
-	case LINEART:
-	  scanner->params.format = SANE_FRAME_GRAY;
-	  scanner->params.depth = 1;
-	  scanner->params.bytes_per_line = get_param_scan_bytes (buffer);
-	  break;
-	}
-
-      scanner->params.last_frame = 0;
-    }
-
-  return status;
-}
-
-
-/* -------------------------------------- POWERSLIDE GRAB SCANNER -------------------------- */
-
-
-static SANE_Status
-powerslide_grab_scanner (Powerslide_Scanner * scanner)
-{
-  SANE_Status status;
-
-  DBG (DBG_proc, "grab_scanner\n");
-
-
-  status = powerslide_wait_scanner (scanner);
-  if (status)
-    return status;
-
-  status =
-    sanei_scsi_cmd (scanner->sfd, reserve_unit.cmd, reserve_unit.size, NULL,
-		    NULL);
-
-
-  if (status)
-    {
-      DBG (DBG_error, "powerslide_grab_scanner: command returned status %s\n",
-	   sane_strstatus (status));
-    }
-  else
-    {
-      DBG (DBG_info, "scanner reserved\n");
-    }
-
-  return status;
-}
-
-
-/* ------------------------------------ POWERSLIDE GIVE SCANNER -------------------------- */
-
-
-static SANE_Status
-powerslide_give_scanner (Powerslide_Scanner * scanner)
-{
-  SANE_Status status;
-
-  DBG (DBG_info2, "trying to release scanner ...\n");
-
-  status =
-    sanei_scsi_cmd (scanner->sfd, release_unit.cmd, release_unit.size, NULL,
-		    NULL);
-  if (status)
-    {
-      DBG (DBG_error, "powerslide_give_scanner: command returned status %s\n",
-	   sane_strstatus (status));
-    }
-  else
-    {
-      DBG (DBG_info, "scanner released\n");
-    }
-  return status;
-}
-
-
 /* ------------------- POWERSLIDE READER PROCESS INDEXED ------------------- */
 
 static int
 powerslide_reader_process_indexed (Powerslide_Scanner * scanner, FILE * fp)
 {
-  int status;
-  int lines;
-  unsigned char *buffer, *reorder = NULL;
-  unsigned char *red_buffer = NULL, *green_buffer = NULL;
-  unsigned char *red_in = NULL, *red_out = NULL;
-  unsigned char *green_in = NULL, *green_out = NULL;
-  int red_size = 0, green_size = 0;
-  int bytes_per_line;
-  int red_count = 0, green_count = 0;
-
-  size_t size;
-
   DBG (DBG_read, "reading %d lines of %d bytes/line (indexed)\n",
        scanner->params.lines, scanner->params.bytes_per_line);
 
-  lines = scanner->params.lines;
-  bytes_per_line = scanner->bytes_per_line;
-
-  /* allocate receive buffer */
-  buffer = malloc (bytes_per_line + 2);
-  if (!buffer)
-    {
-      return SANE_STATUS_NO_MEM;
-    }
-
-  /* allocate deskew buffers for RGB mode */
-  if (scanner->colormode == RGB)
-    {
-      lines *= 3;
-
-      red_size = bytes_per_line * (scanner->filter_offset1 +
-				   scanner->filter_offset2 + 2);
-      green_size = bytes_per_line * (scanner->filter_offset2 + 2);
-
-      DBG (DBG_info2,
-	   "powerslide_reader_process_indexed: alloc %d lines (%d bytes) for red buffer\n",
-	   red_size / bytes_per_line, red_size);
-      DBG (DBG_info2,
-	   "powerslide_reader_process_indexed: alloc %d lines (%d bytes) for green buffer\n",
-	   green_size / bytes_per_line, green_size);
-
-      reorder = malloc (scanner->params.bytes_per_line);
-      red_buffer = malloc (red_size);
-      green_buffer = malloc (green_size);
-
-      if (!reorder || !red_buffer || !green_buffer)
-	{
-	  free (buffer);
-	  free (reorder);
-	  free (red_buffer);
-	  free (green_buffer);
-	  return SANE_STATUS_NO_MEM;
-	}
-
-      red_in = red_out = red_buffer;
-      green_in = green_out = green_buffer;
-    }
-
-  while (lines--)
-    {
-      set_read_length (sread.cmd, 1);
-      size = bytes_per_line + 2;
-
-      do
-	{
-	  status =
-	    sanei_scsi_cmd (scanner->sfd, sread.cmd, sread.size, buffer,
-			    &size);
-	}
-      while (status);
-
-      DBG_DUMP (DBG_dump, buffer, 64);
-
-      if (scanner->colormode == RGB)
-	{
-	  /* we're assuming that we get red before green before blue here */
-	  switch (*buffer)
-	    {
-	    case 'R':
-	      /* copy to red buffer */
-	      memcpy (red_in, buffer + 2, bytes_per_line);
-
-	      /* advance in pointer, and check for wrap */
-	      red_in += bytes_per_line;
-	      if (red_in >= (red_buffer + red_size))
-		red_in = red_buffer;
-
-	      /* increment red line count */
-	      red_count++;
-	      DBG (DBG_info2,
-		   "powerslide_reader_process_indexed: got a red line (%d)\n",
-		   red_count);
-	      break;
-
-	    case 'G':
-	      /* copy to green buffer */
-	      memcpy (green_in, buffer + 2, bytes_per_line);
-
-	      /* advance in pointer, and check for wrap */
-	      green_in += bytes_per_line;
-	      if (green_in >= (green_buffer + green_size))
-		green_in = green_buffer;
-
-	      /* increment green line count */
-	      green_count++;
-	      DBG (DBG_info2,
-		   "powerslide_reader_process_indexed: got a green line (%d)\n",
-		   green_count);
-	      break;
-
-	    case 'B':
-	      /* check we actually have red and green data available */
-	      if (!red_count || !green_count)
-		{
-		  DBG (DBG_error,
-		       "powerslide_reader_process_indexed: deskew buffer empty (%d %d)\n",
-		       red_count, green_count);
-		  return SANE_STATUS_INVAL;
-		}
-	      red_count--;
-	      green_count--;
-
-	      DBG (DBG_info2,
-		   "powerslide_reader_process_indexed: got a blue line\n");
-
-	      {
-		int i;
-		unsigned char *red, *green, *blue, *dest;
-
-		/* now pack the pixels lines into RGB format */
-		dest = reorder;
-		red = red_out;
-		green = green_out;
-		blue = buffer + 2;
-
-		for (i = bytes_per_line; i > 0; i--)
-		  {
-		    *dest++ = *red++;
-		    *dest++ = *green++;
-		    *dest++ = *blue++;
-		  }
-		fwrite (reorder, 1, scanner->params.bytes_per_line, fp);
-
-		/* advance out pointers, and check for wrap */
-		red_out += bytes_per_line;
-		if (red_out >= (red_buffer + red_size))
-		  red_out = red_buffer;
-		green_out += bytes_per_line;
-		if (green_out >= (green_buffer + green_size))
-		  green_out = green_buffer;
-	      }
-	      break;
-
-	    default:
-	      DBG (DBG_error,
-		   "powerslide_reader_process_indexed: bad filter index\n");
-	    }
-	}
-      else
-	{
-	  DBG (DBG_info2,
-	       "powerslide_reader_process_indexed: got a line (%lu bytes)\n", (u_long) size);
-
-	  /* just send the data on, assume filter bytes not present as per calibration case */
-	  fwrite (buffer, 1, scanner->params.bytes_per_line, fp);
-	}
-    }
-
-  free (buffer);
-  free (reorder);
-  free (red_buffer);
-  free (green_buffer);
   return 0;
 }
 
@@ -2641,69 +1434,8 @@ powerslide_reader_process_indexed (Powerslide_Scanner * scanner, FILE * fp)
 static int
 powerslide_reader_process (Powerslide_Scanner * scanner, FILE * fp)
 {
-  int status;
-  int lines;
-  unsigned char *buffer, *reorder;
-  size_t size;
-
   DBG (DBG_read, "reading %d lines of %d bytes/line\n", scanner->params.lines,
        scanner->params.bytes_per_line);
-
-  buffer = malloc (scanner->params.bytes_per_line);
-  reorder = malloc (scanner->params.bytes_per_line);
-  if (!buffer || !reorder)
-    {
-      free (buffer);
-      free (reorder);
-      return SANE_STATUS_NO_MEM;
-    }
-
-  lines = scanner->params.lines;
-
-  while (lines--)
-    {
-      set_read_length (sread.cmd, 1);
-      size = scanner->params.bytes_per_line;
-
-      do
-	{
-	  status =
-	    sanei_scsi_cmd (scanner->sfd, sread.cmd, sread.size, buffer,
-			    &size);
-	}
-      while (status);
-
-      DBG_DUMP (DBG_dump, buffer, 64);
-
-      if (scanner->colormode == RGB)
-	{
-	  int i;
-	  unsigned char *src, *dest;
-	  int offset;
-
-	  dest = reorder;
-	  src = buffer;
-	  offset = scanner->params.pixels_per_line;
-
-	  for (i = scanner->params.pixels_per_line; i > 0; i--)
-	    {
-	      *dest++ = *src;
-	      *dest++ = *(src + offset);
-	      *dest++ = *(src + 2 * offset);
-	      src++;
-	    }
-	  fwrite (reorder, 1, scanner->params.bytes_per_line, fp);
-	}
-      else
-	{
-	  fwrite (buffer, 1, scanner->params.bytes_per_line, fp);
-	}
-
-      fflush (fp);
-    }
-
-  free (buffer);
-  free (reorder);
 
   return 0;
 }
@@ -3322,39 +2054,6 @@ sane_control_option (SANE_Handle handle, SANE_Int option, SANE_Action action,
 	    scanner->opt[OPT_GAMMA_VECTOR_B].cap |= SANE_CAP_INACTIVE;
 	    scanner->opt[OPT_THRESHOLD].cap |= SANE_CAP_INACTIVE;
 
-	    halftoning = (strcmp (val, HALFTONE_STR) == 0);
-
-	    if (halftoning || strcmp (val, LINEART_STR) == 0)
-	      {			/* one bit modes */
-		if (halftoning)
-		  {		/* halftoning modes */
-		    scanner->opt[OPT_HALFTONE_PATTERN].cap &=
-		      ~SANE_CAP_INACTIVE;
-		  }
-		else
-		  {		/* lineart modes */
-		  }
-		scanner->opt[OPT_THRESHOLD].cap &= ~SANE_CAP_INACTIVE;
-	      }
-	    else
-	      {			/* multi-bit modes(gray or color) */
-	      }
-
-	    if ((strcmp (val, LINEART_STR) == 0)
-		|| (strcmp (val, HALFTONE_STR) == 0)
-		|| (strcmp (val, GRAY_STR) == 0))
-	      {
-		scanner->opt[OPT_GAMMA_VECTOR].cap &= ~SANE_CAP_INACTIVE;
-	      }
-	    else if (strcmp (val, COLOR_STR) == 0)
-	      {
-		/* scanner->opt[OPT_GAMMA_VECTOR].cap &= ~SANE_CAP_INACTIVE; */
-		scanner->opt[OPT_GAMMA_VECTOR_R].cap &= ~SANE_CAP_INACTIVE;
-		scanner->opt[OPT_GAMMA_VECTOR_G].cap &= ~SANE_CAP_INACTIVE;
-		scanner->opt[OPT_GAMMA_VECTOR_B].cap &= ~SANE_CAP_INACTIVE;
-	      }
-	    return SANE_STATUS_GOOD;
-	  }
 
 	case OPT_SPEED:
 	case OPT_HALFTONE_PATTERN:
@@ -3368,8 +2067,10 @@ sane_control_option (SANE_Handle handle, SANE_Int option, SANE_Action action,
 
 	    return SANE_STATUS_GOOD;
 	  }
-	}
-    }				/* else */
+	} /* case OPT_MODE */
+/*     default:
+	   nothing */
+    }				/* switch(option) */
   return SANE_STATUS_INVAL;
 }
 
@@ -3380,71 +2081,7 @@ sane_control_option (SANE_Handle handle, SANE_Int option, SANE_Action action,
 SANE_Status
 sane_get_parameters (SANE_Handle handle, SANE_Parameters * params)
 {
-  Powerslide_Scanner *scanner = handle;
-  const char *mode;
-
   DBG (DBG_sane_info, "sane_get_parameters\n");
-
-  if (!scanner->scanning)
-    {				/* not scanning, so lets use recent values */
-      double width, length, x_dpi, y_dpi;
-
-      memset (&scanner->params, 0, sizeof (scanner->params));
-
-      width =
-	SANE_UNFIX (scanner->val[OPT_BR_X].w - scanner->val[OPT_TL_X].w);
-      length =
-	SANE_UNFIX (scanner->val[OPT_BR_Y].w - scanner->val[OPT_TL_Y].w);
-      x_dpi = SANE_UNFIX (scanner->val[OPT_RESOLUTION].w);
-      y_dpi = x_dpi;
-
-#if 0
-      if ((scanner->val[OPT_RESOLUTION_BIND].w == SANE_TRUE)
-	  || (scanner->val[OPT_PREVIEW].w == SANE_TRUE))
-	{
-	  y_dpi = x_dpi;
-	}
-#endif
-      if (x_dpi > 0.0 && y_dpi > 0.0 && width > 0.0 && length > 0.0)
-	{
-	  double x_dots_per_mm = x_dpi / MM_PER_INCH;
-	  double y_dots_per_mm = y_dpi / MM_PER_INCH;
-
-	  scanner->params.pixels_per_line = width * x_dots_per_mm;
-	  scanner->params.lines = length * y_dots_per_mm;
-	}
-    }
-
-  mode = scanner->val[OPT_MODE].s;
-
-  if (strcmp (mode, LINEART_STR) == 0 || strcmp (mode, HALFTONE_STR) == 0)
-    {
-      scanner->params.format = SANE_FRAME_GRAY;
-      scanner->params.bytes_per_line =
-	(scanner->params.pixels_per_line + 7) / 8;
-      scanner->params.depth = 1;
-    }
-  else if (strcmp (mode, GRAY_STR) == 0)
-    {
-      scanner->params.format = SANE_FRAME_GRAY;
-      scanner->params.bytes_per_line = scanner->params.pixels_per_line;
-      scanner->params.depth = 8;
-    }
-  else				/* RGB */
-    {
-      scanner->params.format = SANE_FRAME_RGB;
-      scanner->params.bytes_per_line = 3 * scanner->params.pixels_per_line;
-      scanner->params.depth = 8;
-    }
-
-  scanner->params.last_frame = (scanner->params.format != SANE_FRAME_RED
-				&& scanner->params.format !=
-				SANE_FRAME_GREEN);
-
-  if (params)
-    {
-      *params = scanner->params;
-    }
 
   return SANE_STATUS_GOOD;
 }
@@ -3456,203 +2093,7 @@ sane_get_parameters (SANE_Handle handle, SANE_Parameters * params)
 SANE_Status
 sane_start (SANE_Handle handle)
 {
-  Powerslide_Scanner *scanner = handle;
-  int fds[2];
-  const char *mode;
-  int status;
-
   DBG (DBG_sane_init, "sane_start\n");
-
-  /* Check for inconsistencies */
-
-  if (scanner->val[OPT_TL_X].w > scanner->val[OPT_BR_X].w)
-    {
-      DBG (0, "sane_start: %s (%.1f mm) is bigger than %s (%.1f mm) "
-              "-- aborting\n",
-              scanner->opt[OPT_TL_X].title, SANE_UNFIX (scanner->val[OPT_TL_X].w),
-              scanner->opt[OPT_BR_X].title, SANE_UNFIX (scanner->val[OPT_BR_X].w));
-      return SANE_STATUS_INVAL;
-    }
-  if (scanner->val[OPT_TL_Y].w > scanner->val[OPT_BR_Y].w)
-    {
-      DBG (0, "sane_start: %s (%.1f mm) is bigger than %s (%.1f mm) "
-	      "-- aborting\n",
-	      scanner->opt[OPT_TL_Y].title, SANE_UNFIX (scanner->val[OPT_TL_Y].w),
-	      scanner->opt[OPT_BR_Y].title, SANE_UNFIX (scanner->val[OPT_BR_Y].w));
-      return SANE_STATUS_INVAL;
-    }
-
-  mode = scanner->val[OPT_MODE].s;
-
-  if (scanner->sfd < 0)		/* first call, don`t run this routine again on multi frame or multi image scan */
-    {
-#ifdef HAVE_SANEI_SCSI_OPEN_EXTENDED
-      int scsi_bufsize = 131072;	/* 128KB */
-
-      if (sanei_scsi_open_extended
-	  (scanner->device->sane.name, &(scanner->sfd), sense_handler,
-	   scanner->device, &scsi_bufsize) != 0)
-
-	{
-	  DBG (DBG_error, "sane_start: open failed\n");
-	  return SANE_STATUS_INVAL;
-	}
-
-      if (scsi_bufsize < 32768)	/* < 32KB */
-	{
-	  DBG (DBG_error,
-	       "sane_start: sanei_scsi_open_extended returned too small scsi buffer (%d)\n",
-	       scsi_bufsize);
-	  sanei_scsi_close ((scanner->sfd));
-	  return SANE_STATUS_NO_MEM;
-	}
-      DBG (DBG_info,
-	   "sane_start: sanei_scsi_open_extended returned scsi buffer size = %d\n",
-	   scsi_bufsize);
-
-
-      scanner->bufsize = scsi_bufsize;
-#else
-      if (sanei_scsi_open
-	  (scanner->device->sane.name, &(scanner->sfd), sense_handler,
-	   scanner->device) != SANE_STATUS_GOOD)
-	{
-	  DBG (DBG_error, "sane_start: open of %s failed:\n",
-	       scanner->device->sane.name);
-	  return SANE_STATUS_INVAL;
-	}
-
-      /* there is no need to reallocate the buffer because the size is fixed */
-#endif
-
-#if 0
-      if (powerslide_check_values (scanner->device) != 0)
-	{
-	  DBG (DBG_error, "ERROR: invalid scan-values\n");
-	  scanner->scanning = SANE_FALSE;
-	  powerslide_give_scanner (scanner);	/* reposition and release scanner */
-	  sanei_scsi_close (scanner->sfd);
-	  scanner->sfd = -1;
-	  return SANE_STATUS_INVAL;
-	}
-#endif
-#if 0
-      scanner->params.bytes_per_line = scanner->device->row_len;
-      scanner->params.pixels_per_line = scanner->device->width_in_pixels;
-      scanner->params.lines = scanner->device->length_in_pixels;
-
-      sane_get_parameters (scanner, 0);
-
-      DBG (DBG_sane_info, "x_resolution (dpi)      = %u\n",
-	   scanner->device->x_resolution);
-      DBG (DBG_sane_info, "y_resolution (dpi)      = %u\n",
-	   scanner->device->y_resolution);
-      DBG (DBG_sane_info, "x_coordinate_base (dpi) = %u\n",
-	   scanner->device->x_coordinate_base);
-      DBG (DBG_sane_info, "y_coordinate_base (dpi) = %u\n",
-	   scanner->device->y_coordinate_base);
-      DBG (DBG_sane_info, "upper_left_x (xbase)    = %d\n",
-	   scanner->device->upper_left_x);
-      DBG (DBG_sane_info, "upper_left_y (ybase)    = %d\n",
-	   scanner->device->upper_left_y);
-      DBG (DBG_sane_info, "scanwidth    (xbase)    = %u\n",
-	   scanner->device->scanwidth);
-      DBG (DBG_sane_info, "scanlength   (ybase)    = %u\n",
-	   scanner->device->scanlength);
-      DBG (DBG_sane_info, "width in pixels         = %u\n",
-	   scanner->device->width_in_pixels);
-      DBG (DBG_sane_info, "length in pixels        = %u\n",
-	   scanner->device->length_in_pixels);
-      DBG (DBG_sane_info, "bits per pixel/color    = %u\n",
-	   scanner->device->bits_per_pixel);
-      DBG (DBG_sane_info, "bytes per line          = %d\n",
-	   scanner->params.bytes_per_line);
-      DBG (DBG_sane_info, "pixels_per_line         = %d\n",
-	   scanner->params.pixels_per_line);
-      DBG (DBG_sane_info, "lines                   = %d\n",
-	   scanner->params.lines);
-#endif
-
-      /* grab scanner */
-      if (powerslide_grab_scanner (scanner))
-	{
-	  sanei_scsi_close (scanner->sfd);
-	  scanner->sfd = -1;
-	  DBG (DBG_warning,
-	       "WARNING: unable to reserve scanner: device busy\n");
-	  return SANE_STATUS_DEVICE_BUSY;
-	}
-
-      scanner->scanning = SANE_TRUE;
-
-      powerslide_power_save (scanner, 0);
-    }				/* ------------ end of first call -------------- */
-
-
-  if (strcmp (mode, LINEART_STR) == 0)
-    {
-      scanner->colormode = LINEART;
-    }
-  else if (strcmp (mode, HALFTONE_STR) == 0)
-    {
-      scanner->colormode = HALFTONE;
-    }
-  else if (strcmp (mode, GRAY_STR) == 0)
-    {
-      scanner->colormode = GRAYSCALE;
-    }
-  else if (strcmp (mode, COLOR_STR) == 0)
-    {
-      scanner->colormode = RGB;
-    }
-
-  /* get and set geometric values for scanning */
-  scanner->resolution = SANE_UNFIX (scanner->val[OPT_RESOLUTION].w);
-
-  powerslide_set_window (scanner);
-  powerslide_send_exposure (scanner);
-  powerslide_mode_select (scanner);
-  powerslide_send_highlight_shadow (scanner);
-
-  powerslide_scan (scanner, 1);
-
-  status = powerslide_do_cal (scanner);
-  if (status)
-    return status;
-
-  /* send gammacurves */
-
-  powerslide_dwnld_gamma (scanner);
-
-  powerslide_get_params (scanner);
-
-  if (pipe (fds) < 0)		/* create a pipe, fds[0]=read-fd, fds[1]=write-fd */
-    {
-      DBG (DBG_error, "ERROR: could not create pipe\n");
-      scanner->scanning = SANE_FALSE;
-      powerslide_scan (scanner, 0);
-      powerslide_give_scanner (scanner);	/* reposition and release scanner */
-      sanei_scsi_close (scanner->sfd);
-      scanner->sfd = -1;
-      return SANE_STATUS_IO_ERROR;
-    }
-
-  scanner->pipe       = fds[0];
-  scanner->reader_fds = fds[1];
-  scanner->reader_pid = sanei_thread_begin( reader_process, (void*)scanner );
-
-  if (scanner->reader_pid == -1)
-    {
-      DBG (1, "sane_start: sanei_thread_begin failed (%s)\n",
-             strerror (errno));
-      return SANE_STATUS_NO_MEM;
-    }
-
-  if (sanei_thread_is_forked ())
-    {
-      close (scanner->reader_fds);
-      scanner->reader_fds = -1;
-    }
 
   return SANE_STATUS_GOOD;
 }
@@ -3756,11 +2197,6 @@ sane_get_select_fd (SANE_Handle handle, SANE_Int * fd)
 
   DBG (DBG_sane_init, "sane_get_select_fd\n");
 
-  if (!scanner->scanning)
-    {
-      return SANE_STATUS_INVAL;
-    }
-  *fd = scanner->pipe;
 
   return SANE_STATUS_GOOD;
 }
