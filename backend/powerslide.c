@@ -76,6 +76,8 @@
 
 #include "powerslide-scsidef.h"
 
+#define min(x,y) (((x) < (y)) ? (x) : (y))
+
 #define DBG_error0  0
 #define DBG_error   1
 #define DBG_sense   2
@@ -336,9 +338,13 @@ powerslide_dump_buffer (int level, unsigned char *buf, int n)
 static SANE_Status
 powerslide_ieee1284_control_init(SANE_Int usb)
 {
+  SANE_Int status;
   static SANE_Byte init[1] = { C1284_NINIT };
-  return sanei_usb_control_msg (usb, USB_TYPE_VENDOR|USB_RECIP_DEVICE|USB_DIR_OUT, POWERSLIDE_USB_REQ_ONE,
+  DBG (DBG_proc, "powerslide_ieee1284_control_init\n");
+  status = sanei_usb_control_msg (usb, USB_TYPE_VENDOR|USB_RECIP_DEVICE|USB_DIR_OUT, POWERSLIDE_USB_REQ_ONE,
 				POWERSLIDE_USB_VAL_CTRL, 0, 1, init );
+  usleep(3000);
+  return status;
 }
 
 /*
@@ -350,8 +356,10 @@ powerslide_ieee1284_control_strobe(SANE_Int usb)
 {
   static SANE_Byte strobe[1] = { C1284_NINIT|C1284_NSTROBE };
   SANE_Int status;
+  DBG (DBG_proc, "powerslide_ieee1284_control_strobe\n");
   status = sanei_usb_control_msg (usb, USB_TYPE_VENDOR|USB_RECIP_DEVICE|USB_DIR_OUT, POWERSLIDE_USB_REQ_ONE,
 				  POWERSLIDE_USB_VAL_CTRL, 0, 1, strobe );
+  usleep(3000);
   if (status == SANE_STATUS_GOOD)
     {
       status = powerslide_ieee1284_control_init(usb);
@@ -366,10 +374,15 @@ powerslide_ieee1284_control_strobe(SANE_Int usb)
 static SANE_Status
 powerslide_ieee1284_command_write(SANE_Int usb, SANE_Byte cmd)
 {
+  SANE_Int status;
   static SANE_Byte buf[1];
   buf[0] = cmd;
-  return sanei_usb_control_msg (usb, USB_TYPE_VENDOR|USB_RECIP_DEVICE|USB_DIR_OUT, POWERSLIDE_USB_REQ_ONE,
+  DBG (DBG_proc, "powerslide_ieee1284_command_write\n");
+
+  status = sanei_usb_control_msg (usb, USB_TYPE_VENDOR|USB_RECIP_DEVICE|USB_DIR_OUT, POWERSLIDE_USB_REQ_ONE,
 				POWERSLIDE_USB_VAL_DATA, 0, 1, buf );
+  usleep(3000);
+  return status;
 }
 
 /*
@@ -381,12 +394,13 @@ static SANE_Status
 powerslide_ieee1284_command_prefix(SANE_Int usb)
 {
   static SANE_Byte prefix_sequence[] = { 0xff, 0xaa, 0x55, 0x00, 0xff, 0x87, 0x78 };
+  DBG (DBG_proc, "powerslide_ieee1284_command_prefix\n");
   powerslide_ieee1284_control_init(usb);
   int prefix_sequence_length = sizeof(prefix_sequence);
   int i;
   SANE_Int status;
   
-  for (i = 0; i < prefix_sequence; ++i)
+  for (i = 0; i < prefix_sequence_length; ++i)
     {
       status = powerslide_ieee1284_command_write(usb, prefix_sequence[i]);
       if (status != SANE_STATUS_GOOD)
@@ -405,6 +419,7 @@ static SANE_Status
 powerslide_ieee1284_command(SANE_Int usb, SANE_Byte command)
 {
   SANE_Int status;
+  DBG (DBG_proc, "powerslide_ieee1284_command\n");
 
   while (1)
     {
@@ -426,6 +441,7 @@ powerslide_ieee1284_command(SANE_Int usb, SANE_Byte command)
     {
       DBG (DBG_error, "usb write failed\n");
     }
+  DBG (DBG_proc, "powerslide_ieee1284_command returns %d\n", status);
   return status;
 }
 
@@ -437,6 +453,7 @@ powerslide_ieee1284_command(SANE_Int usb, SANE_Byte command)
 static SANE_Status
 powerslide_ieee1284_addr(SANE_Int usb)
 {
+  DBG (DBG_proc, "powerslide_ieee1284_addr\n");
   return powerslide_ieee1284_command(usb, 0x00);
 }
 
@@ -449,6 +466,7 @@ powerslide_ieee1284_addr(SANE_Int usb)
 static SANE_Status
 powerslide_ieee1284_reset(SANE_Int usb)
 {
+  DBG (DBG_proc, "powerslide_ieee1284_reset\n");
   return powerslide_ieee1284_command(usb, 0x30);
 }
 
@@ -462,6 +480,7 @@ powerslide_scsi_command_write(SANE_Int usb, SANE_Byte cmd)
 {
   static SANE_Byte buf[1];
   buf[0] = cmd;
+  DBG (DBG_proc, "powerslide_scsi_command_write\n");
   return sanei_usb_control_msg (usb, USB_TYPE_VENDOR|USB_RECIP_DEVICE|USB_DIR_OUT, POWERSLIDE_USB_REQ_ONE,
 				POWERSLIDE_USB_SCSI_CMD, 0, 1, buf );
 }
@@ -474,8 +493,12 @@ powerslide_scsi_command_write(SANE_Int usb, SANE_Byte cmd)
 static SANE_Status
 powerslide_scsi_size_write(SANE_Int usb, SANE_Int size, SANE_Byte *buf)
 {
-  return sanei_usb_control_msg (usb, USB_TYPE_VENDOR|USB_RECIP_DEVICE|USB_DIR_OUT, POWERSLIDE_USB_REQ_MANY,
+  SANE_Int status;
+  DBG (DBG_proc, "powerslide_scsi_size_write\n");
+  status = sanei_usb_control_msg (usb, USB_TYPE_VENDOR|USB_RECIP_DEVICE|USB_DIR_OUT, POWERSLIDE_USB_REQ_MANY,
 				POWERSLIDE_USB_SIZE_REG, 0, size, buf );
+  usleep(3000);
+  return status;
 }
 
 /*
@@ -487,8 +510,15 @@ static SANE_Int
 powerslide_scsi_status_read(SANE_Int usb)
 {
   SANE_Byte status;
-  return sanei_usb_control_msg (usb, USB_TYPE_VENDOR|USB_RECIP_DEVICE|USB_DIR_IN, POWERSLIDE_USB_REQ_ONE,
-				POWERSLIDE_USB_SCSI_STATUS, 0, 1, &status );
+  DBG (DBG_proc, "powerslide_scsi_status_read\n");
+  if (sanei_usb_control_msg (usb, USB_TYPE_VENDOR|USB_RECIP_DEVICE|USB_DIR_IN, POWERSLIDE_USB_REQ_ONE,
+				POWERSLIDE_USB_SCSI_STATUS, 0, 1, &status ) != SANE_STATUS_GOOD)
+    {
+      DBG (DBG_error, "sanei_usb_control_msg failed with '%s'\n", sane_strstatus(status));
+      sanei_usb_reset(usb);
+      return -1;
+    }
+  return status;
 }
 
 /*
@@ -502,22 +532,41 @@ powerslide_ieee1284_scsi(SANE_Int usb, SANE_Int scsi_len, SANE_Byte *scsi_buf)
   SANE_Int status;
   SANE_Int i;
   SANE_Int expected_size;
-  
+  SANE_Int scsi_status;
+  static SANE_Byte sizebuf[8] = { 0 };
+
+  DBG (DBG_proc, "powerslide_ieee1284_scsi: len %d, cmd 0x%02x\n", scsi_len, *scsi_buf);
+  DBG_DUMP (DBG_proc, scsi_buf, scsi_len);	  
+  powerslide_ieee1284_reset(usb);
+  usleep(500);
+  powerslide_ieee1284_reset(usb);
+  usleep(500);
+  powerslide_ieee1284_addr(usb);
+  usleep(500);
+
   expected_size = scsi_buf[4];
 
+  DBG (DBG_proc, "powerslide_ieee1284_scsi, cmd 0x%02x, scsi_len %d, expected 0x%02x\n", *scsi_buf, scsi_len, expected_size);
   status = powerslide_ieee1284_command(usb, 0xe0);
+
   for (i = 0; i < scsi_len; ++i)
     {
-      if (status =! SANE_STATUS_GOOD)
-        break;
+      if (status != SANE_STATUS_GOOD)
+        {
+	  DBG (DBG_error, "powerslide_ieee1284_scsi: failed with %d:'%s' at i %d\n", status, sane_strstatus(status), i);
+          return status;
+	}
       status = powerslide_scsi_command_write(usb, *scsi_buf++);
     }
-  if (powerslide_scsi_status_read(usb) == 1)
+  scsi_status = powerslide_scsi_status_read(usb);
+  if (scsi_status != 1)
     {
-      static SANE_Byte sizebuf[8] = { 0 };
-      sizebuf[5] = expected_size;
-      status = powerslide_scsi_size_write(usb, 8, sizebuf);
+      DBG (DBG_error, "Wrong status: 0x%02x\n", scsi_status);
+      return SANE_STATUS_CANCELLED;
     }
+  sizebuf[5] = expected_size;
+  status = powerslide_scsi_size_write(usb, 8, sizebuf);
+
   return status;
 }
 
@@ -947,14 +996,33 @@ powerslide_get_inquiry_values (Powerslide_Device * dev, unsigned char *buffer)
 /* ----------------------------- POWERSLIDE DO INQUIRY ---------------------------- */
 
 
-static void
-powerslide_do_inquiry (int usb, unsigned char *buffer)
+static SANE_Int
+powerslide_do_inquiry (int usb, SANE_Int *size, SANE_Byte *inquiry)
 {
-  size_t size;
   SANE_Status status;
+  SANE_Byte scsi[6] = { 0x12, 0x00, 0x00, 0x00, 0x84, 0x00 };
+  size_t bufsize = 512;
+  SANE_Byte buf[512];
+  DBG (DBG_proc, "do_inquiry: size 0x%02x, inquiry @ %p\n", *size, inquiry);
 
-  DBG (DBG_proc, "do_inquiry\n");
+  scsi[4] = *size;
 
+  status = powerslide_ieee1284_scsi (usb, sizeof(scsi), scsi);
+  if (status != SANE_STATUS_GOOD)
+    return status;
+  usleep(3000);
+  sanei_usb_set_endpoint (usb, USB_ENDPOINT_TYPE_BULK, 1);
+  status = sanei_usb_read_bulk (usb, buf, &bufsize);
+  DBG (DBG_proc, "read_bulk: %d\n", status);
+  DBG_DUMP (DBG_proc, buf, bufsize);
+  if (status == SANE_STATUS_GOOD)
+    {
+      *size = bufsize;
+      memcpy (inquiry, buf, bufsize);
+    }
+  sanei_usb_set_endpoint (usb, USB_ENDPOINT_TYPE_CONTROL, 0);
+
+  return status;
 }
 
 /* ---------------------- POWERSLIDE IDENTIFY SCANNER ---------------------- */
@@ -968,12 +1036,14 @@ powerslide_identify_scanner (Powerslide_Device * dev)
   char version[5];
   char *pp;
   int i = 0;
-  unsigned char inquiry_block[256];
-  memset (inquiry_block, '\0', 256);	/* clear buffer */
+  SANE_Int status;
+  SANE_Byte inquiry_block[132];
+  SANE_Int inquiry_size = sizeof(inquiry_block);
+  memset (inquiry_block, '\0', inquiry_size);	/* clear buffer */
 
-  DBG (DBG_proc, "identify_scanner\n");
+  DBG (DBG_proc, "powerslide_identify_scanner: inquiry_size %d\n", inquiry_size);
 
-  powerslide_do_inquiry (dev->usb, inquiry_block);	/* get inquiry */
+  status = powerslide_do_inquiry (dev->usb, &inquiry_size, inquiry_block);	/* get inquiry */
 
   if (get_inquiry_periph_devtype (inquiry_block) != IN_periph_devtype_scanner)
     {
@@ -1939,7 +2009,7 @@ sane_open (SANE_String_Const devicename, SANE_Handle * handle)
     }
 
 
-  if (!dev)
+  if (!dev || !dev->usbname)
     {
       return SANE_STATUS_INVAL;
     }
