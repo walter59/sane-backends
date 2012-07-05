@@ -103,6 +103,18 @@
 #define SCAN_WAIT_TIME 1000
 #define TUR_WAIT_TIME 1000
 
+/* from libieee1284 */
+#define C1284_NSTROBE 0x01
+#define C1284_NINIT 0x04
+
+/* usb bRequest */
+#define POWERSLIDE_USB_REQ_MANY 0x04 /* multiple bytes */
+#define POWERSLIDE_USB_REQ_ONE 0x0c /* single byte */
+
+/* usb wValue */
+#define POWERSLIDE_USB_VAL_CTRL 0x0087
+#define POWERSLIDE_USB_VAL_DATA 0x0088
+
 /* names of scanners that are supported because */
 /* the inquiry_return_block is ok and driver is tested */
 
@@ -310,7 +322,30 @@ powerslide_dump_buffer (int level, unsigned char *buf, int n)
     }
 }
 
-/* ---------------------------------- POWERSLIDE INIT ---------------------------------- */
+/* ---------------------------------- POWERSLIDE LOWLEVEL ---------------------------------- */
+
+/*
+ * powerslide_control_init - set control to init
+ *
+ */
+static SANE_Status
+powerslide_control_init(SANE_Int usb)
+{
+  return sanei_usb_control_msg (usb, USB_TYPE_VENDOR|USB_RECIP_DEVICE|USB_DIR_OUT, POWERSLIDE_USB_REQ_ONE,
+				POWERSLIDE_USB_VAL_CTRL, 0, 1, C1284_NINIT );
+  
+}
+
+/*
+ * powerslide_control_strobe - set control to strobe
+ *
+ */
+static SANE_Status
+powerslide_control_strobe(SANE_Int usb)
+{
+  return sanei_usb_control_msg (usb, USB_TYPE_VENDOR|USB_RECIP_DEVICE|USB_DIR_OUT, POWERSLIDE_USB_REQ_ONE,
+				POWERSLIDE_USB_VAL_CTRL, 0, 1, C1284_NINIT|C1284_NSTROBE );
+}
 
 /* ---------------------------- SENSE_HANDLER ------------------------------ */
 
@@ -1557,19 +1592,6 @@ do_cancel (Powerslide_Scanner * scanner)
       DBG (DBG_sane_info, "reader_process killed\n");
     }
 
-  if (scanner->sfd >= 0)
-    {
-      powerslide_scan (scanner, 0);
-
-      powerslide_power_save (scanner, 15);
-
-      powerslide_give_scanner (scanner);	/* reposition and release scanner */
-
-      DBG (DBG_sane_info, "closing scannerdevice filedescriptor\n");
-      sanei_scsi_close (scanner->sfd);
-      scanner->sfd = -1;
-    }
-
   return SANE_STATUS_CANCELLED;
 }
 
@@ -2053,7 +2075,7 @@ sane_control_option (SANE_Handle handle, SANE_Int option, SANE_Action action,
 	    scanner->opt[OPT_GAMMA_VECTOR_G].cap |= SANE_CAP_INACTIVE;
 	    scanner->opt[OPT_GAMMA_VECTOR_B].cap |= SANE_CAP_INACTIVE;
 	    scanner->opt[OPT_THRESHOLD].cap |= SANE_CAP_INACTIVE;
-
+	  }
 
 	case OPT_SPEED:
 	case OPT_HALFTONE_PATTERN:
@@ -2067,10 +2089,11 @@ sane_control_option (SANE_Handle handle, SANE_Int option, SANE_Action action,
 
 	    return SANE_STATUS_GOOD;
 	  }
-	} /* case OPT_MODE */
-/*     default:
-	   nothing */
-    }				/* switch(option) */
+        default:
+	  ;
+	 /* nothing */
+        } /* switch(option) */
+    }				/* else */
   return SANE_STATUS_INVAL;
 }
 
