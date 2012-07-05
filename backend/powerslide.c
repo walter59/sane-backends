@@ -111,7 +111,10 @@
 #define POWERSLIDE_USB_REQ_MANY 0x04 /* multiple bytes */
 #define POWERSLIDE_USB_REQ_ONE 0x0c /* single byte */
 
-/* usb wValue */
+/* usb wValue aka register */
+#define POWERSLIDE_USB_SIZE_REG 0x0082
+#define POWERSLIDE_USB_SCSI_STATUS 0x0084
+#define POWERSLIDE_USB_SCSI_CMD 0x0085
 #define POWERSLIDE_USB_VAL_CTRL 0x0087
 #define POWERSLIDE_USB_VAL_DATA 0x0088
 
@@ -324,28 +327,202 @@ powerslide_dump_buffer (int level, unsigned char *buf, int n)
 
 /* ---------------------------------- POWERSLIDE LOWLEVEL ---------------------------------- */
 
+/* ---------------------------------- IEEE1284 via USB ---------------------------------- */
+
 /*
- * powerslide_control_init - set control to init
+ * powerslide_ieee1284_control_init - set IEEE1284 control to init
  *
  */
 static SANE_Status
-powerslide_control_init(SANE_Int usb)
+powerslide_ieee1284_control_init(SANE_Int usb)
 {
+  static SANE_Byte init[1] = { C1284_NINIT };
   return sanei_usb_control_msg (usb, USB_TYPE_VENDOR|USB_RECIP_DEVICE|USB_DIR_OUT, POWERSLIDE_USB_REQ_ONE,
-				POWERSLIDE_USB_VAL_CTRL, 0, 1, C1284_NINIT );
-  
+				POWERSLIDE_USB_VAL_CTRL, 0, 1, init );
 }
 
 /*
- * powerslide_control_strobe - set control to strobe
+ * powerslide_ieee1284_control_strobe - issue IEEE1284 strobe
  *
  */
 static SANE_Status
-powerslide_control_strobe(SANE_Int usb)
+powerslide_ieee1284_control_strobe(SANE_Int usb)
 {
-  return sanei_usb_control_msg (usb, USB_TYPE_VENDOR|USB_RECIP_DEVICE|USB_DIR_OUT, POWERSLIDE_USB_REQ_ONE,
-				POWERSLIDE_USB_VAL_CTRL, 0, 1, C1284_NINIT|C1284_NSTROBE );
+  static SANE_Byte strobe[1] = { C1284_NINIT|C1284_NSTROBE };
+  SANE_Int status;
+  status = sanei_usb_control_msg (usb, USB_TYPE_VENDOR|USB_RECIP_DEVICE|USB_DIR_OUT, POWERSLIDE_USB_REQ_ONE,
+				  POWERSLIDE_USB_VAL_CTRL, 0, 1, strobe );
+  if (status == SANE_STATUS_GOOD)
+    {
+      status = powerslide_ieee1284_control_init(usb);
+    }
+  return status;
 }
+
+/*
+ * powerslide_ieee1284_command_write - write single command byte to IEEE1284 command register
+ *
+ */
+static SANE_Status
+powerslide_ieee1284_command_write(SANE_Int usb, SANE_Byte cmd)
+{
+  static SANE_Byte buf[1];
+  buf[0] = cmd;
+  return sanei_usb_control_msg (usb, USB_TYPE_VENDOR|USB_RECIP_DEVICE|USB_DIR_OUT, POWERSLIDE_USB_REQ_ONE,
+				POWERSLIDE_USB_VAL_DATA, 0, 1, buf );
+}
+
+/*
+ * powerslide_command prefix
+ * Issue 'ieee1284' prefix sequence
+ *
+ */
+static SANE_Status
+powerslide_ieee1284_command_prefix(SANE_Int usb)
+{
+  static SANE_Byte prefix_sequence[] = { 0xff, 0xaa, 0x55, 0x00, 0xff, 0x87, 0x78 };
+  powerslide_ieee1284_control_init(usb);
+  int prefix_sequence_length = sizeof(prefix_sequence);
+  int i;
+  SANE_Int status;
+  
+  for (i = 0; i < prefix_sequence; ++i)
+    {
+      status = powerslide_ieee1284_command_write(usb, prefix_sequence[i]);
+      if (status != SANE_STATUS_GOOD)
+        break;
+    }
+  return status;
+}
+
+/*
+ * powerslide_command
+ * Issue 'ieee1284' command
+ *
+ */
+
+static SANE_Status
+powerslide_ieee1284_command(SANE_Int usb, SANE_Byte command)
+{
+  SANE_Int status;
+
+  while (1)
+    {
+      status = powerslide_ieee1284_command_prefix(usb);
+      if (status != SANE_STATUS_GOOD)
+        break;
+      status = powerslide_ieee1284_command_write(usb, command);
+      if (status != SANE_STATUS_GOOD)
+        break;
+      status = powerslide_ieee1284_control_strobe(usb);
+      if (status != SANE_STATUS_GOOD)
+        break;
+      status = powerslide_ieee1284_command_write(usb, 0xff);
+      if (status != SANE_STATUS_GOOD)
+        break;
+      break;
+    }
+  if (status != SANE_STATUS_GOOD)
+    {
+      DBG (DBG_error, "usb write failed\n");
+    }
+  return status;
+}
+
+/*
+ * Issue 'Addr' via ieee1284
+ *
+ */
+
+static SANE_Status
+powerslide_ieee1284_addr(SANE_Int usb)
+{
+  return powerslide_ieee1284_command(usb, 0x00);
+}
+
+
+/*
+ * Issue 'Reset' via ieee1284
+ *
+ */
+
+static SANE_Status
+powerslide_ieee1284_reset(SANE_Int usb)
+{
+  return powerslide_ieee1284_command(usb, 0x30);
+}
+
+
+/*
+ * powerslide_scsi_command_write - write single command byte to SCSI register
+ *
+ */
+static SANE_Status
+powerslide_scsi_command_write(SANE_Int usb, SANE_Byte cmd)
+{
+  static SANE_Byte buf[1];
+  buf[0] = cmd;
+  return sanei_usb_control_msg (usb, USB_TYPE_VENDOR|USB_RECIP_DEVICE|USB_DIR_OUT, POWERSLIDE_USB_REQ_ONE,
+				POWERSLIDE_USB_SCSI_CMD, 0, 1, buf );
+}
+
+
+/*
+ * powerslide_scsi_size_write - write size buffer to SCSI register
+ *
+ */
+static SANE_Status
+powerslide_scsi_size_write(SANE_Int usb, SANE_Int size, SANE_Byte *buf)
+{
+  return sanei_usb_control_msg (usb, USB_TYPE_VENDOR|USB_RECIP_DEVICE|USB_DIR_OUT, POWERSLIDE_USB_REQ_MANY,
+				POWERSLIDE_USB_SIZE_REG, 0, size, buf );
+}
+
+/*
+ * powerslide_scsi_status_read - read single status byte from SCSI register
+ *
+ * @return: -1 on error
+ */
+static SANE_Int
+powerslide_scsi_status_read(SANE_Int usb)
+{
+  SANE_Byte status;
+  return sanei_usb_control_msg (usb, USB_TYPE_VENDOR|USB_RECIP_DEVICE|USB_DIR_IN, POWERSLIDE_USB_REQ_ONE,
+				POWERSLIDE_USB_SCSI_STATUS, 0, 1, &status );
+}
+
+/*
+ * Issue 'Scsi' via ieee1284
+ *
+ */
+
+static SANE_Status
+powerslide_ieee1284_scsi(SANE_Int usb, SANE_Int scsi_len, SANE_Byte *scsi_buf)
+{
+  SANE_Int status;
+  SANE_Int i;
+  SANE_Int expected_size;
+  
+  expected_size = scsi_buf[4];
+
+  status = powerslide_ieee1284_command(usb, 0xe0);
+  for (i = 0; i < scsi_len; ++i)
+    {
+      if (status =! SANE_STATUS_GOOD)
+        break;
+      status = powerslide_scsi_command_write(usb, *scsi_buf++);
+    }
+  if (powerslide_scsi_status_read(usb) == 1)
+    {
+      static SANE_Byte sizebuf[8] = { 0 };
+      sizebuf[5] = expected_size;
+      status = powerslide_scsi_size_write(usb, 8, sizebuf);
+    }
+  return status;
+}
+
+
+/* ---------------------------------- SCSI via IEEE1284 ---------------------------------- */
 
 /* ---------------------------- SENSE_HANDLER ------------------------------ */
 
