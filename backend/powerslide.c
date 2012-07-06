@@ -395,7 +395,6 @@ powerslide_ieee1284_command_prefix(SANE_Int usb)
 {
   static SANE_Byte prefix_sequence[] = { 0xff, 0xaa, 0x55, 0x00, 0xff, 0x87, 0x78 };
   DBG (DBG_proc, "powerslide_ieee1284_command_prefix\n");
-  powerslide_ieee1284_control_init(usb);
   int prefix_sequence_length = sizeof(prefix_sequence);
   int i;
   SANE_Int status;
@@ -481,8 +480,9 @@ powerslide_scsi_command_write(SANE_Int usb, SANE_Byte cmd)
   static SANE_Byte buf[1];
   buf[0] = cmd;
   DBG (DBG_proc, "powerslide_scsi_command_write\n");
+  /* wIndex 0x0001 - unknown */
   return sanei_usb_control_msg (usb, USB_TYPE_VENDOR|USB_RECIP_DEVICE|USB_DIR_OUT, POWERSLIDE_USB_REQ_ONE,
-				POWERSLIDE_USB_SCSI_CMD, 0, 1, buf );
+				POWERSLIDE_USB_SCSI_CMD, 0x0001, 1, buf );
 }
 
 
@@ -495,8 +495,9 @@ powerslide_scsi_size_write(SANE_Int usb, SANE_Int size, SANE_Byte *buf)
 {
   SANE_Int status;
   DBG (DBG_proc, "powerslide_scsi_size_write\n");
+  /* wIndex 0x00a4 - unknown */
   status = sanei_usb_control_msg (usb, USB_TYPE_VENDOR|USB_RECIP_DEVICE|USB_DIR_OUT, POWERSLIDE_USB_REQ_MANY,
-				POWERSLIDE_USB_SIZE_REG, 0, size, buf );
+				POWERSLIDE_USB_SIZE_REG, 0x00a4, size, buf );
   usleep(3000);
   return status;
 }
@@ -1013,7 +1014,7 @@ powerslide_do_inquiry (int usb, SANE_Int *size, SANE_Byte *inquiry)
   usleep(3000);
   sanei_usb_set_endpoint (usb, USB_ENDPOINT_TYPE_BULK, 1);
   status = sanei_usb_read_bulk (usb, buf, &bufsize);
-  DBG (DBG_proc, "read_bulk: %d\n", status);
+  DBG (DBG_proc, "read_bulk: status %d, %d bytes:\n", status, bufsize);
   DBG_DUMP (DBG_proc, buf, bufsize);
   if (status == SANE_STATUS_GOOD)
     {
