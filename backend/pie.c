@@ -4,6 +4,8 @@
 
    Copyright (C) 2000 Simon Munton, based on the umax backend by Oliver Rauch
 
+   Copyright (C) 2012 Klaus Kaempf, USB driver additions
+
    This file is part of the SANE package.
 
    This program is free software; you can redistribute it and/or
@@ -43,6 +45,8 @@
    If you do not wish that, delete this exception notice.  */
 
 /*
+ * 11-7-2012 add support for USB protocol (PowerSlide 5000)
+ *
  * 22-2-2003 set devlist to NULL in sane_exit()
  *           set first_dev to NULL in sane_exit()
  *           eliminated num_devices
@@ -86,6 +90,7 @@
 #include "../include/sane/sanei.h"
 #include "../include/sane/saneopts.h"
 #include "../include/sane/sanei_scsi.h"
+#include "../include/sane/sanei_usb.h"
 #include "../include/sane/sanei_debug.h"
 
 #define BACKEND_NAME	pie
@@ -95,6 +100,7 @@
 # include "../include/sane/sanei_thread.h"
 
 #include "pie-scsidef.h"
+#include "pie-usbdef.h"
 
 #define DBG_error0  0
 #define DBG_error   1
@@ -115,6 +121,11 @@
 #define BUILD 9
 
 #define PIE_CONFIG_FILE "pie.conf"
+
+/* Pie_Device.bus */
+#define PIE_BUS_UNKNOWN 0
+#define PIE_BUS_SCSI 1
+#define PIE_BUS_USB 2
 
 #define LINEART_STR         SANE_VALUE_SCAN_MODE_LINEART
 #define HALFTONE_STR        SANE_VALUE_SCAN_MODE_HALFTONE
@@ -140,23 +151,24 @@
 /* the inquiry_return_block is ok and driver is tested */
 
 static char *scanner_str[] = {
-  "DEVCOM", "9636PRO",
-  "DEVCOM", "9636S",
-  "DEVCOM", "9630S",
-  "PIE", "ScanAce 1236S",
-  "PIE", "ScanAce 1230S",
-  "PIE", "ScanAce II",
-  "PIE", "ScanAce III",
-  "PIE", "ScanAce Plus",
-  "PIE", "ScanAce II Plus",
-  "PIE", "ScanAce III Plus",
-  "PIE", "ScanAce V",
-  "PIE", "ScanMedia",
-  "PIE", "ScanMedia II",
-  "PIE", "ScanAce 630S",
-  "PIE", "ScanAce 636S",
-  "AdLib", "JetScan 630",
-  "AdLib", "JetScan 636PRO",
+  "DEVCOM", "9636PRO", "SCSI",
+  "DEVCOM", "9636S", "SCSI",
+  "DEVCOM", "9630S", "SCSI",
+  "PIE", "ScanAce 1236S", "SCSI",
+  "PIE", "ScanAce 1230S", "SCSI",
+  "PIE", "ScanAce II", "SCSI",
+  "PIE", "ScanAce III", "SCSI",
+  "PIE", "ScanAce Plus", "SCSI",
+  "PIE", "ScanAce II Plus", "SCSI",
+  "PIE", "ScanAce III Plus", "SCSI",
+  "PIE", "ScanAce V", "SCSI",
+  "PIE", "ScanMedia", "SCSI",
+  "PIE", "ScanMedia II", "SCSI",
+  "PIE", "ScanAce 630S", "SCSI",
+  "PIE", "ScanAce 636S", "SCSI",
+  "AdLib", "JetScan 630", "SCSI",
+  "AdLib", "JetScan 636PRO", "SCSI",
+  "PIE", "MS Scanner", "USB",
   "END_OF_LIST"
 };
 
@@ -237,6 +249,8 @@ typedef struct Pie_Device
   char vendor[9];		/* will be xxxxx */
   char product[17];		/* e.g. "SuperVista_S12" or so */
   char version[5];		/* e.g. V1.3 */
+
+  int bus;                      /* PIE_BUS_SCSI or PIE_BUS_USB */
 
   SANE_Device sane;
   SANE_Range dpi_range;
@@ -893,13 +907,13 @@ pie_identify_scanner (Pie_Device * dev, int sfd)
   DBG (DBG_info, "Found %s scanner %s version %s on device %s\n", vendor,
        product, version, dev->devicename);
 
-  while (strncmp ("END_OF_LIST", scanner_str[2 * i], 11) != 0)	/* Now identify full supported scanners */
+  while (strncmp ("END_OF_LIST", scanner_str[3 * i], 11) != 0)	/* Now identify full supported scanners */
     {
-      if (!strncmp (vendor, scanner_str[2 * i], strlen (scanner_str[2 * i])))
+      if (!strncmp (vendor, scanner_str[3 * i], strlen (scanner_str[3 * i])))
 	{
 	  if (!strncmp
-	      (product, scanner_str[2 * i + 1],
-	       strlen (scanner_str[2 * i + 1])))
+	      (product, scanner_str[3 * i + 1],
+	       strlen (scanner_str[3 * i + 1])))
 	    {
 	      DBG (DBG_info, "found supported scanner\n");
 

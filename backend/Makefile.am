@@ -796,7 +796,7 @@ libsane_niash_la_LIBADD = $(COMMON_LIBS) libniash.la ../sanei/sanei_init_debug.l
 # TODO: Why are these distributed but not compiled?
 EXTRA_DIST += niash_core.c niash_core.h niash_xfer.c niash_xfer.h
 
-libpie_la_SOURCES = pie.c pie-scsidef.h
+libpie_la_SOURCES = pie.c pie-scsidef.h pie-usbdef.h
 libpie_la_CPPFLAGS = $(AM_CPPFLAGS) -DBACKEND_NAME=pie
 
 nodist_libsane_pie_la_SOURCES = pie-s.c 
