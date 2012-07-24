@@ -799,7 +799,7 @@ libpie_la_CPPFLAGS = $(AM_CPPFLAGS) -DBACKEND_NAME=pie
 nodist_libsane_pie_la_SOURCES = pie-s.c 
 libsane_pie_la_CPPFLAGS = $(AM_CPPFLAGS) -DBACKEND_NAME=pie
 libsane_pie_la_LDFLAGS = $(DIST_SANELIBS_LDFLAGS)
-libsane_pie_la_LIBADD = $(COMMON_LIBS) libpie.la ../sanei/sanei_init_debug.lo ../sanei/sanei_constrain_value.lo ../sanei/sanei_config.lo ../sanei/sanei_config2.lo sane_strstatus.lo ../sanei/sanei_scsi.lo ../sanei/sanei_thread.lo $(SCSI_LIBS) $(PTHREAD_LIBS) $(RESMGR_LIBS)
+libsane_pie_la_LIBADD = $(COMMON_LIBS) libpie.la ../sanei/sanei_init_debug.lo ../sanei/sanei_constrain_value.lo ../sanei/sanei_config.lo ../sanei/sanei_config2.lo sane_strstatus.lo  ../sanei/sanei_usb.lo ../sanei/sanei_scsi.lo ../sanei/sanei_thread.lo $(USB_LIBS) $(SCSI_LIBS) $(PTHREAD_LIBS) $(RESMGR_LIBS)
 EXTRA_DIST += pie.conf.in
 
 libp5_la_SOURCES = p5.c p5.h p5_device.h
