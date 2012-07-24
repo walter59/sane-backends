@@ -395,7 +395,7 @@ pie_ieee1284_control_init(int fd)
   static SANE_Byte init[1] = { C1284_NINIT };
   DBG (DBG_sane_info, "pie_ieee1284_control_init\n");
   usleep(3000);
-  status = sanei_usb_control_msg (fd, USB_TYPE_VENDOR|USB_RECIP_DEVICE|USB_DIR_OUT, PIE_USB_REQ_ONE,
+  status = sanei_usb_control_msg (fd, PIE_USB_WRITE, PIE_USB_REQ_ONE,
 				PIE_USB_VAL_CTRL, 0, 1, init );
   return status;
 }
@@ -411,7 +411,7 @@ pie_ieee1284_control_strobe(int fd)
   SANE_Int status;
   DBG (DBG_sane_info, "pie_ieee1284_control_strobe\n");
   usleep(30000);
-  status = sanei_usb_control_msg (fd, USB_TYPE_VENDOR|USB_RECIP_DEVICE|USB_DIR_OUT, PIE_USB_REQ_ONE,
+  status = sanei_usb_control_msg (fd, PIE_USB_WRITE, PIE_USB_REQ_ONE,
 				  PIE_USB_VAL_CTRL, 0, 1, strobe );
   if (status == SANE_STATUS_GOOD)
     {
@@ -432,7 +432,7 @@ pie_ieee1284_command_write(int fd, SANE_Byte cmd)
   buf[0] = cmd;
   DBG (DBG_sane_info, "pie_ieee1284_command_write\n");
   usleep(2000);
-  status = sanei_usb_control_msg (fd, USB_TYPE_VENDOR|USB_RECIP_DEVICE|USB_DIR_OUT, PIE_USB_REQ_ONE,
+  status = sanei_usb_control_msg (fd, PIE_USB_WRITE, PIE_USB_REQ_ONE,
 				PIE_USB_VAL_DATA, 0, 1, buf );
   return status;
 }
@@ -1766,33 +1766,39 @@ init_options (Pie_Scanner * scanner)
   scanner->opt[OPT_GAMMA_VECTOR_B].size =
     scanner->gamma_length * sizeof (SANE_Word);
 
-  /* halftone pattern */
-  scanner->opt[OPT_HALFTONE_PATTERN].name = SANE_NAME_HALFTONE_PATTERN;
-  scanner->opt[OPT_HALFTONE_PATTERN].title = SANE_TITLE_HALFTONE_PATTERN;
-  scanner->opt[OPT_HALFTONE_PATTERN].desc = SANE_DESC_HALFTONE_PATTERN;
-  scanner->opt[OPT_HALFTONE_PATTERN].type = SANE_TYPE_STRING;
-  scanner->opt[OPT_HALFTONE_PATTERN].size =
-    max_string_size ((SANE_String_Const *) scanner->device->halftone_list);
-  scanner->opt[OPT_HALFTONE_PATTERN].constraint_type =
-    SANE_CONSTRAINT_STRING_LIST;
-  scanner->opt[OPT_HALFTONE_PATTERN].constraint.string_list =
-    (SANE_String_Const *) scanner->device->halftone_list;
-  scanner->val[OPT_HALFTONE_PATTERN].s =
-    (SANE_Char *) strdup (scanner->device->halftone_list[0]);
-  scanner->opt[OPT_HALFTONE_PATTERN].cap |= SANE_CAP_INACTIVE;
+  if (scanner->device->halftone_list[0])
+    {
+      /* halftone pattern */
+      scanner->opt[OPT_HALFTONE_PATTERN].name = SANE_NAME_HALFTONE_PATTERN;
+      scanner->opt[OPT_HALFTONE_PATTERN].title = SANE_TITLE_HALFTONE_PATTERN;
+      scanner->opt[OPT_HALFTONE_PATTERN].desc = SANE_DESC_HALFTONE_PATTERN;
+      scanner->opt[OPT_HALFTONE_PATTERN].type = SANE_TYPE_STRING;
+      scanner->opt[OPT_HALFTONE_PATTERN].size =
+              max_string_size ((SANE_String_Const *) scanner->device->halftone_list);
+      scanner->opt[OPT_HALFTONE_PATTERN].constraint_type =
+              SANE_CONSTRAINT_STRING_LIST;
+      scanner->opt[OPT_HALFTONE_PATTERN].constraint.string_list =
+              (SANE_String_Const *) scanner->device->halftone_list;
+      scanner->val[OPT_HALFTONE_PATTERN].s =
+              (SANE_Char *) strdup (scanner->device->halftone_list[0]);
+      scanner->opt[OPT_HALFTONE_PATTERN].cap |= SANE_CAP_INACTIVE;
+    }
 
-  /* speed */
-  scanner->opt[OPT_SPEED].name = SANE_NAME_SCAN_SPEED;
-  scanner->opt[OPT_SPEED].title = SANE_TITLE_SCAN_SPEED;
-  scanner->opt[OPT_SPEED].desc = SANE_DESC_SCAN_SPEED;
-  scanner->opt[OPT_SPEED].type = SANE_TYPE_STRING;
-  scanner->opt[OPT_SPEED].size =
-    max_string_size ((SANE_String_Const *) scanner->device->speed_list);
-  scanner->opt[OPT_SPEED].constraint_type = SANE_CONSTRAINT_STRING_LIST;
-  scanner->opt[OPT_SPEED].constraint.string_list =
-    (SANE_String_Const *) scanner->device->speed_list;
-  scanner->val[OPT_SPEED].s =
-    (SANE_Char *) strdup (scanner->device->speed_list[0]);
+  if (scanner->device->speed_list[0])
+    {
+      /* speed */
+      scanner->opt[OPT_SPEED].name = SANE_NAME_SCAN_SPEED;
+      scanner->opt[OPT_SPEED].title = SANE_TITLE_SCAN_SPEED;
+      scanner->opt[OPT_SPEED].desc = SANE_DESC_SCAN_SPEED;
+      scanner->opt[OPT_SPEED].type = SANE_TYPE_STRING;
+      scanner->opt[OPT_SPEED].size =
+              max_string_size ((SANE_String_Const *) scanner->device->speed_list);
+      scanner->opt[OPT_SPEED].constraint_type = SANE_CONSTRAINT_STRING_LIST;
+      scanner->opt[OPT_SPEED].constraint.string_list =
+              (SANE_String_Const *) scanner->device->speed_list;
+      scanner->val[OPT_SPEED].s =
+              (SANE_Char *) strdup (scanner->device->speed_list[0]);
+    }
 
   /* lineart threshold */
   scanner->opt[OPT_THRESHOLD].name = SANE_NAME_THRESHOLD;
