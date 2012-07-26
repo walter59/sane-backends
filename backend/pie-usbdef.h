@@ -51,6 +51,11 @@
 #ifndef PIE_USBDEF_H
 #define PIE_USBDEF_H
 
+/*
+ * Low level defines
+ *
+ */
+
 /* from libieee1284 */
 #define C1284_NSTROBE 0x01
 #define C1284_NINIT   0x04
@@ -76,6 +81,28 @@
 #define PIE_USB_READ  (USB_TYPE_VENDOR|USB_RECIP_DEVICE|USB_DIR_IN)
 
 /* --------------------------------------------------------------------------------------------------------- */
+
+#ifndef PIE_SCSIDEF_H
+#include "pie-scsidef.h"
+#endif
+
+#define PIE_SCSI_CMD_LEN 6 /* all SCSI commands are 6 bytes */
+
+/*
+ * SCSI defines
+ *
+ */
+
+#define PIE_SCSI_STATE_BAD  -1   /* usb protocol failure */
+#define PIE_SCSI_STATE_OK   0x00 /* ok, done */
+#define PIE_SCSI_STATE_LEN  0x01 /* read: send expected length */
+#define PIE_SCSI_STATE_BUSY 0x03 /* busy, wait for PIE_SCSI_STATE_OK */
+
+/* some kind of 'ping' ? */
+#define SCSI_CMD_PING 0xdd
+static unsigned char pingC[] = { SCSI_CMD_PING, 0x00, 0x00, 0x00, 0x0c, 0x00 };
+static scsiblk ping = { pingC, sizeof(pingC) };
+
 
 
 #endif /* PIE_USBDEF_H */
