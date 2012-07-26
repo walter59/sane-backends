@@ -2076,9 +2076,6 @@ pie_send_exposure (Pie_Scanner * scanner)
 {
   SANE_Status status;
 
-  if (scanner->device->bus == PIE_BUS_USB)
-    return SANE_STATUS_GOOD;
-
   DBG (DBG_proc, "pie_send_exposure\n");
 
   status = pie_send_exposure_one (scanner, FILTER_RED, 100);
@@ -2119,7 +2116,7 @@ pie_send_highlight_shadow_one (Pie_Scanner * scanner, int filter,
   data = buffer + swrite.size;
   memset (data, 0, size);
 
-  set_command (data, SET_EXP_TIME);
+  set_command (data, SET_HIGHLIGHT_SHADOW);
   set_data_length (data, size - 4);
 
   data[4] = filter;
@@ -2608,9 +2605,6 @@ pie_set_window (Pie_Scanner * scanner)
   unsigned char *data;
   double x, dpmm;
 
-  if (scanner->device->bus == PIE_BUS_USB)
-    return SANE_STATUS_GOOD;
-
   DBG (DBG_proc, "pie_set_window\n");
 
   size = 14;
@@ -2866,26 +2860,8 @@ pie_scan_usb (Pie_Scanner * scanner, int start)
 {
   SANE_Status status;
 
-/*
- (+   28 ms) t+ 3124: scsi -      - data - ["13", "00", "04", "00", "02", "00", "64", "00"]
- (+   27 ms) t+ 3208: scsi -      - data - ["13", "00", "04", "00", "04", "00", "64", "00"]
- (+   28 ms) t+ 3297: scsi -      - data - ["13", "00", "04", "00", "08", "00", "64", "00"]
- (+   27 ms) t+ 3386: scsi -      - data - ["14", "00", "04", "00", "02", "00", "64", "00"]
- (+   27 ms) t+ 3470: scsi -      - data - ["14", "00", "04", "00", "04", "00", "64", "00"]
- (+   27 ms) t+ 3554: scsi -      - data - ["14", "00", "04", "00", "08", "00", "64", "00"]
- (+   46 ms) t+ 3659: scsi -      - data - ["12", "00", "0a", "00", "80", "00", "00", "00", "00", "00", "18", "1d", "d5", "1c"]
- (+   21 ms) t+ 3739: scsi -      - data - ["17", "00", "02", "00", "01", "00"]
- (+   60 ms) t+ 3799: scsi - test_ready (00:["00", "00", "00", "00", "00", "00"])
-*/
   SANE_Byte data[] = {
-      8, 0x13, 0x00, 0x04, 0x00, 0x02, 0x00, 0x64, 0x00,
-      8, 0x13, 0x00, 0x04, 0x00, 0x04, 0x00, 0x64, 0x00,
-      8, 0x13, 0x00, 0x04, 0x00, 0x08, 0x00, 0x64, 0x00,
-      8, 0x14, 0x00, 0x04, 0x00, 0x02, 0x00, 0x64, 0x00,
-      8, 0x14, 0x00, 0x04, 0x00, 0x04, 0x00, 0x64, 0x00,
-      8, 0x14, 0x00, 0x04, 0x00, 0x08, 0x00, 0x64, 0x00,
-     14, 0x12, 0x00, 0x0a, 0x00, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x18, 0x1d, 0xd5, 0x1c,
-      6, 0x17, 0x00, 0x02, 0x00, 0x01, 0x00,
+      6, 0x17, 0x00, 0x02, 0x00, 0x01, 0x00, /* IR scan ?? */
       0
   };
   SANE_Byte *ptr = data;
