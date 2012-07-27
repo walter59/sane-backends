@@ -86,6 +86,11 @@
 #include "pie-scsidef.h"
 #endif
 
+/*
+ * Interesting links: http://lists.alioth.debian.org/pipermail/sane-devel/2011-December/029337.html
+ *
+ */
+
 #define PIE_SCSI_CMD_LEN 6 /* all SCSI commands are 6 bytes */
 
 /*
@@ -96,13 +101,12 @@
 #define PIE_SCSI_STATE_BAD  -1   /* usb protocol failure */
 #define PIE_SCSI_STATE_OK   0x00 /* ok, done */
 #define PIE_SCSI_STATE_LEN  0x01 /* read: send expected length */
+#define PIE_SCSI_STATE_2    0x02 /* ?, ok for next cmd */
 #define PIE_SCSI_STATE_BUSY 0x03 /* busy, wait for PIE_SCSI_STATE_OK */
+#define PIE_SCSI_STATE_8    0x08 /* ?, ok for next cmd */
 
-/* some kind of 'ping' ? */
-#define SCSI_CMD_PING 0xdd
-static unsigned char pingC[] = { SCSI_CMD_PING, 0x00, 0x00, 0x00, 0x0c, 0x00 };
-static scsiblk ping = { pingC, sizeof(pingC) };
-
-
+#define SCSI_CMD_READ_STATUS 0xdd
+static unsigned char read_statusC[] = { SCSI_CMD_READ_STATUS, 0x00, 0x00, 0x00, 0x0c, 0x00 };
+static scsiblk read_status = { read_statusC, sizeof(read_statusC) };
 
 #endif /* PIE_USBDEF_H */
