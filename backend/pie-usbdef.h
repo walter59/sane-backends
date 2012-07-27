@@ -103,15 +103,16 @@
 #define PIE_SCSI_STATE_LEN  0x01 /* read: send expected length */
 #define PIE_SCSI_STATE_2    0x02 /* ?, ok for next cmd */
 #define PIE_SCSI_STATE_BUSY 0x03 /* busy, wait for PIE_SCSI_STATE_OK */
-#define PIE_SCSI_STATE_8    0x08 /* ?, ok for next cmd */
+#define PIE_SCSI_STATE_WAIT 0x08 /* wait and try again */
+
+#define PIE_SLIDE_NEXT 0x04
+#define PIE_SLIDE_PREV 0x05
+#define PIE_SLIDE_LAMP_ON 0x10
+#define PIE_SLIDE_RELOAD 0x40
 
 #define SCSI_CMD_SLIDE_CTRL 0xd1
 static unsigned char slide_ctrlC[] = { SCSI_CMD_SLIDE_CTRL, 0x00, 0x00, 0x00, 0x04, 0x00 };
 static scsiblk slide_ctrl = { slide_ctrlC, sizeof(slide_ctrlC) };
-#define PIE_SLIDE_NEXT 0x04
-#define PIE_SLIDE_PREV 0x05
-#define PIE_SLIDE_LOAD 0x10
-#define PIE_SLIDE_RELOAD 0x40
 
 #define SCSI_CMD_READ_REVERSE 0x12
 static unsigned char read_reverseC[] = { SCSI_CMD_READ_REVERSE, 0x00, 0x00, 0x00, 0x12, 0x00 };
