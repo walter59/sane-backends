@@ -105,6 +105,30 @@
 #define PIE_SCSI_STATE_BUSY 0x03 /* busy, wait for PIE_SCSI_STATE_OK */
 #define PIE_SCSI_STATE_8    0x08 /* ?, ok for next cmd */
 
+#define SCSI_CMD_SLIDE_CTRL 0xd1
+static unsigned char slide_ctrlC[] = { SCSI_CMD_SLIDE_CTRL, 0x00, 0x00, 0x00, 0x04, 0x00 };
+static scsiblk slide_ctrl = { slide_ctrlC, sizeof(slide_ctrlC) };
+#define PIE_SLIDE_NEXT 0x04
+#define PIE_SLIDE_PREV 0x05
+#define PIE_SLIDE_LOAD 0x10
+#define PIE_SLIDE_RELOAD 0x40
+
+#define SCSI_CMD_READ_REVERSE 0x12
+static unsigned char read_reverseC[] = { SCSI_CMD_READ_REVERSE, 0x00, 0x00, 0x00, 0x12, 0x00 };
+static scsiblk read_reverse = { read_reverseC, sizeof(read_reverseC) };
+
+#define SCSI_CMD_COPY_DATA 0x18
+static unsigned char copy_dataC[] = { SCSI_CMD_COPY_DATA, 0x00, 0x00, 0x1d, 0x1a, 0x00 };
+static scsiblk copy_data = { copy_dataC, sizeof(copy_dataC) };
+
+#define SCSI_CMD_READ_GAIN_OFFSET 0xd7
+static unsigned char read_gain_offsetC[] = { SCSI_CMD_READ_GAIN_OFFSET, 0x00, 0x00, 0x00, 0x67, 0x00 };
+static scsiblk read_gain_offset = { read_gain_offsetC, sizeof(read_gain_offsetC) };
+
+#define SCSI_CMD_SET_GAIN_OFFSET 0xdc
+static unsigned char set_gain_offsetC[] = { SCSI_CMD_SET_GAIN_OFFSET, 0x00, 0x00, 0x00, 0x1d, 0x00 };
+static scsiblk set_gain_offset = { set_gain_offsetC, sizeof(set_gain_offsetC) };
+
 #define SCSI_CMD_READ_STATUS 0xdd
 static unsigned char read_statusC[] = { SCSI_CMD_READ_STATUS, 0x00, 0x00, 0x00, 0x0c, 0x00 };
 static scsiblk read_status = { read_statusC, sizeof(read_statusC) };
