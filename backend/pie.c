@@ -412,7 +412,7 @@ pie_ieee1284_control_strobe(int fd)
   static SANE_Byte strobe[1] = { C1284_NINIT|C1284_NSTROBE };
   SANE_Int status;
   DBG (DBG_lowlevel, "\t\tpie_ieee1284_control_strobe\n");
-  usleep(30000);
+  usleep(10000);
   status = sanei_usb_control_msg (fd, PIE_USB_WRITE, PIE_USB_REQ_ONE,
 				  PIE_USB_VAL_CTRL, 0, 1, strobe );
   if (status == SANE_STATUS_GOOD)
@@ -580,8 +580,12 @@ pie_usb_scsi_cmd_out(int fd, unsigned char *src, size_t src_size)
       ++src;
       --src_size;
     }
-  
-  scsi_status = pie_usb_scsi_status_read (fd);
+
+  do
+    {
+      scsi_status = pie_usb_scsi_status_read (fd);
+    }
+  while (scsi_status == PIE_SCSI_STATE_BUSY);
 
   return scsi_status;
 }
@@ -608,30 +612,49 @@ pie_usb_scsi_cmd(int fd, unsigned char * src, size_t src_size, unsigned char * d
       DBG (DBG_error, "pie_usb_scsi_cmd: scsi cmd too short\n");
       return SANE_STATUS_INVAL;
     }
-  pie_ieee1284_reset (fd);
-  pie_ieee1284_control_init (fd);
-  pie_ieee1284_reset (fd);
-  pie_ieee1284_addr (fd);
-
-  status = pie_ieee1284_command (fd, PIE_IEEE1284_SCSI);
-  if (status != SANE_STATUS_GOOD)
+  
+  do
     {
-      return status;
-    }
+      pie_ieee1284_reset (fd);
+      pie_ieee1284_control_init (fd);
+      pie_ieee1284_reset (fd);
+      pie_ieee1284_addr (fd);
 
-  scsi_status = pie_usb_scsi_cmd_out (fd, src, PIE_SCSI_CMD_LEN);
-  if (scsi_status == PIE_SCSI_STATE_OK)
-    {
-      /*
-       * evtl. write data
-       *
-       */
+      status = pie_ieee1284_command (fd, PIE_IEEE1284_SCSI);
+      if (status != SANE_STATUS_GOOD)
+        {
+	  return status;
+	}
 
-      if (src_size > PIE_SCSI_CMD_LEN)
-      {
-        scsi_status = pie_usb_scsi_cmd_out (fd, src+PIE_SCSI_CMD_LEN, src_size-PIE_SCSI_CMD_LEN );
-      }
+      scsi_status = pie_usb_scsi_cmd_out (fd, src, PIE_SCSI_CMD_LEN);
+      if (scsi_status == PIE_SCSI_STATE_OK)
+        {
+	  /*
+	   * evtl. write data
+	   *
+	   */
+
+	  if (src_size > PIE_SCSI_CMD_LEN)
+	    {
+	      scsi_status = pie_usb_scsi_cmd_out (fd, src+PIE_SCSI_CMD_LEN, src_size-PIE_SCSI_CMD_LEN );
+	    }
+	}
+      if (scsi_status == PIE_SCSI_STATE_WAIT)
+        {
+	  switch (*src)
+	    {
+	      case TEST_UNIT_READY:
+	      case SCSI_CMD_COPY_DATA:
+	      case SCSI_CMD_READ_REVERSE:
+	        usleep(1500000);
+	        break;
+	       default:
+	        usleep(100000);
+	        break;
+	    }
+        }
     }
+  while (scsi_status == PIE_SCSI_STATE_WAIT);
 
   /*
    * expecting data return ?
@@ -2779,7 +2802,7 @@ pie_set_gain_offset (Pie_Scanner * scanner)
 /*------------------------- PIE SLIDE -----------------------------*/
 
 static SANE_Status
-pie_slide_control (Pie_Scanner * scanner, SANE_Byte cmd)
+pie_slide_control (Pie_Scanner * scanner, SANE_Byte cmd) /*, SANE_Byte val) */
 {
   unsigned char buffer[128];
   size_t size;
@@ -2789,7 +2812,7 @@ pie_slide_control (Pie_Scanner * scanner, SANE_Byte cmd)
   if (scanner->device->bus != PIE_BUS_USB)
     return SANE_STATUS_GOOD;
 
-  DBG (DBG_proc, "pie_slide 0x%02x\n", cmd);
+  DBG (DBG_proc, "pie_slide_control 0x%02x\n", cmd);
 
   size = sizeof(data);
 
@@ -2799,6 +2822,7 @@ pie_slide_control (Pie_Scanner * scanner, SANE_Byte cmd)
 
   memcpy (buffer + slide_ctrl.size, data, size);
   buffer[slide_ctrl.size] = cmd;
+/*  buffer[slide_ctrl.size+1] = val;*/
 
   status =
     pie_scsi_cmd (scanner->device->bus, scanner->sfd, buffer, slide_ctrl.size + size, NULL, NULL);
@@ -3135,10 +3159,11 @@ pie_get_params (Pie_Scanner * scanner)
   if (status)
     return status;
 
-  if (scanner->device->inquiry_image_format & INQ_IMG_FMT_OKLINE)
+  if (scanner->device->bus == PIE_BUS_USB)
+    size = 18;
+  else if (scanner->device->inquiry_image_format & INQ_IMG_FMT_OKLINE)
     size = 16;
   else
-
     size = 14;
 
   set_param_length (param.cmd, size);
@@ -3170,10 +3195,11 @@ pie_get_params (Pie_Scanner * scanner)
       scanner->filter_offset1 = get_param_scan_filter_offset1 (buffer);
       scanner->filter_offset2 = get_param_scan_filter_offset2 (buffer);
       scanner->bytes_per_line = get_param_scan_bytes (buffer);
-
+      DBG (DBG_info, "bytes_per_line: %d\n", scanner->bytes_per_line);
       scanner->params.pixels_per_line = get_param_scan_width (buffer);
+      DBG (DBG_info, "pixels_per_line: %d\n", scanner->params.pixels_per_line);
       scanner->params.lines = get_param_scan_lines (buffer);
-
+      DBG (DBG_info, "params.lines: %d\n", scanner->params.lines);
       switch (scanner->colormode)
 	{
 	case RGB:
@@ -3286,6 +3312,7 @@ pie_reader_process_indexed (Pie_Scanner * scanner, FILE * fp)
 
   size_t size;
 
+  DBG (DBG_proc, "pie_reader_process_indexed\n");
   DBG (DBG_read, "reading %d lines of %d bytes/line (indexed)\n",
        scanner->params.lines, scanner->params.bytes_per_line);
 
@@ -3459,6 +3486,7 @@ pie_reader_process (Pie_Scanner * scanner, FILE * fp)
   unsigned char *buffer, *reorder;
   size_t size;
 
+  DBG (DBG_proc, "pie_reader_process\n");
   DBG (DBG_read, "reading %d lines of %d bytes/line\n", scanner->params.lines,
        scanner->params.bytes_per_line);
 
@@ -3580,9 +3608,9 @@ reader_process ( void *data )	/* executed as a child process */
   fp = fdopen (scanner->reader_fds, "w");
   if (!fp)
     {
+      DBG (DBG_error, "fdopen(%d) failed: %s\n", scanner->reader_fds, strerror(errno));
       return SANE_STATUS_IO_ERROR;
     }
-
   DBG (DBG_sane_info, "reader_process: starting to READ data\n");
 
   if (scanner->device->inquiry_color_format & INQ_COLOR_FORMAT_LINE)
@@ -3592,8 +3620,10 @@ reader_process ( void *data )	/* executed as a child process */
   else
     status = SANE_STATUS_UNSUPPORTED;
 
-  fclose (fp);
-
+  if (fp)
+    {
+      fclose (fp);
+    }
   DBG (DBG_sane_info, "reader_process: finished reading data\n");
 
   return status;
@@ -4479,7 +4509,7 @@ sane_start (SANE_Handle handle)
 
   pie_get_params (scanner);
 
-  pie_slide_control (scanner, PIE_SLIDE_LOAD);
+  pie_slide_control (scanner, PIE_SLIDE_LAMP_ON);
 
   pie_scan (scanner, 1);
 
@@ -4538,54 +4568,36 @@ pie_copy_data (Pie_Scanner *scanner)
   status = pie_scsi_cmd (scanner->device->bus, scanner->sfd, copy_data.cmd, copy_data.size, buffer, &size);
   if (status != SANE_STATUS_GOOD)
     {
-      DBG (DBG_error, "pie_copy_data: command returned status %s\n",
+      DBG (DBG_error, "pie_copy_data: copy command returned status %s\n",
 	   sane_strstatus (status));
       free(buffer);
       return status;
     }
-  DBG (DBG_proc, "pie_copy_data: size %x\n", size);
-  if (size == orig_size)
+
+  free(buffer);
+  orig_size = size = read_reverse.cmd[4];
+  buffer = (unsigned char *)calloc(1, size);
+  if (!buffer)
     {
-      status = pie_scsi_cmd (scanner->device->bus, scanner->sfd, copy_data.cmd, copy_data.size, buffer, &size);
-      if (status == SANE_STATUS_GOOD)
-        {
-          free(buffer);
-          orig_size = size = read_reverse.cmd[4];
-          buffer = (unsigned char *)calloc(1, size);
-          if (!buffer)
-            {
-              DBG (DBG_error, "pie_copy_data: calloc(%d) failed\n", (int)size);
-              return SANE_STATUS_NO_MEM;
-            }
-          status = pie_scsi_cmd (scanner->device->bus, scanner->sfd, read_reverse.cmd, read_reverse.size, buffer, &size);
-          if (size == orig_size)
-            {
-              status = pie_scsi_cmd (scanner->device->bus, scanner->sfd, read_reverse.cmd, read_reverse.size, buffer, &size);
-              if (status == SANE_STATUS_GOOD)
-                {
-                  pie_wait_scanner (scanner);
-                }
-            }
-        }
+      DBG (DBG_error, "pie_copy_data: calloc(%d) failed\n", (int)size);
+      return SANE_STATUS_NO_MEM;
     }
+  status = pie_scsi_cmd (scanner->device->bus, scanner->sfd, read_reverse.cmd, read_reverse.size, buffer, &size);
+  if (status != SANE_STATUS_GOOD)
+    {
+      DBG (DBG_error, "pie_copy_data: read reverse command returned status %s\n",
+	   sane_strstatus (status));
+      free(buffer);
+      return status;
+    }
+  status = pie_wait_scanner (scanner);
 
   return status;
 }
 
 
 SANE_Status
-sane_read_usb (SANE_Handle handle, SANE_Byte * buf, SANE_Int max_len,
-	   SANE_Int * len)
-{
-  SANE_Status status;
-  Pie_Scanner *scanner = handle;
-
-  status = pie_copy_data (scanner);
-}
-
-
-SANE_Status
-sane_read_scsi (SANE_Handle handle, SANE_Byte * buf, SANE_Int max_len,
+sane_read (SANE_Handle handle, SANE_Byte * buf, SANE_Int max_len,
 	   SANE_Int * len)
 {
   Pie_Scanner *scanner = handle;
@@ -4627,23 +4639,6 @@ sane_read_scsi (SANE_Handle handle, SANE_Byte * buf, SANE_Int max_len,
     }
 
   return SANE_STATUS_GOOD;
-}
-
-
-SANE_Status
-sane_read (SANE_Handle handle, SANE_Byte * buf, SANE_Int max_len,
-	   SANE_Int * len)
-{
-  Pie_Scanner *scanner = handle;
-
-  DBG (DBG_proc, "sane_read\n");
-
-  *len = 0;
-
-  if (scanner->device->bus == PIE_BUS_USB)
-    return sane_read_usb (handle, buf, max_len, len);
-  else
-    return sane_read_scsi (handle, buf, max_len, len);
 }
 
 
