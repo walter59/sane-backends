@@ -1622,7 +1622,6 @@ attach_scanner_scsi (const char *devicename, Pie_Device * dev, int *sfd)
       (devicename, sfd, sense_handler, dev, &bufsize) != 0)
     {
       DBG (DBG_error, "attach_scanner: open failed\n");
-      free (dev);
       return SANE_STATUS_INVAL;
     }
 
@@ -1632,7 +1631,6 @@ attach_scanner_scsi (const char *devicename, Pie_Device * dev, int *sfd)
 	   "attach_scanner: sanei_scsi_open_extended returned too small scsi buffer (%d)\n",
 	   bufsize);
       sanei_scsi_close (*sfd);
-      free (dev);
       return SANE_STATUS_NO_MEM;
     }
 
@@ -1645,8 +1643,6 @@ attach_scanner_scsi (const char *devicename, Pie_Device * dev, int *sfd)
   if (sanei_scsi_open (devicename, &sfd, sense_handler, dev) != 0)
     {
       DBG (DBG_error, "attach_scanner: open failed\n");
-      free (dev);
-
       return SANE_STATUS_INVAL;
 
     }
