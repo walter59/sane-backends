@@ -101,7 +101,7 @@
 #define PIE_SCSI_STATE_BAD  -1   /* usb protocol failure */
 #define PIE_SCSI_STATE_OK   0x00 /* ok, done */
 #define PIE_SCSI_STATE_LEN  0x01 /* read: send expected length */
-#define PIE_SCSI_STATE_2    0x02 /* ?, ok for next cmd */
+#define PIE_SCSI_STATE_CHECK 0x02 /* check condition */
 #define PIE_SCSI_STATE_BUSY 0x03 /* busy, wait for PIE_SCSI_STATE_OK */
 #define PIE_SCSI_STATE_WAIT 0x08 /* wait and try again */
 
