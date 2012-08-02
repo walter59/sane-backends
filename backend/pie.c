@@ -353,6 +353,8 @@ static const SANE_Device **devlist = NULL;
 static SANE_Status pie_wait_device (Pie_Device *dev, int sfd);
 static SANE_Status pie_wait_scanner (Pie_Scanner * scanner);
 static SANE_Status pie_copy_data (Pie_Scanner *scanner);
+static SANE_Status pie_usb_sane_start(const char *name, int *fd);
+static int pie_request_sense (int fd);
 
 /* ---------------------------------- PIE DUMP_BUFFER ---------------------------------- */
 
@@ -411,7 +413,7 @@ pie_ieee1284_control_strobe(int fd)
   static SANE_Byte strobe[1] = { C1284_NINIT|C1284_NSTROBE };
   SANE_Int status;
   DBG (DBG_lowlevel, "\t\tpie_ieee1284_control_strobe\n");
-  usleep(10000);
+  usleep(3000);
   status = sanei_usb_control_msg (fd, PIE_USB_WRITE, PIE_USB_REQ_ONE,
 				  PIE_USB_VAL_CTRL, 0, 1, strobe );
   if (status == SANE_STATUS_GOOD)
@@ -544,8 +546,6 @@ pie_usb_scsi_status_read(int fd)
   if (status != SANE_STATUS_GOOD)
     {
       DBG (DBG_error, "sanei_usb_control_msg failed with '%s'\n", sane_strstatus(status));
-      sanei_usb_reset(fd);
-      pie_ieee1284_reset(fd);
       return -1;
     }
   return state;
@@ -573,7 +573,6 @@ pie_usb_scsi_cmd_out(int fd, unsigned char *src, size_t src_size)
       if (status != SANE_STATUS_GOOD)
         {
 	  DBG (DBG_error, "pie_usb_scsi_cmd_out: failed with %d:'%s', %d bytes remaining\n", status, sane_strstatus(status), (int)src_size);
-          sanei_usb_reset (fd);
           return status;
 	}
       ++src;
@@ -586,6 +585,7 @@ pie_usb_scsi_cmd_out(int fd, unsigned char *src, size_t src_size)
     }
   while (scsi_status == PIE_SCSI_STATE_BUSY);
 
+  DBG (DBG_proc, "\tpie_usb_scsi_cmd_out: scsi_status %d\n", scsi_status);
   return scsi_status;
 }
 
@@ -615,11 +615,6 @@ pie_usb_scsi_cmd(int fd, unsigned char * src, size_t src_size, unsigned char * d
   
   do
     {
-      pie_ieee1284_reset (fd);
-      pie_ieee1284_control_init (fd);
-      pie_ieee1284_reset (fd);
-      pie_ieee1284_addr (fd);
-
       status = pie_ieee1284_command (fd, PIE_IEEE1284_SCSI);
       if (status != SANE_STATUS_GOOD)
         {
@@ -646,7 +641,7 @@ pie_usb_scsi_cmd(int fd, unsigned char * src, size_t src_size, unsigned char * d
 	      case TEST_UNIT_READY:
 	      case SCSI_CMD_COPY_DATA:
 	      case SCSI_CMD_READ_REVERSE:
-	        usleep(1500000);
+	        sleep(3);
 	        break;
 	       default:
 	        usleep(100000);
@@ -704,10 +699,10 @@ pie_usb_scsi_cmd(int fd, unsigned char * src, size_t src_size, unsigned char * d
   while (scsi_status != PIE_SCSI_STATE_OK
 	 && timeout > 0)
     {
-      scsi_status = pie_usb_scsi_status_read (fd);
-      if (scsi_status == PIE_SCSI_STATE_CHECK)
+      if ((scsi_status == PIE_SCSI_STATE_CHECK)
+	   && (*src != request_sense.cmd)) /* prevent recursive calls */
         {
-	  return pie_usb_scsi_cmd (fd, scan.cmd, scan.size, NULL, NULL);
+	  scsi_status = pie_request_sense (fd);
 	}
       if (scsi_status < 0)
         {
@@ -716,6 +711,7 @@ pie_usb_scsi_cmd(int fd, unsigned char * src, size_t src_size, unsigned char * d
 	}
       usleep (3000);
       --timeout;
+      scsi_status = pie_usb_scsi_status_read (fd);
     }
 
   if (timeout == 0)
@@ -785,7 +781,6 @@ pie_scsi_cmd (int bus, int fd, void * src, size_t src_size, void * dst, size_t *
   else
     return pie_usb_scsi_cmd (fd, src, src_size, dst, dst_size);
 }
-
 
 /* ---------------------------- SENSE_HANDLER ------------------------------ */
 
@@ -1026,6 +1021,27 @@ sense_handler (__sane_unused__ int scsi_fd, unsigned char *result, __sane_unused
     }
 
   return SANE_STATUS_IO_ERROR;
+}
+
+/* ---------------------------- REQUEST SENSE ------------------------------ */
+
+static int
+pie_request_sense (int fd)
+{
+  size_t dst_size = 14;
+  unsigned char dst[14];
+  int scsi_status;
+
+  set_RS_allocation_length (request_sense.cmd, dst_size);
+  scsi_status = pie_usb_scsi_cmd (fd, request_sense.cmd, request_sense.size, dst, &dst_size);
+  DBG (DBG_proc, "pie_request_sense: status %d\n", scsi_status);
+  if (scsi_status == PIE_SCSI_STATE_OK)
+    {
+      DBG_DUMP (DBG_proc, dst, dst_size);
+    }
+  sense_handler (fd, dst, NULL);
+  sleep(5);
+  return scsi_status;
 }
 
 
@@ -1633,17 +1649,13 @@ attach_scanner_usb (const char *devicename, Pie_Device * dev, int *sfd)
 
   dev->bus = PIE_BUS_USB;
   dev->devicename = strdup (usbName);
-  if (sanei_usb_open (dev->devicename, sfd) != SANE_STATUS_GOOD)
+
+  if (pie_usb_sane_start (dev->devicename, sfd) != SANE_STATUS_GOOD)
     {
       DBG (DBG_error, "attach_scanner_usb: Cannot open scanner device %s\n", dev->devicename);
       return SANE_STATUS_INVAL;
     }
 
-#ifdef HAVE_SANEI_USB_SET_TIMEOUT
-  sanei_usb_set_timeout(3000); /* 3sec timeout */
-  pie_ieee1284_control_init(*sfd);
-  pie_ieee1284_control_init(*sfd);
-#endif
   return SANE_STATUS_GOOD;
 }
 
@@ -3058,7 +3070,7 @@ pie_scan (Pie_Scanner * scanner, int start)
 	}
     }
   while (start && status);
-
+  usleep(500000);
   pie_wait_scanner (scanner);
 
   return status;
@@ -3124,8 +3136,8 @@ pie_get_params (Pie_Scanner * scanner)
 
   DBG (DBG_proc, "pie_get_params\n");
 
-  status = pie_read_status (scanner);
-  if (status)
+  status = pie_wait_scanner (scanner);
+  if (status != SANE_STATUS_GOOD)
     return status;
 
   if (scanner->device->bus == PIE_BUS_USB)
@@ -4266,19 +4278,21 @@ sane_get_parameters (SANE_Handle handle, SANE_Parameters * params)
 /* ----------------------------------------- SANE START --------------------------------- */
 
 static SANE_Status
-pie_usb_sane_start(Pie_Scanner *scanner)
+pie_usb_sane_start(const char *name, int *fd)
 {
-  if (sanei_usb_open (scanner->device->devicename, &(scanner->sfd)) != SANE_STATUS_GOOD)
+  if (sanei_usb_open (name, fd) != SANE_STATUS_GOOD)
     {
-      DBG (DBG_error, "pie_usb_sane_start: Cannot open scanner device %s\n", scanner->device->devicename);
+      DBG (DBG_error, "pie_usb_sane_start: Cannot open scanner device %s\n", name);
       return SANE_STATUS_INVAL;
     }
 
 #ifdef HAVE_SANEI_USB_SET_TIMEOUT
   sanei_usb_set_timeout(3000); /* 3sec timeout */
-  pie_ieee1284_control_init(scanner->sfd);
-  pie_ieee1284_control_init(scanner->sfd);
 #endif
+  pie_ieee1284_control_init (*fd);
+  pie_ieee1284_control_init (*fd);
+  pie_ieee1284_reset (*fd);
+  pie_ieee1284_addr (*fd);
   return SANE_STATUS_GOOD;
 }
 
@@ -4371,7 +4385,7 @@ sane_start (SANE_Handle handle)
         }
       else
         {
-          status = pie_usb_sane_start (scanner);
+          status = pie_usb_sane_start (scanner->device->devicename, &(scanner->sfd));
           pie_read_status (scanner);
         }
 
@@ -4476,7 +4490,7 @@ sane_start (SANE_Handle handle)
 
   pie_dwnld_gamma (scanner);
 
-  pie_get_params (scanner);
+/*  pie_get_params (scanner);*/
 
   pie_slide_control (scanner, PIE_SLIDE_LAMP_ON);
 
