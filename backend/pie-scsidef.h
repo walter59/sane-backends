@@ -349,7 +349,7 @@ static scsiblk sread = { sreadC, sizeof(sreadC) };
 
 /* --------------------------------------------------------------------------------------------------------- */
 
-#if 0
+#if 1
 static unsigned char request_senseC[] = { REQUEST_SENSE, 0x00, 0x00, 0x00, 0x00, 0x00 };
 #define set_RS_allocation_length(sb,val)		sb[0x04]=val
 #define set_RS_LUN(sb,val)				setbitfield(sb + 0x01, 7, 5) /* ??? */
