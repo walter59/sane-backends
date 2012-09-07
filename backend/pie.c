@@ -3113,6 +3113,8 @@ pie_wait_device (Pie_Device *dev, int sfd)
     }
   while (status != SANE_STATUS_GOOD);
 
+  usleep (150000);
+
   return status;
 }
 
