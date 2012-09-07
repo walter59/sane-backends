@@ -91,7 +91,7 @@ BACKEND_CONFS= abaton.conf agfafocus.conf apple.conf artec.conf \
 	       mustek_pp.conf mustek_usb.conf nec.conf net.conf \
 	       p5.conf \
 	       pie.conf pixma.conf plustek.conf plustek_pp.conf \
-	       qcam.conf ricoh.conf rts8891.conf s9036.conf sceptre.conf \
+	       qcam.conf reflecta.conf ricoh.conf rts8891.conf s9036.conf sceptre.conf \
 	       sharp.conf sm3840.conf snapscan.conf sp15c.conf \
 	       st400.conf stv680.conf tamarack.conf \
 	       teco1.conf teco2.conf teco3.conf test.conf \
@@ -184,7 +184,7 @@ be_convenience_libs = libabaton.la libagfafocus.la \
     libniash.la libp5.la \
     libpie.la libpint.la libpixma.la \
     libplustek.la libplustek_pp.la libpnm.la \
-    libqcam.la libricoh.la librts8891.la \
+    libqcam.la libreflecta.la libricoh.la librts8891.la \
     libs9036.la libsceptre.la libsharp.la \
     libsm3600.la libsm3840.la libsnapscan.la \
     libsp15c.la libst400.la libstv680.la \
@@ -218,7 +218,7 @@ be_dlopen_libs = libsane-abaton.la libsane-agfafocus.la \
     libsane-niash.la libsane-p5.la \
     libsane-pie.la libsane-pint.la libsane-pixma.la \
     libsane-plustek.la libsane-plustek_pp.la libsane-pnm.la \
-    libsane-qcam.la libsane-ricoh.la libsane-rts8891.la \
+    libsane-qcam.la libsane-reflecta.la libsane-ricoh.la libsane-rts8891.la \
     libsane-s9036.la libsane-sceptre.la libsane-sharp.la \
     libsane-sm3600.la libsane-sm3840.la libsane-snapscan.la \
     libsane-sp15c.la libsane-st400.la libsane-stv680.la \
@@ -867,6 +867,15 @@ libsane_qcam_la_CPPFLAGS = $(AM_CPPFLAGS) -DBACKEND_NAME=qcam
 libsane_qcam_la_LDFLAGS = $(DIST_SANELIBS_LDFLAGS)
 libsane_qcam_la_LIBADD = $(COMMON_LIBS) libqcam.la ../sanei/sanei_init_debug.lo ../sanei/sanei_constrain_value.lo ../sanei/sanei_config.lo  sane_strstatus.lo ../sanei/sanei_pio.lo
 EXTRA_DIST += qcam.conf.in
+
+libreflecta_la_SOURCES =  reflecta.c reflecta.h reflecta_buffer.c reflecta_buffer.h reflecta_scancmd.c reflecta_scancmd.h reflecta_specific.c reflecta_specific.h reflecta_usb.c reflecta_usb.h
+libreflecta_la_CPPFLAGS = $(AM_CPPFLAGS) -DBACKEND_NAME=reflecta
+
+nodist_libsane_reflecta_la_SOURCES = reflecta-s.c 
+libsane_reflecta_la_CPPFLAGS = $(AM_CPPFLAGS) -DBACKEND_NAME=reflecta
+libsane_reflecta_la_LDFLAGS = $(DIST_SANELIBS_LDFLAGS)
+libsane_reflecta_la_LIBADD = $(COMMON_LIBS) libreflecta.la ../sanei/sanei_init_debug.lo ../sanei/sanei_constrain_value.lo ../sanei/sanei_config.lo ../sanei/sanei_config2.lo sane_strstatus.lo ../sanei/sanei_usb.lo ../sanei/sanei_thread.lo $(USB_LIBS) $(PTHREAD_LIBS) $(RESMGR_LIBS)
+EXTRA_DIST += reflecta.conf
 
 libricoh_la_SOURCES = ricoh.c ricoh.h
 libricoh_la_CPPFLAGS = $(AM_CPPFLAGS) -DBACKEND_NAME=ricoh
