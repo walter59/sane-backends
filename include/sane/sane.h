@@ -71,7 +71,7 @@ typedef enum
 SANE_Status;
 
 /* following are for later sane version, older frontends wont support */
-#if 0
+#if 1
 #define SANE_STATUS_WARMING_UP 12 /* lamp not ready, please retry */
 #define SANE_STATUS_HW_LOCKED  13 /* scanner mechanism locked for transport */
 #endif
@@ -182,7 +182,7 @@ SANE_Frame;
 /* push remaining types down to match existing backends */
 /* these are to be exposed in a later version of SANE */
 /* most front-ends will require updates to understand them */
-#if 0
+#if 1
 #define SANE_FRAME_TEXT  0x0A  /* backend specific textual data */
 #define SANE_FRAME_JPEG  0x0B  /* complete baseline JPEG file */
 #define SANE_FRAME_G31D  0x0C  /* CCITT Group 3 1-D Compressed (MH) */
@@ -211,6 +211,7 @@ struct SANE_Auth_Data;
 #define SANE_MAX_USERNAME_LEN	128
 #define SANE_MAX_PASSWORD_LEN	128
 
+#ifdef 0 /* Defined in reflecta.h */
 typedef void (*SANE_Auth_Callback) (SANE_String_Const resource,
 				    SANE_Char *username,
 				    SANE_Char *password);
@@ -239,6 +240,7 @@ extern SANE_Status sane_set_io_mode (SANE_Handle handle,
 extern SANE_Status sane_get_select_fd (SANE_Handle handle,
 				       SANE_Int * fd);
 extern SANE_String_Const sane_strstatus (SANE_Status status);
+#endif
 
 #ifdef __cplusplus
 }

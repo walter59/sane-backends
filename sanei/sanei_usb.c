@@ -2451,7 +2451,7 @@ sanei_usb_write_bulk (SANE_Int dn, const SANE_Byte * buffer, size_t * size)
 	  int trans_bytes;
 	  ret = libusb_bulk_transfer (devices[dn].lu_handle,
 				      devices[dn].bulk_out_ep,
-				      buffer,
+				      (unsigned char *)buffer,
 				      (int) *size, &trans_bytes,
 				      libusb_timeout);
 	  if (ret < 0)
@@ -2624,6 +2624,9 @@ sanei_usb_control_msg (SANE_Int dn, SANE_Int rtype, SANE_Int req,
     {
       int result;
 
+      DBG (5, "sanei_usb_control_msg: handle=%d, rtype=0x%x, req=0x%x, value=0x%x, index=0x%x, data=%p, len=%d, time=%d\n",
+              (int)devices[dn].lu_handle, rtype, req, value, index, data, len, libusb_timeout);
+      
       result = libusb_control_transfer (devices[dn].lu_handle, rtype, req,
 					value, index, data, len,
 					libusb_timeout);

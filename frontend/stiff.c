@@ -583,6 +583,189 @@ write_tiff_color_header (FILE *fptr, int width, int height, int depth,
     free_ifd (ifd);
 }
 
+/* not static, used in reflecta.c */
+void
+write_tiff_rgbi_header (FILE *fptr, int width, int height, int depth,
+                         int resolution, const char *icc_profile)
+{IFD *ifd;
+    int header_size = 8, ifd_size;
+    int strip_offset, data_offset, data_size;
+    int strip_bytecount;
+    int ntags;
+    int motorola, bps, maxsamplevalue;
+    FILE *icc_file = 0;
+    int icc_len = -1;
+
+    fprintf(stderr,"TIFF RGBI header\n");
+    
+    if (icc_profile)
+    {
+      icc_file = fopen(icc_profile, "r");
+
+      if (!icc_file)
+      {
+        fprintf(stderr, "Could not open ICC profile %s\n", icc_profile);
+      }
+      else
+      {
+        icc_len = 16777216 * fgetc(icc_file) + 65536 * fgetc(icc_file) + 256 * fgetc(icc_file) + fgetc(icc_file);
+        rewind(icc_file);
+      }
+    }
+
+
+    ifd = create_ifd ();
+
+    bps = (depth <= 8) ? 1 : 2;  /* Bytes per sample */
+    maxsamplevalue = (depth <= 8) ? 255 : 65535;
+    strip_bytecount = width * height * 4 * bps; /* 3 -> 4 */
+
+    /* the following values must be known in advance */
+    ntags = 13; 
+    data_size = 4*2 + 4*2 + 4*2; /* 3 => 4*/
+
+    if (resolution > 0)
+    {
+        ntags += 3;
+        data_size += 2*4 + 2*4;
+    }
+
+    ntags++; /* added 338 */
+    
+    if (icc_len > 0) /* if icc profile exists add memory for tag */
+    {
+        ntags += 1;
+        data_size += icc_len;
+    }
+
+
+    ifd_size = 2 + ntags*12 + 4;
+    data_offset = header_size + ifd_size;
+    strip_offset = data_offset + data_size;
+
+    /* New subfile type */
+    add_ifd_entry (ifd, 254, IFDE_TYP_LONG, 1, 0);
+    /* image width */
+    add_ifd_entry (ifd, 256, (width > 0xffff) ? IFDE_TYP_LONG : IFDE_TYP_SHORT,
+                   1, width);
+    /* image length */
+    add_ifd_entry (ifd, 257, (height > 0xffff) ? IFDE_TYP_LONG : IFDE_TYP_SHORT,
+                   1, height);
+    /* bits per sample */
+    add_ifd_entry (ifd, 258, IFDE_TYP_SHORT, 4, data_offset); /* 3-> 4*/
+    data_offset += 4*2; /* 3->4 */
+    /* compression (uncompressed) */
+    add_ifd_entry (ifd, 259, IFDE_TYP_SHORT, 1, 1);
+    /* photometric interpretation */
+    add_ifd_entry (ifd, 262, IFDE_TYP_SHORT, 1, 2);
+    /* strip offset */
+    add_ifd_entry (ifd, 273, IFDE_TYP_LONG, 1, strip_offset);
+    /* orientation */
+    add_ifd_entry (ifd, 274, IFDE_TYP_SHORT, 1, 1);
+    /* samples per pixel */
+    add_ifd_entry (ifd, 277, IFDE_TYP_SHORT, 1, 4); /* 3 -> 4*/
+    /* rows per strip */
+    add_ifd_entry (ifd, 278, IFDE_TYP_LONG, 1, height);
+    /* strip bytecount */
+    add_ifd_entry (ifd, 279, IFDE_TYP_LONG, 1, strip_bytecount);
+    /* min sample value */
+    add_ifd_entry (ifd, 280, IFDE_TYP_SHORT, 4, data_offset); /* 3->4 */
+    data_offset += 4*2; /* 3->4 */
+    /* max sample value */
+    add_ifd_entry (ifd, 281, IFDE_TYP_SHORT, 4, data_offset); /* 3->4 */
+    data_offset += 4*2; /* 3->4 */
+
+    if (resolution > 0)
+    {
+        /* x resolution */
+        add_ifd_entry (ifd, 282, IFDE_TYP_RATIONAL, 1, data_offset);
+        data_offset += 2*4;
+        /* y resolution */
+        add_ifd_entry (ifd, 283, IFDE_TYP_RATIONAL, 1, data_offset);
+        data_offset += 2*4;
+    }
+
+    if (resolution > 0)
+    {
+        /* resolution unit (dpi) */
+        add_ifd_entry (ifd, 296, IFDE_TYP_SHORT, 1, 2);
+    }
+
+    /* extra samples per pixel */
+    add_ifd_entry (ifd, 338, IFDE_TYP_SHORT, 1, 0); /* 1 extra sample of type 0 = Unspecified data */
+
+    if (icc_len > 0) /* add ICC-profile TAG */
+    {
+      add_ifd_entry(ifd, 34675, 7, icc_len, data_offset);
+      data_offset += icc_len;
+    }
+
+
+    /* I prefer motorola format. Its human readable. But for 16 bit, */
+    /* the image format is defined by SANE to be the native byte order */
+    if (bps == 1)
+    {
+        motorola = 1;
+    }
+    else
+    {int check = 1;
+        motorola = ((*((char *)&check)) == 0);
+    }
+
+    write_ifd (fptr, ifd, motorola);
+
+    /* Write bits per sample value values */
+    write_i2 (fptr, depth, motorola);
+    write_i2 (fptr, depth, motorola);
+    write_i2 (fptr, depth, motorola);
+    write_i2 (fptr, depth, motorola); /* line added */
+
+    /* Write min sample value values */
+    write_i2 (fptr, 0, motorola);
+    write_i2 (fptr, 0, motorola);
+    write_i2 (fptr, 0, motorola);
+    write_i2 (fptr, 0, motorola); /* line added */
+
+    /* Write max sample value values */
+    write_i2 (fptr, maxsamplevalue, motorola);
+    write_i2 (fptr, maxsamplevalue, motorola);
+    write_i2 (fptr, maxsamplevalue, motorola);
+    write_i2 (fptr, maxsamplevalue, motorola); /* line added */
+
+    /* Write x/y resolution */
+    if (resolution > 0)
+    {
+        write_i4 (fptr, resolution, motorola);
+        write_i4 (fptr, 1, motorola);
+        write_i4 (fptr, resolution, motorola);
+        write_i4 (fptr, 1, motorola);
+    }
+
+    /* Write ICC profile */
+    if (icc_len > 0)
+    {
+      int i;
+      for (i=0; i<icc_len; i++)
+      {
+        if (!feof(icc_file))
+        {
+          fputc(fgetc(icc_file), fptr);
+        }
+        else
+        {
+          fprintf(stderr, "ICC profile %s is too short\n", icc_profile);
+          break;
+        }
+      }
+    }
+
+    if (icc_file)
+    {
+      fclose(icc_file);
+    }
+
+    free_ifd (ifd);
+}
 
 void
 sanei_write_tiff_header (SANE_Frame format, int width, int height, int depth,
@@ -597,14 +780,22 @@ sanei_write_tiff_header (SANE_Frame format, int width, int height, int depth,
     case SANE_FRAME_GREEN:
     case SANE_FRAME_BLUE:
     case SANE_FRAME_RGB:
+        fprintf(stderr,"sanei_write_tiff_header(): color header\n");
         write_tiff_color_header (stdout, width, height, depth, resolution, icc_profile);
+        break;
+    case SANE_FRAME_RGBI:
+        fprintf(stderr,"sanei_write_tiff_header(): color+infrared header\n");
+        write_tiff_rgbi_header (stdout, width, height, depth, resolution, icc_profile);
         break;
 
     default:
-        if (depth == 1)
+        if (depth == 1) {
+            fprintf(stderr,"sanei_write_tiff_header(): bw header\n");
             write_tiff_bw_header (stdout, width, height, resolution);
-        else
+        } else {
+            fprintf(stderr,"sanei_write_tiff_header(): grey header\n");
             write_tiff_grey_header (stdout, width, height, depth, resolution, icc_profile);
+        }
         break;
     }
 }
