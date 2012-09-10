@@ -19,7 +19,10 @@
 #include <stdio.h> /* for FILE */
 #include <string.h> /* for strlen */
 #include <stdlib.h> /* for NULL */
+extern char *strdup (const char *s);
+extern char *strndup (const char *s, size_t n);
 #include <unistd.h> /* usleep */
+extern int usleep (__useconds_t useconds);
 #include <stdint.h>
 
 /* Configutation defines */
@@ -147,7 +150,7 @@ sane_init (SANE_Int * version_code, SANE_Auth_Callback __sane_unused__ authorize
     SANE_Word product_id;
     SANE_Word model_number;
     SANE_Status status;
-    int i = 0;
+    int i;
    
     /* Initialize debug logging */
     DBG_INIT ();
@@ -174,7 +177,7 @@ sane_init (SANE_Int * version_code, SANE_Auth_Callback __sane_unused__ authorize
     /* Reflecta CrystalScan 7200, model number 0x30 */
     reflecta_supported_usb_device_list[0].vendor = 0x05e3;
     reflecta_supported_usb_device_list[0].product = 0x0145;
-    reflecta_supported_usb_device_list[0].model = 0x30;
+    reflecta_supported_usb_device_list[0].model = 0x31;
     /* Reflecta ProScan 7200, model number 0x36 */
     reflecta_supported_usb_device_list[1].vendor = 0x05e3;
     reflecta_supported_usb_device_list[1].product = 0x0145;
@@ -184,6 +187,15 @@ sane_init (SANE_Int * version_code, SANE_Auth_Callback __sane_unused__ authorize
     reflecta_supported_usb_device_list[2].product = 0;
     reflecta_supported_usb_device_list[2].model = 0;
 
+/*
+    for (i=0; i<3; i++) {
+        DBG(DBG_info,"%03d: %04x %04x %02x\n", i,
+            reflecta_supported_usb_device_list[i].vendor,
+            reflecta_supported_usb_device_list[i].product,
+            reflecta_supported_usb_device_list[i].model);
+    }
+*/
+    
     /* Add entries from config file */
     fp = sanei_config_open (REFLECTA_CONFIG_FILE);
     if (!fp) {
@@ -196,18 +208,25 @@ sane_init (SANE_Int * version_code, SANE_Auth_Callback __sane_unused__ authorize
             /* Ignore lines which do not begin with 'usb ' */
             if (strncmp (config_line, "usb ", 4) != 0) continue;
             /* Parse vendor-id, product-id and model number and add to list */
-            DBG (DBG_sane_proc, "sane_init() trying %s\n", config_line);
+            DBG (DBG_sane_proc, "sane_init() config file parsing %s\n", config_line);
             status = reflecta_parse_config_line(config_line, &vendor_id, &product_id, &model_number);
             if (status == SANE_STATUS_GOOD) {
+                DBG (DBG_info, "sane_init() config file lists device %04x %04x %02x\n",vendor_id, product_id, model_number);
                 if (!reflecta_supported_device_list_contains(vendor_id, product_id, model_number)) {
+                    DBG (DBG_info, "sane_init() adding device %04x %04x %02x\n",vendor_id, product_id, model_number);
                     reflecta_supported_device_list_add(vendor_id, product_id, model_number);
+                } else {
+                    DBG (DBG_sane_proc, "sane_init() list already contains %04x %04x %02x\n", vendor_id, product_id, model_number);
                 }
+            } else {
+                DBG (DBG_sane_proc, "sane_init() config file parsing %s: error\n", config_line);
             }
 	}
         fclose (fp);
     }
         
     /* Loop through supported device list */
+    i = 0;
     while (reflecta_supported_usb_device_list[i].vendor != 0) {
         /* Check if the supported device is present. If so, create a device
          * definition structure for it.
@@ -216,14 +235,16 @@ sane_init (SANE_Int * version_code, SANE_Auth_Callback __sane_unused__ authorize
         reflecta_supported_usb_device.vendor = reflecta_supported_usb_device_list[i].vendor;
         reflecta_supported_usb_device.product = reflecta_supported_usb_device_list[i].product;
         reflecta_supported_usb_device.model = reflecta_supported_usb_device_list[i].model;
-        reflecta_supported_usb_device.device_number = -1; /* No dievice number (yet) */
+        reflecta_supported_usb_device.device_number = -1; /* No device number (yet) */
         DBG( DBG_info, "sane_init() looking for Reflecta scanner %04x %04x model %02x\n",reflecta_supported_usb_device.vendor,reflecta_supported_usb_device.product,reflecta_supported_usb_device.model);
         sanei_usb_find_devices (reflecta_supported_usb_device_list[i].vendor, reflecta_supported_usb_device_list[i].product, find_device_callback);
         /* If opened, close it again here.
          * sanei_usb_find_devices() ignores errors from find_device_callback(), so the device may already be closed. */
+/* not necessary, callback closes device
         if (reflecta_supported_usb_device.device_number >= 0) {
             sanei_usb_close (reflecta_supported_usb_device.device_number);
         }
+*/
         i++;
     }    
     return SANE_STATUS_GOOD;    
@@ -348,8 +369,10 @@ sane_open (SANE_String_Const devicename, SANE_Handle * handle)
                          * it here. */
                         DBG (DBG_error, "sane_open: sanei_usb_find_devices did not open device %s\n",devicename);
                         return SANE_STATUS_INVAL;
+/* not necessary, callback closes device
                     } else {
                         sanei_usb_close(reflecta_supported_usb_device.device_number);
+*/
                     }
                 }
                 i++;

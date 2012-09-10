@@ -124,7 +124,7 @@ find_device_callback (const char *devicename)
     r = sanei_usb_open (devicename, &device_number);
     if (r != SANE_STATUS_GOOD) {
         free (dev);
-        DBG (DBG_error, "find_device_callback: sanei_usb_open failed\n");
+        DBG (DBG_error, "find_device_callback: sanei_usb_open failed for device %s: %s\n",devicename,sane_strstatus(r));
         return r;
     }
     
@@ -145,6 +145,15 @@ find_device_callback (const char *devicename)
         return status.sane_status;
     }
     
+    /* Close the device again */
+    sanei_usb_close(device_number);
+     
+    /* Initialize device definition */  
+    reflecta_initialize_device_definition(dev,&inq,devicename,reflecta_supported_usb_device.vendor,reflecta_supported_usb_device.product,device_number);
+    
+    /* Output */
+    reflecta_print_inquiry (dev);
+
     /* Check model number */
     if (inq.model != reflecta_supported_usb_device.model) {
         free (dev);
@@ -152,12 +161,6 @@ find_device_callback (const char *devicename)
         return SANE_STATUS_INVAL;
     }
     
-    /* Initialize device definition */  
-    reflecta_initialize_device_definition(dev,&inq,devicename,reflecta_supported_usb_device.vendor,reflecta_supported_usb_device.product,device_number);
-    
-    /* Output */
-    reflecta_print_inquiry (dev);
-
     /* Found a supported scanner, put it in the definitions list*/
     DBG (DBG_error, "find_device_callback: success\n");
     dev->next = definition_list_head;
@@ -308,6 +311,7 @@ reflecta_print_inquiry (Reflecta_Device_Definition * dev)
   DBG (DBG_inquiry, "\n");
   DBG (DBG_inquiry, "vendor........................: '%s'\n", dev->sane.vendor);
   DBG (DBG_inquiry, "product.......................: '%s'\n", dev->sane.model);
+  DBG (DBG_inquiry, "model  .......................: 0x%02x\n", dev->model);
   DBG (DBG_inquiry, "version.......................: '%s'\n", dev->version);
 
   DBG (DBG_inquiry, "X resolution..................: %d dpi\n",
@@ -738,14 +742,21 @@ reflecta_supported_device_list_contains(SANE_Word vendor_id, SANE_Word product_i
 static SANE_Status
 reflecta_supported_device_list_add(SANE_Word vendor_id, SANE_Word product_id, SANE_Word model_number)
 {
-    int i = 0;
+    int i = 0, k;
     struct Reflecta_USB_Device_Entry* dl;
     
     while (reflecta_supported_usb_device_list[i].vendor != 0) {
         i++;
     }    
     /* i is index of last entry */
-    dl = realloc(reflecta_supported_usb_device_list,i+2); /* Add one entry to list */
+    for (k=0; k<=i; k++) {
+        DBG(DBG_info,"init: %03d: %04x %04x %02x\n", i,
+            reflecta_supported_usb_device_list[k].vendor,
+            reflecta_supported_usb_device_list[k].product,
+            reflecta_supported_usb_device_list[k].model);
+    }
+    
+    dl = realloc(reflecta_supported_usb_device_list,(i+2)*sizeof(struct Reflecta_USB_Device_Entry)); /* Add one entry to list */
     if (dl == NULL) {
         return SANE_STATUS_INVAL;
     }
@@ -757,6 +768,12 @@ reflecta_supported_device_list_add(SANE_Word vendor_id, SANE_Word product_id, SA
     reflecta_supported_usb_device_list[i+1].vendor = 0;
     reflecta_supported_usb_device_list[i+1].product = 0;
     reflecta_supported_usb_device_list[i+1].model = 0;
+    for (k=0; k<=i+1; k++) {
+        DBG(DBG_info,"addd: %03d: %04x %04x %02x\n", i,
+            reflecta_supported_usb_device_list[k].vendor,
+            reflecta_supported_usb_device_list[k].product,
+            reflecta_supported_usb_device_list[k].model);
+    }
     return SANE_STATUS_GOOD;
 }
 
