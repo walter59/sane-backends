@@ -793,13 +793,13 @@ libsane_niash_la_LIBADD = $(COMMON_LIBS) libniash.la ../sanei/sanei_init_debug.l
 # TODO: Why are these distributed but not compiled?
 EXTRA_DIST += niash_core.c niash_core.h niash_xfer.c niash_xfer.h
 
-libpie_la_SOURCES = pie.c pie-scsidef.h
+libpie_la_SOURCES = pie.c pie_usb.h pie-scsidef.h
 libpie_la_CPPFLAGS = $(AM_CPPFLAGS) -DBACKEND_NAME=pie
 
 nodist_libsane_pie_la_SOURCES = pie-s.c 
 libsane_pie_la_CPPFLAGS = $(AM_CPPFLAGS) -DBACKEND_NAME=pie
 libsane_pie_la_LDFLAGS = $(DIST_SANELIBS_LDFLAGS)
-libsane_pie_la_LIBADD = $(COMMON_LIBS) libpie.la ../sanei/sanei_init_debug.lo ../sanei/sanei_constrain_value.lo ../sanei/sanei_config.lo ../sanei/sanei_config2.lo sane_strstatus.lo ../sanei/sanei_scsi.lo ../sanei/sanei_thread.lo $(SCSI_LIBS) $(PTHREAD_LIBS) $(RESMGR_LIBS)
+libsane_pie_la_LIBADD = $(COMMON_LIBS) libpie.la ../sanei/sanei_init_debug.lo ../sanei/sanei_constrain_value.lo ../sanei/sanei_config.lo ../sanei/sanei_config2.lo sane_strstatus.lo ../sanei/sanei_scsi.lo ../sanei/sanei_thread.lo ../sanei/sanei_usb.lo ../sanei/sanei_ir.lo ../sanei/sanei_magic.lo $(SCSI_LIBS) $(PTHREAD_LIBS) $(RESMGR_LIBS) $(USB_LIBS) $(MATH_LIB)
 EXTRA_DIST += pie.conf.in
 
 libp5_la_SOURCES = p5.c p5.h p5_device.h
