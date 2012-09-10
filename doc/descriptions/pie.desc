@@ -106,5 +106,12 @@
 :comment "Several slightly differing scanner models share the same USB-ID"
 :comment "Similar to PrimeFilm 7250 scanners from Pacific Image Electronics"
 
+:model "Reflecta DigitDia"
+:interface "USB"
+:usbid "0x05e3" "0x0142"
+:status :basic
+:comment "Several slightly differing scanner models share the same USB-ID"
+:comment "Similar to Powerslide scanners from Pacific Image Electronics"
+
 ; :comment and :url specifiers are optional after :mfg, :model, :desc,
 ;  and at the top-level.
