@@ -211,7 +211,6 @@ struct SANE_Auth_Data;
 #define SANE_MAX_USERNAME_LEN	128
 #define SANE_MAX_PASSWORD_LEN	128
 
-#ifdef 0 /* Defined in reflecta.h */
 typedef void (*SANE_Auth_Callback) (SANE_String_Const resource,
 				    SANE_Char *username,
 				    SANE_Char *password);
@@ -240,7 +239,6 @@ extern SANE_Status sane_set_io_mode (SANE_Handle handle,
 extern SANE_Status sane_get_select_fd (SANE_Handle handle,
 				       SANE_Int * fd);
 extern SANE_String_Const sane_strstatus (SANE_Status status);
-#endif
 
 #ifdef __cplusplus
 }
