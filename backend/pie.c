@@ -2815,7 +2815,7 @@ pie_usb_wait_scanner (Pie_Scanner * scanner, int secs)
           DBG (DBG_warning, "pie_usb_wait_scanner timed out\n");
           return status;
         }
-      usleep (62500);
+      sleep (1);
       cnt--;
 
     }
@@ -3889,7 +3889,7 @@ pie_usb_calibrate (Pie_Scanner * scanner)
   if (!rcv_buffer)
     return SANE_STATUS_NO_MEM;
 
-  status = pie_usb_wait_scanner (scanner, 6);
+  status = pie_usb_wait_scanner (scanner, 30);
   if (status != SANE_STATUS_GOOD)
     goto freend;
   set_read_length (sread.cmd, 4);       /* a test line */
