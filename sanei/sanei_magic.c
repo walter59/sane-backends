@@ -450,13 +450,13 @@ sanei_magic_crop(SANE_Parameters * params, SANE_Byte * buffer,
   DBG (10, "sanei_magic_crop: start\n");
 
   /*convert left and right to bytes, figure new byte and pixel width */
-  if(params->format == SANE_FRAME_RGB){
+  if(params->format == SANE_FRAME_RGB && params->depth <= 16){
     pixels = right-left;
     bytes = pixels * 3;
     left *= 3;
     right *= 3;
   }
-  else if(params->format == SANE_FRAME_GRAY && params->depth == 8){
+  else if(params->format == SANE_FRAME_GRAY && params->depth <= 16){
     pixels = right-left;
     bytes = right-left;
   }
@@ -471,6 +471,12 @@ sanei_magic_crop(SANE_Parameters * params, SANE_Byte * buffer,
     ret = SANE_STATUS_INVAL;
     goto cleanup;
   }
+
+  if ((params->depth > 8) && (params->depth <= 16))
+    {
+      left *= 2;
+      bytes *= 2;
+    }
 
   DBG (15, "sanei_magic_crop: l:%d r:%d p:%d b:%d\n",left,right,pixels,bytes);
 

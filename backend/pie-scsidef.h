@@ -5,6 +5,8 @@
     pie-scsidef.h: scsi-definiton header file for PIE scanner driver.
 
     Copyright (C) 2000 Simon Munton, based on the umax-scsidef.h by Oliver Rauch & Michael Johnson
+    Copyright (C) 2012 Michael Rickmann <mrickma@gwdg.de>
+                 for initial USB additions
 
     This file is part of the SANE package.
 
@@ -59,46 +61,58 @@
  * program here for dealing with parts of SCSI commands.
  */
 
-static inline void setbitfield(unsigned char * pageaddr, int mask, int shift, int val)
-{ *pageaddr = (*pageaddr & ~(mask << shift)) | ((val & mask) << shift); }
+static inline void
+setbitfield (unsigned char *pageaddr, int mask, int shift, int val)
+{
+  *pageaddr = (*pageaddr & ~(mask << shift)) | ((val & mask) << shift);
+}
 
-static inline void resetbitfield(unsigned char * pageaddr, int mask, int shift, int val)
-{ *pageaddr = (*pageaddr & ~(mask << shift)) | (((!val) & mask) << shift); }
+static inline void
+resetbitfield (unsigned char *pageaddr, int mask, int shift, int val)
+{
+  *pageaddr = (*pageaddr & ~(mask << shift)) | (((!val) & mask) << shift);
+}
 
-static inline int getbitfield(unsigned char * pageaddr, int mask, int shift)
-{ return ((*pageaddr >> shift) & mask); }
+static inline int
+getbitfield (unsigned char *pageaddr, int mask, int shift)
+{
+  return ((*pageaddr >> shift) & mask);
+}
 
 /* ------------------------------------------------------------------------- */
 
-static inline int getnbyte(unsigned char * pnt, int nbytes)
+static inline int
+getnbyte (unsigned char *pnt, int nbytes)
 {
  unsigned int result = 0;
  int i;
 
-  for(i=0; i<nbytes; i++)
+  for (i = 0; i < nbytes; i++)
     result = (result << 8) | (pnt[i] & 0xff);
   return result;
 }
 
 /* ------------------------------------------------------------------------- */
 
-static inline int getnbyte1(unsigned char * pnt, int nbytes)
+static inline int
+getnbyte1 (unsigned char *pnt, int nbytes)
 {
  unsigned int result = 0;
  int i;
 
-  for(i=nbytes-1; i >= 0; i--)
+  for (i = nbytes - 1; i >= 0; i--)
     result = (result << 8) | (pnt[i] & 0xff);
   return result;
 }
 
 /* ------------------------------------------------------------------------- */
 
-static inline void putnbyte(unsigned char * pnt, unsigned int value, unsigned int nbytes)
+static inline void
+putnbyte (unsigned char *pnt, unsigned int value, unsigned int nbytes)
 {
   int i;
 
-  for(i=nbytes-1; i>= 0; i--)
+  for (i = nbytes - 1; i >= 0; i--)
   {
     pnt[i] = value & 0xff;
     value = value >> 8;
@@ -108,11 +122,12 @@ static inline void putnbyte(unsigned char * pnt, unsigned int value, unsigned in
 
 /* ------------------------------------------------------------------------- */
 
-static inline void putnbyte1(unsigned char * pnt, unsigned int value, unsigned int nbytes)
+static inline void
+putnbyte1 (unsigned char *pnt, unsigned int value, unsigned int nbytes)
 {
   unsigned int i;
 
-  for(i=0; i< nbytes; i++)
+  for (i = 0; i < nbytes; i++)
   {
     pnt[i] = value & 0xff;
     value = value >> 8;
@@ -160,7 +175,7 @@ typedef struct
 
 #define set_inquiry_return_size(icb,val)			icb[0x04]=val
 static unsigned char inquiryC[] = { INQUIRY, 0x00, 0x00, 0x00, 0x7c, 0x00 };
-static scsiblk inquiry = { inquiryC, sizeof(inquiryC) };
+static scsiblk inquiry = { inquiryC, sizeof (inquiryC) };
 
 
 /* --------------------------------------------------------------------------------------------------------- */
@@ -194,6 +209,9 @@ static scsiblk inquiry = { inquiryC, sizeof(inquiryC) };
 #define get_inquiry_vendor(in, buf)				strncpy(buf, in + 0x08, 0x08)
 #define get_inquiry_product(in, buf)				strncpy(buf, in + 0x10, 0x010)
 #define get_inquiry_version(in, buf)				strncpy(buf, in + 0x20, 0x04)
+#define dup_inquiry_vendor(in)					strndup(in + 0x08, 0x08)
+#define dup_inquiry_product(in)					strndup(in + 0x10, 0x010)
+#define dup_inquiry_version(in)					strndup(in + 0x20, 0x04)
 
 #define get_inquiry_max_x_res(in)				getnbyte1(in + 0x24, 2)
 #define get_inquiry_max_y_res(in)				getnbyte1(in + 0x26, 2)
@@ -222,8 +240,10 @@ static scsiblk inquiry = { inquiryC, sizeof(inquiryC) };
 #define get_inquiry_trans_y1(in)				getnbyte1(in + 0x6e, 2)
 #define get_inquiry_trans_x2(in)				getnbyte1(in + 0x70, 2)
 #define get_inquiry_trans_y2(in)				getnbyte1(in + 0x72, 2)
+#define get_inquiry_model(in)				        in[0x74]
 
 #define INQ_ONE_PASS_COLOR          0x80
+#define INQ_FILTER_IRED             0x10
 #define INQ_FILTER_BLUE             0x08
 #define INQ_FILTER_GREEN            0x04
 #define INQ_FILTER_RED              0x02
@@ -270,25 +290,29 @@ static scsiblk inquiry = { inquiryC, sizeof(inquiryC) };
 /* --------------------------------------------------------------------------------------------------------- */
 
 
-static unsigned char test_unit_readyC[] = { TEST_UNIT_READY, 0x00, 0x00, 0x00, 0x00, 0x00 };
+static unsigned char test_unit_readyC[] =
+  { TEST_UNIT_READY, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
-static scsiblk test_unit_ready = { test_unit_readyC,sizeof(test_unit_readyC) };
-
-
-/* --------------------------------------------------------------------------------------------------------- */
-
-
-static unsigned char reserve_unitC[] = { RESERVE_UNIT, 0x00, 0x00, 0x00, 0x00, 0x00 };
-
-static scsiblk reserve_unit = { reserve_unitC, sizeof(reserve_unitC) };
+static scsiblk test_unit_ready =
+  { test_unit_readyC, sizeof (test_unit_readyC) };
 
 
 /* --------------------------------------------------------------------------------------------------------- */
 
 
-static unsigned char release_unitC[] = { RELEASE_UNIT, 0x00, 0x00, 0x00, 0x00, 0x00 };
+static unsigned char reserve_unitC[] =
+  { RESERVE_UNIT, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
-static scsiblk release_unit = { release_unitC, sizeof(release_unitC) };
+static scsiblk reserve_unit = { reserve_unitC, sizeof (reserve_unitC) };
+
+
+/* --------------------------------------------------------------------------------------------------------- */
+
+
+static unsigned char release_unitC[] =
+  { RELEASE_UNIT, 0x00, 0x00, 0x00, 0x00, 0x00 };
+
+static scsiblk release_unit = { release_unitC, sizeof (release_unitC) };
 
 
 /* --------------------------------------------------------------------------------------------------------- */
@@ -296,7 +320,7 @@ static scsiblk release_unit = { release_unitC, sizeof(release_unitC) };
 
 static unsigned char paramC[] = { PARAM, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
-static scsiblk param = { paramC, sizeof(paramC) };
+static scsiblk param = { paramC, sizeof (paramC) };
 
 #define set_param_length(in, l)		putnbyte(in + 3, (l), 2)
 
@@ -314,7 +338,7 @@ static scsiblk param = { paramC, sizeof(paramC) };
 
 static unsigned char writeC[] = { WRITE, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
-static scsiblk swrite = { writeC, sizeof(writeC) };
+static scsiblk swrite = { writeC, sizeof (writeC) };
 
 #define set_write_length(in, l)		putnbyte(in + 2, (l), 3)
 
@@ -324,7 +348,7 @@ static scsiblk swrite = { writeC, sizeof(writeC) };
 
 static unsigned char modeC[] = { MODE, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
-static scsiblk smode = { modeC, sizeof(modeC) };
+static scsiblk smode = { modeC, sizeof (modeC) };
 
 #define set_mode_length(in, l)		putnbyte(in + 3, (l), 2)
 
@@ -333,7 +357,7 @@ static scsiblk smode = { modeC, sizeof(modeC) };
 
 static unsigned char scanC[] = { SCAN, 0x00, 0x00, 0x00, 0x01, 0x00 };
 
-static scsiblk scan = { scanC, sizeof(scanC) };
+static scsiblk scan = { scanC, sizeof (scanC) };
 
 #define set_scan_cmd(in, l)		in[4] = l
 
@@ -343,18 +367,19 @@ static scsiblk scan = { scanC, sizeof(scanC) };
 /* sread instead of read because read is a libc primitive */
 static unsigned char sreadC[] = { READ, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
-static scsiblk sread = { sreadC, sizeof(sreadC) };
+static scsiblk sread = { sreadC, sizeof (sreadC) };
 
 #define set_read_length(in, l)		putnbyte(in + 2, (l), 3)
 
 /* --------------------------------------------------------------------------------------------------------- */
 
-#if 0
-static unsigned char request_senseC[] = { REQUEST_SENSE, 0x00, 0x00, 0x00, 0x00, 0x00 };
+static unsigned char request_senseC[] =
+  { REQUEST_SENSE, 0x00, 0x00, 0x00, 0x00, 0x00 };
 #define set_RS_allocation_length(sb,val)		sb[0x04]=val
+#if 0
 #define set_RS_LUN(sb,val)				setbitfield(sb + 0x01, 7, 5) /* ??? */
 
-static scsiblk request_sense = { request_senseC, sizeof(request_senseC) };
+static scsiblk request_sense = { request_senseC, sizeof (request_senseC) };
 #endif
 
 /* defines for request sense return block */
@@ -380,7 +405,7 @@ static scsiblk request_sense = { request_senseC, sizeof(request_senseC) };
 /* --------------------------------------------------------------------------------------------------------- */
 
 
-static char *sense_str[] = {"NO SENSE",
+static char *sense_str[] = { "NO SENSE",
                             "RECOVERED ERROR",
                             "NOT READY",
                             "MEDIUM ERROR",
@@ -395,7 +420,8 @@ static char *sense_str[] = {"NO SENSE",
                             "EQUAL",
                             "VOLUME OVERFLOW",
                             "MISCOMPARE",
-                            "??? - SENSE 0FH" };
+  "??? - SENSE 0FH"
+};
 
 /* --------------------------------------------------------------------------------------------------------- */
 
@@ -429,5 +455,28 @@ static char *sense_str[] = {"NO SENSE",
 #define FILTER_RED		    0x02
 #define FILTER_NEUTRAL		    0x01
 
+/* --------------------------------------------------------------------------------------------------------- */
+
+/* apparently PIE specific extensions used for USB scanners */
+
+/* additional command codes and their representation */
+
+#define PIE_COPY		0x18	/* reads a block of 0x70 or 0x00s before image aquisition */
+#define PIE_RELEASE_SCANNER     0xd2	/* written after image read, flush ? */
+#define PIE_READ_CALIBRATION	0xd7	/* used before image aquisition, calibration */
+#define PIE_WRITE_CALIBRATION	0xdc	/* used before image aquisition, calibration */
+#define PIE_READ_STATUS		0xdd	/* read 11 bytes of status, e.g. button */
+
+
+static unsigned char pie_copyC[] = { PIE_COPY, 0x00, 0x00, 0x14, 0xdc, 0x00 };
+static unsigned char release_scanC[] =
+  { PIE_RELEASE_SCANNER, 0x00, 0x00, 0x00, 0x04, 0x00 };
+static unsigned char read_calibrationC[] =
+  { PIE_READ_CALIBRATION, 0x00, 0x00, 0x00, 0x67, 0x00 };
+static unsigned char write_calibrationC[] =
+  { PIE_WRITE_CALIBRATION, 0x00, 0x00, 0x00, 0x17, 0x00 };
+static unsigned char read_statusC[] =
+  { PIE_READ_STATUS, 0x00, 0x00, 0x00, 0x0b, 0x00 };
 
 #endif
+

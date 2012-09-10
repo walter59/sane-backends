@@ -1,7 +1,8 @@
-.TH sane\-pie 5 "14 Jul 2008" "@PACKAGEVERSION@" "SANE Scanner Access Now Easy"
+.TH sane\-pie 5 "19 Aug 2012" "@PACKAGEVERSION@" "SANE Scanner Access Now Easy"
 .IX sane\-pie
 .SH NAME
 sane\-pie \- SANE backend for PIE, Devcom and AdLib SCSI flatbed scanners
+and PIE, Reflecta USB film scanners
 
 .SH DESCRIPTION
 The
@@ -13,25 +14,28 @@ At present, the following scanners should work with this backend:
 .PP
 .ft CR
 .nf
-Model:                  Status
-----------------------  ------
-Devcom 9636PRO          OK
-Devcom 9636S            Untested
-Devcom 9630S            Untested
-ScanAce 1236S           Untested
-ScanAce 1230S           Untested
-ScanAce II              Untested
-ScanAce III             OK
-ScanAce Plus            Untested
-ScanAce II Plus         Untested
-ScanAce III Plus        Untested
-ScanAce V               Untested
-ScanAce ScanMedia       Untested
-ScanAce ScanMedia II    Untested
-ScanAce 630S            Untested
-ScanAce 636S            Untested
-JetScan 630             OK
-JetScan 636PRO          Untested
+Model:                        Status
+----------------------------  ------
+Devcom 9636PRO                OK
+Devcom 9636S                  Untested
+Devcom 9630S                  Untested
+ScanAce 1236S                 Untested
+ScanAce 1230S                 Untested
+ScanAce II                    Untested
+ScanAce III                   OK
+ScanAce Plus                  Untested
+ScanAce II Plus               Untested
+ScanAce III Plus              Untested
+ScanAce V                     Untested
+ScanAce ScanMedia             Untested
+ScanAce ScanMedia II          Untested
+ScanAce 630S                  Untested
+ScanAce 636S                  Untested
+JetScan 630                   OK
+JetScan 636PRO                Untested
+
+Reflecta ProScan 7200         OK
+Reflecta Crystal Scan 7200    Untested
 .fi
 .ft R
 .PP
@@ -56,3 +60,8 @@ sane(7)
 Please send any information and bug-reports to:
 .br
 .B Simon Munton <simon@munton.demon.co.uk>
+.br
+for USB film scanners to:
+.br
+.B Michael Rickmann <mrickma@gwdg.de>
+
