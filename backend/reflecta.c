@@ -19,10 +19,7 @@
 #include <stdio.h> /* for FILE */
 #include <string.h> /* for strlen */
 #include <stdlib.h> /* for NULL */
-extern char *strdup (const char *s);
-extern char *strndup (const char *s, size_t n);
 #include <unistd.h> /* usleep */
-extern int usleep (__useconds_t useconds);
 #include <stdint.h>
 
 /* Configutation defines */
@@ -39,7 +36,6 @@ extern int usleep (__useconds_t useconds);
 #define BACKEND_NAME reflecta
 #include "../include/sane/sanei_backend.h"
 #include "reflecta.h"
-#include "reflecta7200.h"
 #include "sane.h"
 
 extern void write_tiff_rgbi_header (FILE *fptr, int width, int height, int depth, int resolution, const char *icc_profile);
