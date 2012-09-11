@@ -234,6 +234,7 @@ static char *scanner_str[] = {
   "AdLib", "JetScan 636PRO",
   /* USB film scanners */
   "PIE", "SF Scanner",
+  "PIE", "MS Scanner",
   "END_OF_LIST"
 };
 
@@ -517,9 +518,32 @@ static PIE_USB_Model proscan_7200_model = {
    0x0e79, {0x3f, 0x3d, 0x39}}
 };
 
+static PIE_USB_Model powerslide_3600_model = {
+  "PIE/Reflecta",               /* Device vendor string */
+  "Powerslide 3600/DigitDia 6000",               /* Device model name */
+  0x3a,                         /* Model ID */
+  PIE_USB_FLAG_MIRROR_IMAGE,    /* flags */
+  /* operation mode values for preview, skip calibration and quality */
+  {0x00, 0x08, 0x02},
+  75000,                        /* default brightness */
+  /* R, G, B gain constant */
+  {4.19682524E-04, 3.92060196E-04, 3.89647803E-04},
+  /* R, G, B normal mode offset factor */
+  {1.2229896394, 1.0447735936, 0.9805181615},
+  16,                           /* minimal gain */
+  42,                           /* maximal gain in quality mode */
+  0x0f00,                       /* normal mode maximal exposure time */
+  10,                           /* gain calibration part */
+  {{0x2c89, 0x1eb7, 0x17ca},    /* RGB texp and gain, first calibration if quality mode */
+   0x2c89, {0x25, 0x25, 0x28}},
+  {{0x0e79, 0x0bff, 0x0c6c},    /* RGB texp and gain, first calibration if normal mode */
+   0x0e79, {0x3f, 0x3d, 0x39}}
+};
+
 /* list of USB descriptors, do not mind different models with the same USB id
  */
 static PIE_USB_Device_Entry pie_usb_device_list[] = {
+  {0x05e3, 0x0142, &powerslide_3600_model},     /* PIE Powerslide 3600 / Reflecta DigitDia 5000,6000 */
   {0x05e3, 0x0145, &crystalscan_7200_model},    /* Reflecta CrystalScan 7200, id 0x30 */
   {0x05e3, 0x0145, &proscan_7200_model},        /* Reflecta ProScan 7200, id 0x36 */
   {0, 0, 0}
