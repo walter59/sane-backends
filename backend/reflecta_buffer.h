@@ -59,7 +59,7 @@ struct Reflecta_Read_Buffer
     SANE_Int iWrite[4]; /* index of lines where to write for a specific color */
     SANE_Byte* complete; /* array of bytes, one byte per line, specifying the amount of colors read for a line */
     /* SANE_Int iIncomplete; index of first incomplete line; should not be read yet */
-    /* SANE_Int nFree; /* number of free lines in buffer */
+    /* SANE_Int nFree;  number of free lines in buffer */
     /* Statistics */
     SANE_Int sizeImage; /* number of bytes in full image */
     SANE_Int nRead; /* number of bytes read from the buffer */

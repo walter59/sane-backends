@@ -19,10 +19,7 @@
 #include <stdio.h> /* for FILE */
 #include <string.h> /* for strlen */
 #include <stdlib.h> /* for NULL */
-extern char *strdup (const char *s);
-extern char *strndup (const char *s, size_t n);
 #include <unistd.h> /* usleep */
-extern int usleep (__useconds_t useconds);
 #include <stdint.h>
 
 /* Configutation defines */
@@ -1025,7 +1022,7 @@ sane_start (SANE_Handle handle)
         /* Export shading data as TIFF */
         if (scanner->val[OPT_SHADINGDATA].b) {
             struct Reflecta_Read_Buffer shading;
-            SANE_Char* lboff = scanner->shading_buffer;
+            SANE_Byte* lboff = scanner->shading_buffer;
             SANE_Int bpl = 5340*2+2;
             SANE_Int n;
             SANE_Int bufsize = 5340*45*2*4;
@@ -1281,7 +1278,7 @@ sane_read (SANE_Handle handle, SANE_Byte * buf, SANE_Int max_len, SANE_Int * len
             /* The amount of bytes_per_line varies with color format setting; only 'index' implemented */
             bpl = scanner->scan_parameters.bytes_per_line/scanner->buffer.nColors + 2; /* Index bytes! */
             DBG(DBG_info,"sane_read(): reading lines: bytes per line = %d\n",bpl);
-            SANE_Char* linebuf = (SANE_Char*)malloc(linesToRead*bpl);
+            SANE_Byte* linebuf = (SANE_Byte*)malloc(linesToRead*bpl);
             cmdGetScannedLines(scanner->device_number, linebuf, linesToRead, linesToRead*bpl, &status, 5);
             if (status.sane_status != SANE_STATUS_GOOD ) {
                 /* Error, return */
@@ -1289,7 +1286,7 @@ sane_read (SANE_Handle handle, SANE_Byte * buf, SANE_Int max_len, SANE_Int * len
                 return SANE_STATUS_IO_ERROR;
             }
             /* Copy into official buffer */
-            SANE_Char* lboff = linebuf;
+            SANE_Byte* lboff = linebuf;
             for (n=0; n<linesToRead; n++) {
                 if (buffer_put(&scanner->buffer, lboff, bpl) == 0) {
                     /* Error, return */

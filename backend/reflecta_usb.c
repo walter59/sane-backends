@@ -334,12 +334,12 @@ static SANE_Status ctrlinbyte(SANE_Int device_number, SANE_Byte* b) {
  * @return SANE status
  */
 static SANE_Status bulkin(SANE_Int device_number, SANE_Byte data[], unsigned int size) {
-    unsigned int total = 0;
+    size_t total = 0;
     SANE_Status r = SANE_STATUS_GOOD;
     SANE_Byte * buffer = (SANE_Byte *) malloc(0x4000);
     while (total<size) {
         /* Determine bulk size */
-        unsigned int part = ((size-total) >= 0x4000 ? 0x4000 : (size-total));
+        size_t part = ((size-total) >= 0x4000 ? 0x4000 : (size-total));
         /* Get bulk data */
         /* r = libusb_bulk_transfer(scannerHandle, BULK_ENDPOINT, buffer, part, &N, TIMEOUT); */
 /*
@@ -351,7 +351,7 @@ static SANE_Status bulkin(SANE_Int device_number, SANE_Byte data[], unsigned int
 */
         if (r==0) {
             /* Read data into buffer, part = # bytes actually read */
-            unsigned int k;
+            size_t k;
             for (k=0; k<part; k++) {
                 *(data+total+k) = *(buffer+k);
             }
