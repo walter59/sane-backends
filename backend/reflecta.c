@@ -168,7 +168,7 @@ sane_init (SANE_Int * version_code, SANE_Auth_Callback __sane_unused__ authorize
      * that don't work. */
 
     /* Create default list */
-    reflecta_supported_usb_device_list = calloc(3,sizeof(struct Reflecta_USB_Device_Entry));
+    reflecta_supported_usb_device_list = calloc(4,sizeof(struct Reflecta_USB_Device_Entry));
     /* Reflecta CrystalScan 7200, model number 0x30 */
     reflecta_supported_usb_device_list[0].vendor = 0x05e3;
     reflecta_supported_usb_device_list[0].product = 0x0145;
@@ -177,6 +177,10 @@ sane_init (SANE_Int * version_code, SANE_Auth_Callback __sane_unused__ authorize
     reflecta_supported_usb_device_list[1].vendor = 0x05e3;
     reflecta_supported_usb_device_list[1].product = 0x0145;
     reflecta_supported_usb_device_list[1].model = 0x36;
+    /* Reflecta DigitDia 6000, model number 0x3a */
+    reflecta_supported_usb_device_list[1].vendor = 0x05e3;
+    reflecta_supported_usb_device_list[1].product = 0x0142;
+    reflecta_supported_usb_device_list[1].model = 0x3a;
     /* end of list */
     reflecta_supported_usb_device_list[2].vendor = 0;
     reflecta_supported_usb_device_list[2].product = 0;
