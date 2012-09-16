@@ -868,14 +868,16 @@ libsane_qcam_la_LDFLAGS = $(DIST_SANELIBS_LDFLAGS)
 libsane_qcam_la_LIBADD = $(COMMON_LIBS) libqcam.la ../sanei/sanei_init_debug.lo ../sanei/sanei_constrain_value.lo ../sanei/sanei_config.lo  sane_strstatus.lo ../sanei/sanei_pio.lo
 EXTRA_DIST += qcam.conf.in
 
-libreflecta_la_SOURCES =  reflecta.c reflecta.h reflecta_buffer.c reflecta_buffer.h reflecta_scancmd.c reflecta_scancmd.h reflecta_specific.c reflecta_specific.h reflecta_usb.c reflecta_usb.h
+libreflecta_la_SOURCES = reflecta.c reflecta.h reflecta_scancmd.h reflecta_specific.h reflecta_usb.h reflecta_buffer.h
 libreflecta_la_CPPFLAGS = $(AM_CPPFLAGS) -DBACKEND_NAME=reflecta
 
-nodist_libsane_reflecta_la_SOURCES = reflecta-s.c 
+nodist_libsane_reflecta_la_SOURCES = reflecta-s.c ../frontend/stiff.c ../frontend/stiff.h
 libsane_reflecta_la_CPPFLAGS = $(AM_CPPFLAGS) -DBACKEND_NAME=reflecta
 libsane_reflecta_la_LDFLAGS = $(DIST_SANELIBS_LDFLAGS)
-libsane_reflecta_la_LIBADD = $(COMMON_LIBS) libreflecta.la ../sanei/sanei_init_debug.lo ../sanei/sanei_constrain_value.lo ../sanei/sanei_config.lo ../sanei/sanei_config2.lo sane_strstatus.lo ../sanei/sanei_usb.lo ../sanei/sanei_thread.lo $(USB_LIBS) $(PTHREAD_LIBS) $(RESMGR_LIBS)
-EXTRA_DIST += reflecta.conf
+libsane_reflecta_la_LIBADD = $(COMMON_LIBS) libreflecta.la ../sanei/sanei_init_debug.lo ../sanei/sanei_constrain_value.lo ../sanei/sanei_config.lo sane_strstatus.lo ../sanei/sanei_usb.lo $(MATH_LIB) $(USB_LIBS) $(RESMGR_LIBS)
+# plus included .c files
+EXTRA_DIST += reflecta.conf.in reflecta_scancmd.c reflecta_specific.c reflecta_usb.c reflecta_buffer.c
+
 
 libricoh_la_SOURCES = ricoh.c ricoh.h
 libricoh_la_CPPFLAGS = $(AM_CPPFLAGS) -DBACKEND_NAME=ricoh

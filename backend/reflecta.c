@@ -38,10 +38,8 @@ extern int usleep (__useconds_t useconds);
 /* Backend includes */
 #define BACKEND_NAME reflecta
 #include "../include/sane/sanei_backend.h"
+#include "../frontend/stiff.h"
 #include "reflecta.h"
-#include "sane.h"
-
-extern void write_tiff_rgbi_header (FILE *fptr, int width, int height, int depth, int resolution, const char *icc_profile);
 
 /* --------------------------------------------------------------------------
  *
@@ -1400,3 +1398,4 @@ sane_get_select_fd (SANE_Handle handle, SANE_Int * fd)
  * ========================================================================= */
 
 #include "reflecta_usb.c"
+

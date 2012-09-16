@@ -1,0 +1,8 @@
+# reflecta.conf: Configuration file for
+# Reflecta / Pacific Image Electronics film scanners
+
+# PIE MF Scanner model
+usb 0x05e3 0x0142
+
+# several PIE SF Scanner models
+usb 0x05e3 0x0145
