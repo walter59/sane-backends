@@ -1,26 +1,27 @@
-[sanei_debug+  0.001185] Setting debug level of pieusb to 255.
-[pieusb+  0.001252] sane_init() build 1
-[pieusb+  0.806054] sane_init() looking for Reflecta scanner 05e3 0145 model 30
-[pieusb+  0.806140] sane_init() looking for Reflecta scanner 05e3 0145 model 36
-[pieusb+  0.806156] sane_init() looking for Reflecta scanner 05e3 0142 model 3a
-[pieusb+  0.806175] pieusb_find_device_callback: libusb:003:002
-[pieusb+  0.806821] pieusb_cmd_inquiry()
-[pieusb+  0.806846] ***	pieusb_command(12:Inquiry): size 0x05
-[pieusb+  0.806871] pieusb_command loop, status 8:Again
-[pieusb+  0.806885] _pieusb_scsi_command(): 12:Inquiry
-[pieusb+  0.844807] _pieusb_scsi_command usbstat 0x01
-[pieusb+  0.844865] pieusb_scsi_command data in
+[sanei_debug+  0.001108] Setting debug level of pieusb to 255.
+[pieusb+  0.001192] sane_init() build 1
+[pieusb+  0.924112] sane_init() looking for Reflecta scanner 05e3 0145 model 30
+[pieusb+  0.924186] sane_init() looking for Reflecta scanner 05e3 0145 model 36
+[pieusb+  0.924205] sane_init() looking for Reflecta scanner 05e3 0142 model 3a
+[pieusb+  0.924229] pieusb_find_device_callback: libusb:001:007
+[pieusb+  0.925020] pieusb_cmd_inquiry()
+[pieusb+  0.925085] *** pieusb_command(12:Inquiry): size 0x05
+[pieusb+  0.925122] 	pieusb_command loop, status 8:Again
+[pieusb+  0.925141] 		_pieusb_scsi_command(): 12:Inquiry
+Cmd	00000000: 12 00 00 00 05 00                               ......
+[pieusb+  0.937192] 		_pieusb_scsi_command usbstat 0x01
+[pieusb+  0.937223] 		_pieusb_scsi_command data in
 In	00000000: 06 00 02 01 b4                                  ....4
-[pieusb+  0.850997] _pieusb_scsi_command returned 1:Read
-[pieusb+  0.852808] pieusb_command loop, status 3:Busy
-[pieusb+  0.854808] pieusb_command loop, status 0:Ok
-[pieusb+  0.854858] pieusb_command() finished with state 0
-[pieusb+  0.854873] pieusb_cmd_inquiry()
-[pieusb+  0.854886] ***	pieusb_command(12:Inquiry): size 0xb8
-[pieusb+  0.854900] pieusb_command loop, status 8:Again
-[pieusb+  0.854912] _pieusb_scsi_command(): 12:Inquiry
-[pieusb+  0.892807] _pieusb_scsi_command usbstat 0x01
-[pieusb+  0.892864] pieusb_scsi_command data in
+[pieusb+  0.944146] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  0.945257] 	pieusb_command loop, status 0:Ok
+[pieusb+  0.945329] 	pieusb_command() finished with state 0
+[pieusb+  0.945351] pieusb_cmd_inquiry()
+[pieusb+  0.945369] *** pieusb_command(12:Inquiry): size 0xb8
+[pieusb+  0.945386] 	pieusb_command loop, status 8:Again
+[pieusb+  0.945402] 		_pieusb_scsi_command(): 12:Inquiry
+Cmd	00000000: 12 00 00 00 b8 00                               ....8.
+[pieusb+  0.956191] 		_pieusb_scsi_command usbstat 0x01
+[pieusb+  0.956228] 		_pieusb_scsi_command data in
 In	00000000: 06 00 02 01 b4 00 00 00 50 49 45 20 20 20 20 20 ....4...PIE     
 	00000010: 4d 53 20 53 63 61 6e 6e 65 72 00 00 00 00 00 00 MS Scanner......
 	00000020: 31 2e 30 30 88 13 88 13 18 1d d5 1c 9e 35 07 00 1.00......U..5..
@@ -33,476 +34,1595 @@ In	00000000: 06 00 02 01 b4 00 00 00 50 49 45 20 20 20 20 20 ....4...PIE
 	00000090: 46 6c 61 73 68 20 52 4f 4d 20 32 39 45 45 35 31 Flash ROM 29EE51
 	000000a0: 32 20 0d 0a 42 59 3a 43 68 65 6e 20 54 73 75 6e 2 ..BY:Chen Tsun
 	000000b0: 67 2d 59 75 20 20 00 00                         g-Yu  ..
-[pieusb+  0.907868] _pieusb_scsi_command returned 1:Read
-[pieusb+  0.908808] pieusb_command loop, status 3:Busy
-[pieusb+  0.910809] pieusb_command loop, status 0:Ok
-[pieusb+  0.910861] pieusb_command() finished with state 0
-[pieusb+  0.910972] INQUIRY:
-[pieusb+  0.910994] ========
-[pieusb+  0.911006] 
-[pieusb+  0.911018] vendor........................: 'PIE'
-[pieusb+  0.911031] product.......................: 'MS Scanner'
-[pieusb+  0.911043] model  .......................: 0x3a
-[pieusb+  0.911055] version.......................: '1.00'
-[pieusb+  0.911067] X resolution..................: 5000 dpi
-[pieusb+  0.911079] Y resolution..................: 5000 dpi
-[pieusb+  0.911091] pixel resolution..............: 5000 dpi
-[pieusb+  0.911103] fb width......................: 1.489600 in
-[pieusb+  0.911136] fb length.....................: 1.476200 in
-[pieusb+  0.911150] transparency width............: 0.989600 in
-[pieusb+  0.911165] transparency length...........: 1.224400 in
-[pieusb+  0.911179] transparency offset...........: 999,1607
-[pieusb+  0.911191] # of halftones................: 0
-[pieusb+  0.911203] One pass color................: yes
-[pieusb+  0.911219] Filters.......................: Infrared Red Green Blue  (9e)
-[pieusb+  0.911233] Color depths..................: 16 bit 12 bit 8 bit 1 bit  (35)
-[pieusb+  0.911247] Color Format..................: Indexed Line Pixel  (07)
-[pieusb+  0.911260] Image Format..................: OKLine Intel (09)
-[pieusb+  0.911273] Scan Capability...............: ExtCal DisCal 3 speeds (4b)
-[pieusb+  0.911287] Optional Devices..............: TransModule1 ADF  (65)
-[pieusb+  0.911300] Enhancement...................: 02
-[pieusb+  0.911312] Gamma bits....................: 12
-[pieusb+  0.911324] Fast Preview Resolution.......: 300
-[pieusb+  0.911336] Min Highlight.................: 100
-[pieusb+  0.911347] Max Shadow....................: 25
-[pieusb+  0.911387] Cal Eqn.......................: 1
-[pieusb+  0.911400] Min Exposure..................: 100
-[pieusb+  0.911412] Max Exposure..................: 10000
-[pieusb+  0.911424] pieusb_find_device_callback: success
-[pieusb+  0.911438] sane_get_devices
-[pieusb+  0.913563] sane_open(libusb:003:002)
-[pieusb+  0.914916] pieusb_init_options
-[pieusb+  0.914994] pieusb_wait_ready()
-[pieusb+  0.915015] pieusb_cmd_test_unit_ready()
-[pieusb+  0.915032] ***	pieusb_command(00:Test Unit Ready): size 0x00
-[pieusb+  0.915047] pieusb_command loop, status 8:Again
-[pieusb+  0.915060] _pieusb_scsi_command(): 00:Test Unit Ready
-[pieusb+  0.952807] _pieusb_scsi_command usbstat 0x03
-[pieusb+  0.952863] _pieusb_scsi_command returned 3:Busy
-[pieusb+  1.953831] pieusb_command loop, status 0:Ok
-[pieusb+  1.953890] pieusb_command() finished with state 0
-[pieusb+  1.953910] pieusb_cmd_test_unit_ready() return status = Success
-[pieusb+  1.953924] pieusb_wait_ready() pieusb_cmd_test_unit_ready: 0
-[pieusb+  1.953946] pieusb_cmd_read_state()
-[pieusb+  1.953959] ***	pieusb_command(dd:Read State): size 0x0c
-[pieusb+  1.953972] pieusb_command loop, status 8:Again
-[pieusb+  1.953985] _pieusb_scsi_command(): dd:Read State
-[pieusb+  1.991819] _pieusb_scsi_command usbstat 0x01
-[pieusb+  1.991877] pieusb_scsi_command data in
-In	00000000: 00 00 00 ff f0 00 05 00 00 49 45 20             ...p....IE 
-[pieusb+  1.996012] _pieusb_scsi_command returned 1:Read
-[pieusb+  1.997824] pieusb_command loop, status 3:Busy
-[pieusb+  2.998833] pieusb_command loop, status 0:Ok
-[pieusb+  2.998892] pieusb_command() finished with state 0
-[pieusb+  2.998906] pieusb_cmd_read_state(): button 0, warmingUp 0, scanning 5, busy? 0
-[pieusb+  2.998920] pieusb_wait_ready() pieusb_cmd_read_state: 0
-[pieusb+  2.998948] pieusb_cmd_get_shading_parms()
-[pieusb+  2.998960] ***	pieusb_command(0a:Write): size 0x06
-[pieusb+  2.998974] pieusb_command loop, status 8:Again
-[pieusb+  2.998987] _pieusb_scsi_command(): 0a:Write
-[pieusb+  3.036831] _pieusb_scsi_command usbstat 0x00
+[pieusb+  0.973092] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  0.974120] 	pieusb_command loop, status 0:Ok
+[pieusb+  0.974188] 	pieusb_command() finished with state 0
+[pieusb+  0.974321] INQUIRY:
+[pieusb+  0.974350] ========
+[pieusb+  0.974366] 
+[pieusb+  0.974381] vendor........................: 'PIE'
+[pieusb+  0.974396] product.......................: 'MS Scanner'
+[pieusb+  0.974411] model  .......................: 0x3a
+[pieusb+  0.974427] version.......................: '1.00'
+[pieusb+  0.974442] X resolution..................: 5000 dpi
+[pieusb+  0.974461] Y resolution..................: 5000 dpi
+[pieusb+  0.974477] pixel resolution..............: 5000 dpi
+[pieusb+  0.974494] fb width......................: 1.489600 in
+[pieusb+  0.974537] fb length.....................: 1.476200 in
+[pieusb+  0.974555] transparency width............: 0.989600 in
+[pieusb+  0.974574] transparency length...........: 1.224400 in
+[pieusb+  0.974591] transparency offset...........: 999,1607
+[pieusb+  0.974607] # of halftones................: 0
+[pieusb+  0.974622] One pass color................: yes
+[pieusb+  0.974637] Filters.......................: Infrared Red Green Blue  (9e)
+[pieusb+  0.974655] Color depths..................: 16 bit 12 bit 8 bit 1 bit  (35)
+[pieusb+  0.974672] Color Format..................: Indexed Line Pixel  (07)
+[pieusb+  0.974693] Image Format..................: OKLine Intel (09)
+[pieusb+  0.974710] Scan Capability...............: ExtCal DisCal 3 speeds (4b)
+[pieusb+  0.974726] Optional Devices..............: TransModule1 ADF  (65)
+[pieusb+  0.974743] Enhancement...................: 02
+[pieusb+  0.974865] Gamma bits....................: 12
+[pieusb+  0.974882] Fast Preview Resolution.......: 300
+[pieusb+  0.974898] Min Highlight.................: 100
+[pieusb+  0.974942] Max Shadow....................: 25
+[pieusb+  0.974960] Cal Eqn.......................: 1
+[pieusb+  0.974975] Min Exposure..................: 100
+[pieusb+  0.974991] Max Exposure..................: 10000
+[pieusb+  0.975006] pieusb_find_device_callback: success
+[pieusb+  0.975026] sane_get_devices
+[pieusb+  0.976661] sane_open(libusb:001:007)
+[pieusb+  0.977805] pieusb_init_options
+[pieusb+  0.977870] pieusb_wait_ready()
+[pieusb+  0.977885] pieusb_cmd_test_unit_ready()
+[pieusb+  0.977895] *** pieusb_command(00:Test Unit Ready): size 0x00
+[pieusb+  0.977907] 	pieusb_command loop, status 8:Again
+[pieusb+  0.977916] 		_pieusb_scsi_command(): 00:Test Unit Ready
+Cmd	00000000: 00 00 00 00 00 00                               ......
+[pieusb+  0.988936] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  0.988967] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  1.989463] 	pieusb_command loop, status 0:Ok
+[pieusb+  1.989540] 	pieusb_command() finished with state 0
+[pieusb+  1.989566] pieusb_cmd_test_unit_ready() return status = Success
+[pieusb+  1.989584] -> pieusb_cmd_test_unit_ready: 0
+[pieusb+  1.989614] pieusb_cmd_get_shading_parms()
+[pieusb+  1.989632] *** pieusb_command(0a:Write): size 0x06
+[pieusb+  1.989650] 	pieusb_command loop, status 8:Again
+[pieusb+  1.989667] 		_pieusb_scsi_command(): 0a:Write
+Cmd	00000000: 0a 00 00 00 06 00                               ......
+[pieusb+  2.000316] 		_pieusb_scsi_command usbstat 0x00
 Out	00000000: 95 00 00 00 00 00                               ......
-[pieusb+  3.048831] _pieusb_scsi_command returned 3:Busy
-[pieusb+  3.050846] pieusb_command loop, status 3:Busy
-[pieusb+  3.052832] pieusb_command loop, status 0:Ok
-[pieusb+  3.052882] pieusb_command() finished with state 0
-[pieusb+  3.052896] ***	pieusb_command(08:Read): size 0x20
-[pieusb+  3.052909] pieusb_command loop, status 8:Again
-[pieusb+  3.052922] _pieusb_scsi_command(): 08:Read
-[pieusb+  3.090833] _pieusb_scsi_command usbstat 0x01
-[pieusb+  3.090889] pieusb_scsi_command data in
+[pieusb+  2.003061] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  2.003893] 	pieusb_command loop, status 0:Ok
+[pieusb+  2.003967] 	pieusb_command() finished with state 0
+[pieusb+  2.003986] *** pieusb_command(08:Read): size 0x20
+[pieusb+  2.004005] 	pieusb_command loop, status 8:Again
+[pieusb+  2.004024] 		_pieusb_scsi_command(): 08:Read
+Cmd	00000000: 08 00 00 00 20 00                               .... .
+[pieusb+  2.014874] 		_pieusb_scsi_command usbstat 0x01
+[pieusb+  2.014943] 		_pieusb_scsi_command data in
 In	00000000: 95 00 1c 00 04 06 04 00 00 10 10 14 1a 1d 08 10 ................
 	00000010: 10 14 1a 1d 10 10 10 14 1a 1d 20 10 10 14 1a 1d .......... .....
-[pieusb+  3.095217] _pieusb_scsi_command returned 1:Read
-[pieusb+  3.096813] pieusb_command loop, status 3:Busy
-[pieusb+  3.098832] pieusb_command loop, status 0:Ok
-[pieusb+  3.098885] pieusb_command() finished with state 0
-[pieusb+  3.099284] sane_get_option_descriptor() option=0
-[pieusb+  3.099304] sane_control_option()
-[pieusb+  3.099323] get  [#0]
-[pieusb+  3.099336] get  [#0] val=32
-[pieusb+  3.099361] sane_get_option_descriptor() option=0
-[pieusb+  3.099374] sane_control_option()
-[pieusb+  3.099386] get  [#0]
-[pieusb+  3.099398] get  [#0] val=32
-[pieusb+  3.099411] sane_get_option_descriptor() option=1
-[pieusb+  3.099424] sane_get_option_descriptor() option=2
-[pieusb+  3.099436] sane_get_option_descriptor() option=3
-[pieusb+  3.099448] sane_get_option_descriptor() option=4
-[pieusb+  3.099465] sane_get_option_descriptor() option=5
-[pieusb+  3.099478] sane_get_option_descriptor() option=6
-[pieusb+  3.099490] sane_get_option_descriptor() option=7
-[pieusb+  3.099502] sane_get_option_descriptor() option=8
-[pieusb+  3.099514] sane_get_option_descriptor() option=9
-[pieusb+  3.099526] sane_get_option_descriptor() option=10
-[pieusb+  3.099538] sane_get_option_descriptor() option=11
-[pieusb+  3.099550] sane_get_option_descriptor() option=12
-[pieusb+  3.099563] sane_get_option_descriptor() option=13
-[pieusb+  3.099597] sane_get_option_descriptor() option=14
-[pieusb+  3.099612] sane_get_option_descriptor() option=15
-[pieusb+  3.099624] sane_get_option_descriptor() option=16
-[pieusb+  3.099636] sane_get_option_descriptor() option=17
-[pieusb+  3.099649] sane_get_option_descriptor() option=18
-[pieusb+  3.099661] sane_get_option_descriptor() option=19
-[pieusb+  3.099673] sane_get_option_descriptor() option=20
-[pieusb+  3.099685] sane_get_option_descriptor() option=21
-[pieusb+  3.099697] sane_get_option_descriptor() option=22
-[pieusb+  3.099709] sane_get_option_descriptor() option=23
-[pieusb+  3.099721] sane_get_option_descriptor() option=24
-[pieusb+  3.099733] sane_get_option_descriptor() option=25
-[pieusb+  3.099759] sane_get_option_descriptor() option=26
-[pieusb+  3.099771] sane_get_option_descriptor() option=27
-[pieusb+  3.099783] sane_get_option_descriptor() option=28
-[pieusb+  3.099795] sane_get_option_descriptor() option=29
-[pieusb+  3.099807] sane_get_option_descriptor() option=30
-[pieusb+  3.099818] sane_get_option_descriptor() option=31
-[pieusb+  3.099831] sane_control_option()
-[pieusb+  3.099843] get br-x [#14]
-[pieusb+  3.099855] get br-x [#14] val=2479609
-[pieusb+  3.099868] sane_control_option()
-[pieusb+  3.099879] get tl-x [#12]
-[pieusb+  3.099891] get tl-x [#12] val=0
-[pieusb+  3.099904] sane_control_option()
-[pieusb+  3.099915] get br-y [#15]
-[pieusb+  3.099927] get br-y [#15] val=2457303
-[pieusb+  3.099940] sane_control_option()
-[pieusb+  3.099951] get tl-y [#13]
-[pieusb+  3.099963] get tl-y [#13] val=0
-[pieusb+  3.099992] sane_get_option_descriptor() option=4
-[pieusb+  3.100034] sane_get_option_descriptor() option=4
-[pieusb+  3.100048] sane_control_option()
-[pieusb+  3.100059] set resolution [#4] to 1000.000000
-[pieusb+  3.100099] sane_control_option()
-[pieusb+  3.100112] get tl-x [#12]
-[pieusb+  3.100124] get tl-x [#12] val=0
-[pieusb+  3.100136] sane_get_option_descriptor() option=14
-[pieusb+  3.100149] sane_control_option()
-[pieusb+  3.100160] set br-x [#14] to 37.835831
-[pieusb+  3.100178] sane_control_option()
-[pieusb+  3.100189] get tl-y [#13]
-[pieusb+  3.100201] get tl-y [#13] val=0
-[pieusb+  3.100214] sane_get_option_descriptor() option=15
-[pieusb+  3.100226] sane_control_option()
-[pieusb+  3.100237] set br-y [#15] to 37.495468
-[pieusb+  3.100285] sane_start()
-[pieusb+  3.100300] pieusb_cmd_read_state()
-[pieusb+  3.100312] ***	pieusb_command(dd:Read State): size 0x0c
-[pieusb+  3.100326] pieusb_command loop, status 8:Again
-[pieusb+  3.100339] _pieusb_scsi_command(): dd:Read State
-[pieusb+  3.136832] _pieusb_scsi_command usbstat 0x01
-[pieusb+  3.136886] pieusb_scsi_command data in
-In	00000000: 00 00 00 ff f0 00 05 00 00 10 10 14             ...p.......
-[pieusb+  3.141023] _pieusb_scsi_command returned 1:Read
-[pieusb+  3.142853] pieusb_command loop, status 3:Busy
-[pieusb+  4.143845] pieusb_command loop, status 0:Ok
-[pieusb+  4.143902] pieusb_command() finished with state 0
-[pieusb+  4.143915] pieusb_cmd_read_state(): button 0, warmingUp 0, scanning 5, busy? 0
-[pieusb+  4.143941] pieusb_cmd_set_exposure_time()
-[pieusb+  4.143954] ***	pieusb_command(0a:Write): size 0x08
-[pieusb+  4.143967] pieusb_command loop, status 8:Again
-[pieusb+  4.143980] _pieusb_scsi_command(): 0a:Write
-[pieusb+  4.181848] _pieusb_scsi_command usbstat 0x00
+[pieusb+  2.017512] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  2.018375] 	pieusb_command loop, status 0:Ok
+[pieusb+  2.018445] 	pieusb_command() finished with state 0
+[pieusb+  2.018857] sane_get_option_descriptor() option=0
+[pieusb+  2.018886] sane_control_option()
+[pieusb+  2.018902] get  [#0]
+[pieusb+  2.018920] get  [#0] val=32
+[pieusb+  2.018954] sane_get_option_descriptor() option=0
+[pieusb+  2.018983] sane_control_option()
+[pieusb+  2.019000] get  [#0]
+[pieusb+  2.019016] get  [#0] val=32
+[pieusb+  2.019033] sane_get_option_descriptor() option=1
+[pieusb+  2.019049] sane_get_option_descriptor() option=2
+[pieusb+  2.019064] sane_get_option_descriptor() option=3
+[pieusb+  2.019079] sane_get_option_descriptor() option=4
+[pieusb+  2.019099] sane_get_option_descriptor() option=5
+[pieusb+  2.019118] sane_get_option_descriptor() option=6
+[pieusb+  2.019139] sane_get_option_descriptor() option=7
+[pieusb+  2.019158] sane_get_option_descriptor() option=8
+[pieusb+  2.019175] sane_get_option_descriptor() option=9
+[pieusb+  2.019194] sane_get_option_descriptor() option=10
+[pieusb+  2.019210] sane_get_option_descriptor() option=11
+[pieusb+  2.019229] sane_get_option_descriptor() option=12
+[pieusb+  2.019247] sane_get_option_descriptor() option=13
+[pieusb+  2.019264] sane_get_option_descriptor() option=14
+[pieusb+  2.019281] sane_get_option_descriptor() option=15
+[pieusb+  2.019298] sane_get_option_descriptor() option=16
+[pieusb+  2.019314] sane_get_option_descriptor() option=17
+[pieusb+  2.019331] sane_get_option_descriptor() option=18
+[pieusb+  2.019347] sane_get_option_descriptor() option=19
+[pieusb+  2.019364] sane_get_option_descriptor() option=20
+[pieusb+  2.019381] sane_get_option_descriptor() option=21
+[pieusb+  2.019397] sane_get_option_descriptor() option=22
+[pieusb+  2.019415] sane_get_option_descriptor() option=23
+[pieusb+  2.019431] sane_get_option_descriptor() option=24
+[pieusb+  2.019480] sane_get_option_descriptor() option=25
+[pieusb+  2.019497] sane_get_option_descriptor() option=26
+[pieusb+  2.019513] sane_get_option_descriptor() option=27
+[pieusb+  2.019528] sane_get_option_descriptor() option=28
+[pieusb+  2.019544] sane_get_option_descriptor() option=29
+[pieusb+  2.019561] sane_get_option_descriptor() option=30
+[pieusb+  2.019577] sane_get_option_descriptor() option=31
+[pieusb+  2.019593] sane_control_option()
+[pieusb+  2.019609] get br-x [#14]
+[pieusb+  2.019626] get br-x [#14] val=2479609
+[pieusb+  2.019648] sane_control_option()
+[pieusb+  2.019667] get tl-x [#12]
+[pieusb+  2.019684] get tl-x [#12] val=0
+[pieusb+  2.019701] sane_control_option()
+[pieusb+  2.019716] get br-y [#15]
+[pieusb+  2.019732] get br-y [#15] val=2457303
+[pieusb+  2.019749] sane_control_option()
+[pieusb+  2.019843] get tl-y [#13]
+[pieusb+  2.019852] get tl-y [#13] val=0
+[pieusb+  2.019875] sane_get_option_descriptor() option=4
+[pieusb+  2.019905] sane_get_option_descriptor() option=4
+[pieusb+  2.019920] sane_control_option()
+[pieusb+  2.019931] set resolution [#4] to 1000.000000
+[pieusb+  2.019961] sane_control_option()
+[pieusb+  2.019975] get tl-x [#12]
+[pieusb+  2.019985] get tl-x [#12] val=0
+[pieusb+  2.019994] sane_get_option_descriptor() option=14
+[pieusb+  2.020005] sane_control_option()
+[pieusb+  2.020014] set br-x [#14] to 37.835831
+[pieusb+  2.020030] sane_control_option()
+[pieusb+  2.020040] get tl-y [#13]
+[pieusb+  2.020049] get tl-y [#13] val=0
+[pieusb+  2.020058] sane_get_option_descriptor() option=15
+[pieusb+  2.020070] sane_control_option()
+[pieusb+  2.020079] set br-y [#15] to 37.495468
+[pieusb+  2.020114] sane_start()
+[pieusb+  2.020131] pieusb_cmd_read_state()
+[pieusb+  2.020142] *** pieusb_command(dd:Read State): size 0x0c
+[pieusb+  2.020152] 	pieusb_command loop, status 8:Again
+[pieusb+  2.020162] 		_pieusb_scsi_command(): dd:Read State
+Cmd	00000000: dd 00 00 00 0c 00                               ].....
+[pieusb+  2.031431] 		_pieusb_scsi_command usbstat 0x01
+[pieusb+  2.031458] 		_pieusb_scsi_command data in
+In	00000000: 00 00 00 ff f0 00 45 00 00 10 10 14             ...p.E.....
+[pieusb+  2.032886] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  3.033348] 	pieusb_command loop, status 0:Ok
+[pieusb+  3.033425] 	pieusb_command() finished with state 0
+[pieusb+  3.033444] pieusb_cmd_read_state(): button 0, warmingUp 0, scanning 69, busy? 0
+[pieusb+  3.033475] pieusb_cmd_set_exposure_time()
+[pieusb+  3.033493] *** pieusb_command(0a:Write): size 0x08
+[pieusb+  3.033510] 	pieusb_command loop, status 8:Again
+[pieusb+  3.033527] 		_pieusb_scsi_command(): 0a:Write
+Cmd	00000000: 0a 00 00 00 08 00                               ......
+[pieusb+  3.044505] 		_pieusb_scsi_command usbstat 0x00
 Out	00000000: 13 00 04 00 02 00 64 00                         ......d.
-[pieusb+  4.197848] _pieusb_scsi_command returned 3:Busy
-[pieusb+  4.199845] pieusb_command loop, status 3:Busy
-[pieusb+  4.201850] pieusb_command loop, status 0:Ok
-[pieusb+  4.201903] pieusb_command() finished with state 0
-[pieusb+  4.201916] ***	pieusb_command(0a:Write): size 0x08
-[pieusb+  4.201929] pieusb_command loop, status 8:Again
-[pieusb+  4.201942] _pieusb_scsi_command(): 0a:Write
-[pieusb+  4.239846] _pieusb_scsi_command usbstat 0x00
+[pieusb+  3.050002] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  3.050356] 	pieusb_command loop, status 0:Ok
+[pieusb+  3.050434] 	pieusb_command() finished with state 0
+[pieusb+  3.050456] *** pieusb_command(0a:Write): size 0x08
+[pieusb+  3.050478] 	pieusb_command loop, status 8:Again
+[pieusb+  3.050495] 		_pieusb_scsi_command(): 0a:Write
+Cmd	00000000: 0a 00 00 00 08 00                               ......
+[pieusb+  3.061056] 		_pieusb_scsi_command usbstat 0x00
 Out	00000000: 13 00 04 00 04 00 64 00                         ......d.
-[pieusb+  4.255862] _pieusb_scsi_command returned 3:Busy
-[pieusb+  4.257850] pieusb_command loop, status 3:Busy
-[pieusb+  4.259856] pieusb_command loop, status 0:Ok
-[pieusb+  4.259912] pieusb_command() finished with state 0
-[pieusb+  4.259955] ***	pieusb_command(0a:Write): size 0x08
-[pieusb+  4.259969] pieusb_command loop, status 8:Again
-[pieusb+  4.259982] _pieusb_scsi_command(): 0a:Write
-[pieusb+  4.297851] _pieusb_scsi_command usbstat 0x00
+[pieusb+  3.064553] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  3.064804] 	pieusb_command loop, status 0:Ok
+[pieusb+  3.064823] 	pieusb_command() finished with state 0
+[pieusb+  3.064834] *** pieusb_command(0a:Write): size 0x08
+[pieusb+  3.064843] 	pieusb_command loop, status 8:Again
+[pieusb+  3.064853] 		_pieusb_scsi_command(): 0a:Write
+Cmd	00000000: 0a 00 00 00 08 00                               ......
+[pieusb+  3.075939] 		_pieusb_scsi_command usbstat 0x00
 Out	00000000: 13 00 04 00 08 00 64 00                         ......d.
-[pieusb+  4.313877] _pieusb_scsi_command returned 3:Busy
-[pieusb+  4.315841] pieusb_command loop, status 3:Busy
-[pieusb+  4.317864] pieusb_command loop, status 0:Ok
-[pieusb+  4.317922] pieusb_command() finished with state 0
-[pieusb+  4.317949] pieusb_cmd_set_highlight_shadow()
-[pieusb+  4.317962] ***	pieusb_command(0a:Write): size 0x08
-[pieusb+  4.317976] pieusb_command loop, status 8:Again
-[pieusb+  4.317988] _pieusb_scsi_command(): 0a:Write
-[pieusb+  4.355844] _pieusb_scsi_command usbstat 0x00
+[pieusb+  3.080184] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  3.080559] 	pieusb_command loop, status 0:Ok
+[pieusb+  3.080586] 	pieusb_command() finished with state 0
+[pieusb+  3.080662] pieusb_cmd_set_highlight_shadow()
+[pieusb+  3.080684] *** pieusb_command(0a:Write): size 0x08
+[pieusb+  3.080703] 	pieusb_command loop, status 8:Again
+[pieusb+  3.080721] 		_pieusb_scsi_command(): 0a:Write
+Cmd	00000000: 0a 00 00 00 08 00                               ......
+[pieusb+  3.091309] 		_pieusb_scsi_command usbstat 0x00
 Out	00000000: 14 00 04 00 02 00 64 00                         ......d.
-[pieusb+  4.371856] _pieusb_scsi_command returned 3:Busy
-[pieusb+  4.373887] pieusb_command loop, status 3:Busy
-[pieusb+  4.375856] pieusb_command loop, status 0:Ok
-[pieusb+  4.375931] pieusb_command() finished with state 0
-[pieusb+  4.375954] ***	pieusb_command(0a:Write): size 0x08
-[pieusb+  4.375972] pieusb_command loop, status 8:Again
-[pieusb+  4.375989] _pieusb_scsi_command(): 0a:Write
-[pieusb+  4.413879] _pieusb_scsi_command usbstat 0x00
+[pieusb+  3.095307] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  3.095683] 	pieusb_command loop, status 0:Ok
+[pieusb+  3.095709] 	pieusb_command() finished with state 0
+[pieusb+  3.095727] *** pieusb_command(0a:Write): size 0x08
+[pieusb+  3.095750] 	pieusb_command loop, status 8:Again
+[pieusb+  3.095800] 		_pieusb_scsi_command(): 0a:Write
+Cmd	00000000: 0a 00 00 00 08 00                               ......
+[pieusb+  3.106432] 		_pieusb_scsi_command usbstat 0x00
 Out	00000000: 14 00 04 00 04 00 64 00                         ......d.
-[pieusb+  4.429878] _pieusb_scsi_command returned 3:Busy
-[pieusb+  4.431851] pieusb_command loop, status 3:Busy
-[pieusb+  4.433831] pieusb_command loop, status 0:Ok
-[pieusb+  4.433905] pieusb_command() finished with state 0
-[pieusb+  4.433925] ***	pieusb_command(0a:Write): size 0x08
-[pieusb+  4.433943] pieusb_command loop, status 8:Again
-[pieusb+  4.433959] _pieusb_scsi_command(): 0a:Write
-[pieusb+  4.471880] _pieusb_scsi_command usbstat 0x00
+[pieusb+  3.110613] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  3.110933] 	pieusb_command loop, status 0:Ok
+[pieusb+  3.110960] 	pieusb_command() finished with state 0
+[pieusb+  3.110978] *** pieusb_command(0a:Write): size 0x08
+[pieusb+  3.110998] 	pieusb_command loop, status 8:Again
+[pieusb+  3.111015] 		_pieusb_scsi_command(): 0a:Write
+Cmd	00000000: 0a 00 00 00 08 00                               ......
+[pieusb+  3.121556] 		_pieusb_scsi_command usbstat 0x00
 Out	00000000: 14 00 04 00 08 00 64 00                         ......d.
-[pieusb+  4.487844] _pieusb_scsi_command returned 3:Busy
-[pieusb+  4.489848] pieusb_command loop, status 3:Busy
-[pieusb+  4.491830] pieusb_command loop, status 0:Ok
-[pieusb+  4.491909] pieusb_command() finished with state 0
-[pieusb+  4.491946] Num options = 32
-[pieusb+  4.491965]   Option 1: Scan Mode = (null)
-[pieusb+  4.491982]   Option 2: mode = Color
-[pieusb+  4.491999]   Option 3: depth = 8
-[pieusb+  4.492016]   Option 4: resolution = 1000.000000
-[pieusb+  4.492061]   Option 5: halftone-pattern = 4x4 SQUARE
-[pieusb+  4.492080]   Option 6: threshold = 50.000000
-[pieusb+  4.492102]   Option 7: sharpen = 1
-[pieusb+  4.492118]   Option 8: shading-analysis = 0
-[pieusb+  4.492135]   Option 9: fast-infrared = 0
-[pieusb+  4.492152]   Option 10: calibration = from internal test
-[pieusb+  4.492167]   Option 11: Geometry = (null)
-[pieusb+  4.492184]   Option 12: tl-x = 0.000000
-[pieusb+  4.492202]   Option 13: tl-y = 0.000000
-[pieusb+  4.492221]   Option 14: br-x = 37.835831
-[pieusb+  4.492243]   Option 15: br-y = 37.495468
-[pieusb+  4.492264]   Option 16: Enhancement = (null)
-[pieusb+  4.492284]   Option 17: correct-shading = 1
-[pieusb+  4.492301]   Option 18: correct-infrared = 0
-[pieusb+  4.492319]   Option 19: clean-image = 0
-[pieusb+  4.492337]   Option 20: gain-adjust = * 1.0
-[pieusb+  4.492354]   Option 21: crop = Inside
-[pieusb+  4.492371]   Option 22: smooth = 0
-[pieusb+  4.492388]   Option 23: srgb = 0
-[pieusb+  4.492405]   Option 24: invert = 0
-[pieusb+  4.492422]   Option 25: Advanced = (null)
-[pieusb+  4.492439]   Option 26: preview = 0
-[pieusb+  4.492455]   Option 27: save-shading-data = 0
-[pieusb+  4.492472]   Option 28: save-ccdmask = 0
-[pieusb+  4.492489]   Option 29: exposure-time = [2937,2937,2937,2937]
-[pieusb+  4.492508]   Option 30: gain = [19,19,19,19]
-[pieusb+  4.492526]   Option 31: offset = [0,0,0,0]
-[pieusb+  4.492550] pieusb_cmd_17(1)
-[pieusb+  4.492575] ***	pieusb_command(0a:Write): size 0x06
-[pieusb+  4.492595] pieusb_command loop, status 8:Again
-[pieusb+  4.492613] _pieusb_scsi_command(): 0a:Write
-[pieusb+  4.529805] _pieusb_scsi_command usbstat 0x00
-Out	00000000: 17 00 02 00 01 00                               ......
-[pieusb+  4.541870] _pieusb_scsi_command returned 3:Busy
-[pieusb+  4.543866] pieusb_command loop, status 3:Busy
-[pieusb+  4.545844] pieusb_command loop, status 0:Ok
-[pieusb+  4.545918] pieusb_command() finished with state 0
-[pieusb+  4.545939] pieusb_wait_ready()
-[pieusb+  4.545957] pieusb_cmd_test_unit_ready()
-[pieusb+  4.545980] ***	pieusb_command(00:Test Unit Ready): size 0x00
-[pieusb+  4.545997] pieusb_command loop, status 8:Again
-[pieusb+  4.546013] _pieusb_scsi_command(): 00:Test Unit Ready
-[pieusb+  4.546031] _pieusb_scsi_command can't prep scsi cmd: 4
-[pieusb+  4.546047] _pieusb_scsi_command returned 255:Error
-[pieusb+  4.546065] pieusb_command() finished with state 9
-[pieusb+  4.546081] pieusb_cmd_test_unit_ready() return status = Error during device I/O
-[pieusb+  4.546098] pieusb_wait_ready() pieusb_cmd_test_unit_ready: 9
-[pieusb+  4.546133] pieusb_cmd_set_scan_frame()
-[pieusb+  4.546160]  x0,y0 = 0,0
-[pieusb+  4.546177]  x1,y1 = 7447,7380
-[pieusb+  4.546193]  index = 128
-[pieusb+  4.546209] ***	pieusb_command(0a:Write): size 0x0e
-[pieusb+  4.546225] pieusb_command loop, status 8:Again
-[pieusb+  4.546242] _pieusb_scsi_command(): 0a:Write
-[pieusb+  4.583853] _pieusb_scsi_command usbstat 0x00
+[pieusb+  3.125177] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  3.125429] 	pieusb_command loop, status 0:Ok
+[pieusb+  3.125456] 	pieusb_command() finished with state 0
+[pieusb+  3.125485] Num options = 32
+[pieusb+  3.125515]   Option 1: Scan Mode = (null)
+[pieusb+  3.125535]   Option 2: mode = Color
+[pieusb+  3.125552]   Option 3: depth = 8
+[pieusb+  3.125569]   Option 4: resolution = 1000.000000
+[pieusb+  3.125599]   Option 5: halftone-pattern = 4x4 SQUARE
+[pieusb+  3.125616]   Option 6: threshold = 50.000000
+[pieusb+  3.125643]   Option 7: sharpen = 1
+[pieusb+  3.125660]   Option 8: shading-analysis = 1
+[pieusb+  3.125680]   Option 9: fast-infrared = 0
+[pieusb+  3.125700]   Option 10: calibration = from internal test
+[pieusb+  3.125718]   Option 11: Geometry = (null)
+[pieusb+  3.125735]   Option 12: tl-x = 0.000000
+[pieusb+  3.125754]   Option 13: tl-y = 0.000000
+[pieusb+  3.125774]   Option 14: br-x = 37.835831
+[pieusb+  3.125797]   Option 15: br-y = 37.495468
+[pieusb+  3.125818]   Option 16: Enhancement = (null)
+[pieusb+  3.125835]   Option 17: correct-shading = 1
+[pieusb+  3.125852]   Option 18: correct-infrared = 0
+[pieusb+  3.125872]   Option 19: clean-image = 0
+[pieusb+  3.125890]   Option 20: gain-adjust = * 1.0
+[pieusb+  3.125907]   Option 21: crop = Inside
+[pieusb+  3.125925]   Option 22: smooth = 0
+[pieusb+  3.125941]   Option 23: srgb = 0
+[pieusb+  3.125962]   Option 24: invert = 0
+[pieusb+  3.125979]   Option 25: Advanced = (null)
+[pieusb+  3.125995]   Option 26: preview = 0
+[pieusb+  3.126016]   Option 27: save-shading-data = 0
+[pieusb+  3.126033]   Option 28: save-ccdmask = 0
+[pieusb+  3.126050]   Option 29: exposure-time = [2937,2937,2937,2937]
+[pieusb+  3.126069]   Option 30: gain = [19,19,19,19]
+[pieusb+  3.126088]   Option 31: offset = [0,0,0,0]
+[pieusb+  3.126115] pieusb_cmd_set_scan_frame()
+[pieusb+  3.126145]  x0,y0 = 0,0
+[pieusb+  3.126162]  x1,y1 = 7447,7380
+[pieusb+  3.126179]  index = 128
+[pieusb+  3.126197] *** pieusb_command(0a:Write): size 0x0e
+[pieusb+  3.126214] 	pieusb_command loop, status 8:Again
+[pieusb+  3.126231] 		_pieusb_scsi_command(): 0a:Write
+Cmd	00000000: 0a 00 00 00 0e 00                               ......
+[pieusb+  3.137303] 		_pieusb_scsi_command usbstat 0x00
 Out	00000000: 12 00 0a 00 80 00 00 00 00 00 17 1d d4 1c       ............T.
-[pieusb+  4.611823] _pieusb_scsi_command returned 3:Busy
-[pieusb+  4.613805] pieusb_command loop, status 3:Busy
-[pieusb+  4.615819] pieusb_command loop, status 0:Ok
-[pieusb+  4.615860] pieusb_command() finished with state 0
-[pieusb+  4.615867] pieusb_set_frame_from_options(): pieusb_cmd_set_scan_frame status Success
-[pieusb+  4.615881] pieusb_set_gain_offset(): mode = default values
-[pieusb+  4.615887] pieusb_set_gain_offset(): get calibration data from defaults
-[pieusb+  4.615902] pieusb_cmd_set_gain_offset()
-[pieusb+  4.615907] pieusb_cmd_set_gain_offset() set:
-[pieusb+  4.615912]  exposure times = 2937-2937-2937-2937
-[pieusb+  4.615918]  gain = 19-19-19-19
-[pieusb+  4.615923]  offset = 0-0-0-0
-[pieusb+  4.615928]  light = 04
-[pieusb+  4.615933]  double times = 00
-[pieusb+  4.615937]  extra entries = 01
-[pieusb+  4.615943] ***	pieusb_command(dc:Write Gain Offset): size 0x1d
-[pieusb+  4.615947] pieusb_command loop, status 8:Again
-[pieusb+  4.615952] _pieusb_scsi_command(): dc:Write Gain Offset
-[pieusb+  4.653842] _pieusb_scsi_command usbstat 0x00
-Out	00000000: 79 0b 79 0b 79 0b 00 00 00 00 00 00 13 13 13 04 y.y.y...........
-	00000010: 01 00 79 0b 00 00 13 00 00 00 00 00 00          ..y..........
-[pieusb+  4.711849] _pieusb_scsi_command returned 3:Busy
-[pieusb+  4.713870] pieusb_command loop, status 3:Busy
-[pieusb+  4.715854] pieusb_command loop, status 0:Ok
-[pieusb+  4.715925] pieusb_command() finished with state 0
-[pieusb+  4.715949] pieusb_set_gain_offset(): status Success
-[pieusb+  4.715966] pieusb_wait_ready()
-[pieusb+  4.715982] pieusb_cmd_test_unit_ready()
-[pieusb+  4.715997] ***	pieusb_command(00:Test Unit Ready): size 0x00
-[pieusb+  4.716014] pieusb_command loop, status 8:Again
-[pieusb+  4.716030] _pieusb_scsi_command(): 00:Test Unit Ready
-[pieusb+  4.753858] _pieusb_scsi_command usbstat 0x03
-[pieusb+  4.753942] _pieusb_scsi_command returned 3:Busy
-[pieusb+  5.754890] pieusb_command loop, status 0:Ok
-[pieusb+  5.754962] pieusb_command() finished with state 0
-[pieusb+  5.754982] pieusb_cmd_test_unit_ready() return status = Success
-[pieusb+  5.754998] pieusb_wait_ready() pieusb_cmd_test_unit_ready: 0
-[pieusb+  5.755019] pieusb_cmd_read_state()
-[pieusb+  5.755035] ***	pieusb_command(dd:Read State): size 0x0c
-[pieusb+  5.755052] pieusb_command loop, status 8:Again
-[pieusb+  5.755068] _pieusb_scsi_command(): dd:Read State
-[pieusb+  5.792861] _pieusb_scsi_command usbstat 0x01
-[pieusb+  5.792940] pieusb_scsi_command data in
-In	00000000: 00 00 00 ff f0 00 05 00 00 00 00 00             ...p.......
-[pieusb+  5.797045] _pieusb_scsi_command returned 1:Read
-[pieusb+  5.798848] pieusb_command loop, status 3:Busy
-[pieusb+  6.799891] pieusb_command loop, status 0:Ok
-[pieusb+  6.799971] pieusb_command() finished with state 0
-[pieusb+  6.799991] pieusb_cmd_read_state(): button 0, warmingUp 0, scanning 5, busy? 0
-[pieusb+  6.800042] pieusb_wait_ready() pieusb_cmd_read_state: 0
-[pieusb+  6.800078] pieusb_set_mode_from_options(): resolution from option setting (1000)
-[pieusb+  6.800101] pieusb_cmd_set_mode()
-[pieusb+  6.800117] pieusb_cmd_set_mode() set:
-[pieusb+  6.800133]  resolution = 1000
-[pieusb+  6.800158]  passes = 80
-[pieusb+  6.800176]  depth = 04
-[pieusb+  6.800194]  color format = 04
-[pieusb+  6.800213]  sharpen = 1
-[pieusb+  6.800233]  skip calibration = 1
-[pieusb+  6.800250]  fast infrared = 0
-[pieusb+  6.800268]  halftone pattern = 0
-[pieusb+  6.800284]  line threshold = 127
-[pieusb+  6.800305] ***	pieusb_command(15:Mode Select): size 0x10
-[pieusb+  6.800325] pieusb_command loop, status 8:Again
-[pieusb+  6.800342] _pieusb_scsi_command(): 15:Mode Select
-[pieusb+  6.837862] _pieusb_scsi_command usbstat 0x00
-Out	00000000: 00 0f e8 03 80 04 04 00 01 0a 00 00 00 7f 00 00 ..h............
-[pieusb+  6.869857] _pieusb_scsi_command returned 3:Busy
-[pieusb+  6.871882] pieusb_command loop, status 3:Busy
-[pieusb+  6.873882] pieusb_command loop, status 0:Ok
-[pieusb+  6.873955] pieusb_command() finished with state 0
-[pieusb+  6.873975] pieusb_wait_ready()
-[pieusb+  6.873992] pieusb_cmd_test_unit_ready()
-[pieusb+  6.874009] ***	pieusb_command(00:Test Unit Ready): size 0x00
-[pieusb+  6.874032] pieusb_command loop, status 8:Again
-[pieusb+  6.874049] _pieusb_scsi_command(): 00:Test Unit Ready
-[pieusb+  6.911877] _pieusb_scsi_command usbstat 0x03
-[pieusb+  6.911955] _pieusb_scsi_command returned 3:Busy
-[pieusb+  7.912911] pieusb_command loop, status 0:Ok
-[pieusb+  7.912983] pieusb_command() finished with state 0
-[pieusb+  7.913003] pieusb_cmd_test_unit_ready() return status = Success
-[pieusb+  7.913021] pieusb_wait_ready() pieusb_cmd_test_unit_ready: 0
-[pieusb+  7.913039] pieusb_cmd_read_state()
-[pieusb+  7.913060] ***	pieusb_command(dd:Read State): size 0x0c
-[pieusb+  7.913079] pieusb_command loop, status 8:Again
-[pieusb+  7.913095] _pieusb_scsi_command(): dd:Read State
-[pieusb+  7.950902] _pieusb_scsi_command usbstat 0x01
-[pieusb+  7.950987] pieusb_scsi_command data in
-In	00000000: 00 00 00 ff f0 00 05 00 00 0a 00 00             ...p.......
-[pieusb+  7.955233] _pieusb_scsi_command returned 1:Read
-[pieusb+  7.956904] pieusb_command loop, status 3:Busy
-[pieusb+  8.957922] pieusb_command loop, status 0:Ok
-[pieusb+  8.957991] pieusb_command() finished with state 0
-[pieusb+  8.958010] pieusb_cmd_read_state(): button 0, warmingUp 0, scanning 5, busy? 0
-[pieusb+  8.958028] pieusb_wait_ready() pieusb_cmd_read_state: 0
-[pieusb+  8.958050] pieusb_set_mode_from_options(): pieusb_cmd_set_mode status Success
-[pieusb+  8.958076] pieusb_cmd_slide(0x10)
-[pieusb+  8.958095] ***	pieusb_command(d1:Slide): size 0x04
-[pieusb+  8.958113] pieusb_command loop, status 8:Again
-[pieusb+  8.958130] _pieusb_scsi_command(): d1:Slide
-[pieusb+  8.995897] _pieusb_scsi_command usbstat 0x00
-Out	00000000: 10 01 00 7c                                     ...|
-[pieusb+  9.003907] _pieusb_scsi_command returned 3:Busy
-[pieusb+  9.005923] pieusb_command loop, status 3:Busy
-[pieusb+  9.007929] pieusb_command loop, status 0:Ok
-[pieusb+  9.008020] pieusb_command() finished with state 0
-[pieusb+  9.008042] pieusb_wait_ready()
-[pieusb+  9.008059] pieusb_cmd_test_unit_ready()
-[pieusb+  9.008075] ***	pieusb_command(00:Test Unit Ready): size 0x00
-[pieusb+  9.008093] pieusb_command loop, status 8:Again
-[pieusb+  9.008108] _pieusb_scsi_command(): 00:Test Unit Ready
-[pieusb+  9.045918] _pieusb_scsi_command usbstat 0x03
-[pieusb+  9.046009] _pieusb_scsi_command returned 3:Busy
-[pieusb+ 10.046929] pieusb_command loop, status 0:Ok
-[pieusb+ 10.047001] pieusb_command() finished with state 0
-[pieusb+ 10.047020] pieusb_cmd_test_unit_ready() return status = Success
-[pieusb+ 10.047038] pieusb_wait_ready() pieusb_cmd_test_unit_ready: 0
-[pieusb+ 10.047060] pieusb_cmd_read_state()
-[pieusb+ 10.047077] ***	pieusb_command(dd:Read State): size 0x0c
-[pieusb+ 10.047094] pieusb_command loop, status 8:Again
-[pieusb+ 10.047111] _pieusb_scsi_command(): dd:Read State
-[pieusb+ 10.084929] _pieusb_scsi_command usbstat 0x01
-[pieusb+ 10.085026] pieusb_scsi_command data in
-In	00000000: 00 00 00 ff f0 00 05 00 00 0a 00 00             ...p.......
-[pieusb+ 10.089240] _pieusb_scsi_command returned 1:Read
-[pieusb+ 10.090922] pieusb_command loop, status 3:Busy
-[pieusb+ 11.091944] pieusb_command loop, status 0:Ok
-[pieusb+ 11.092021] pieusb_command() finished with state 0
-[pieusb+ 11.092041] pieusb_cmd_read_state(): button 0, warmingUp 0, scanning 5, busy? 0
-[pieusb+ 11.092059] pieusb_wait_ready() pieusb_cmd_read_state: 0
-[pieusb+ 11.092088] pieusb_cmd_start_scan()
-[pieusb+ 11.092111] ***	pieusb_command(1b:Scan): size 0x00
-[pieusb+ 11.092128] pieusb_command loop, status 8:Again
-[pieusb+ 11.092144] _pieusb_scsi_command(): 1b:Scan
-[pieusb+ 11.129914] _pieusb_scsi_command usbstat 0x03
-[pieusb+ 11.129998] _pieusb_scsi_command returned 3:Busy
-[pieusb+ 11.131934] pieusb_command loop, status 2:Check
-[pieusb+ 11.132031] pieusb_cmd_get_sense()
-[pieusb+ 11.132049] ***	pieusb_command(03:Request Sense): size 0x0e
-[pieusb+ 11.132068] pieusb_command loop, status 8:Again
-[pieusb+ 11.132084] _pieusb_scsi_command(): 03:Request Sense
-[pieusb+ 11.169927] _pieusb_scsi_command usbstat 0x01
-[pieusb+ 11.170009] pieusb_scsi_command data in
-In	00000000: 70 00 06 00 00 00 00 06 00 00 00 00 82 00       p.............
-[pieusb+ 11.174193] _pieusb_scsi_command returned 1:Read
-[pieusb+ 11.175927] pieusb_command loop, status 3:Busy
-[pieusb+ 11.177917] pieusb_command loop, status 0:Ok
-[pieusb+ 11.177998] pieusb_command() finished with state 0
-[pieusb+ 11.178047] pieusb_command(): CHECK CONDITION: Unit Attention: SCAN entering Calibration phase (vs)
-[pieusb+ 11.178068] pieusb_command() finished with state 12
-[pieusb+ 11.178084] pieusb_wait_ready()
-[pieusb+ 11.178101] pieusb_cmd_test_unit_ready()
-[pieusb+ 11.178120] ***	pieusb_command(00:Test Unit Ready): size 0x00
-[pieusb+ 11.178139] pieusb_command loop, status 8:Again
-[pieusb+ 11.178155] _pieusb_scsi_command(): 00:Test Unit Ready
-[pieusb+ 11.215933] _pieusb_scsi_command usbstat 0x03
-[pieusb+ 11.216015] _pieusb_scsi_command returned 3:Busy
-[pieusb+ 12.216957] pieusb_command loop, status 8:Again
-[pieusb+ 12.217071] _pieusb_scsi_command(): 00:Test Unit Ready
-[pieusb+ 12.254951] _pieusb_scsi_command usbstat 0x03
-[pieusb+ 12.255044] _pieusb_scsi_command returned 3:Busy
-[pieusb+ 13.255969] pieusb_command loop, status 8:Again
-[pieusb+ 13.256048] _pieusb_scsi_command(): 00:Test Unit Ready
-[pieusb+ 13.293909] _pieusb_scsi_command usbstat 0x03
-[pieusb+ 13.293961] _pieusb_scsi_command returned 3:Busy
-[pieusb+ 14.294982] pieusb_command loop, status 8:Again
-[pieusb+ 14.295060] _pieusb_scsi_command(): 00:Test Unit Ready
-[pieusb+ 24.322103] _pieusb_scsi_command fails command out, after 1 bytes: 4
-[pieusb+ 24.322195] _pieusb_scsi_command returned 255:Error
-[pieusb+ 24.322215] pieusb_command() finished with state 9
-[pieusb+ 24.322232] pieusb_cmd_test_unit_ready() return status = Error during device I/O
-[pieusb+ 24.322249] pieusb_wait_ready() pieusb_cmd_test_unit_ready: 9
-[pieusb+ 24.322271] sane_start: scanner not ready 9
+[pieusb+  3.144485] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  3.144801] 	pieusb_command loop, status 0:Ok
+[pieusb+  3.144828] 	pieusb_command() finished with state 0
+[pieusb+  3.144847] pieusb_set_frame_from_options(): pieusb_cmd_set_scan_frame status Success
+[pieusb+  3.144916] pieusb_cmd_17(1)
+[pieusb+  3.144937] *** pieusb_command(0a:Write): size 0x06
+[pieusb+  3.144954] 	pieusb_command loop, status 8:Again
+[pieusb+  3.144969] 		_pieusb_scsi_command(): 0a:Write
+Cmd	00000000: 0a 00 00 00 06 00                               ......
+[pieusb+  3.155879] 		_pieusb_scsi_command usbstat 0x00
+Out	00000000: 17 00 02 00 01 00                               ......
+[pieusb+  3.160104] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  3.160464] 	pieusb_command loop, status 0:Ok
+[pieusb+  3.160521] 	pieusb_command() finished with state 0
+[pieusb+  3.160541] pieusb_wait_ready()
+[pieusb+  3.160559] pieusb_cmd_test_unit_ready()
+[pieusb+  3.160576] *** pieusb_command(00:Test Unit Ready): size 0x00
+[pieusb+  3.160595] 	pieusb_command loop, status 8:Again
+[pieusb+  3.160612] 		_pieusb_scsi_command(): 00:Test Unit Ready
+Cmd	00000000: 00 00 00 00 00 00                               ......
+[pieusb+  3.171178] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  3.171209] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  4.171644] 	pieusb_command loop, status 0:Ok
+[pieusb+  4.171719] 	pieusb_command() finished with state 0
+[pieusb+  4.171740] pieusb_cmd_test_unit_ready() return status = Success
+[pieusb+  4.171797] -> pieusb_cmd_test_unit_ready: 0
+[pieusb+  4.171830] pieusb_set_gain_offset(): mode = from internal test
+[pieusb+  4.171847] pieusb_set_gain_offset(): get calibration data from scanner
+[pieusb+  4.171867] pieusb_cmd_get_gain_offset()
+[pieusb+  4.171884] *** pieusb_command(d7:Read Gain Offset): size 0x67
+[pieusb+  4.171910] 	pieusb_command loop, status 8:Again
+[pieusb+  4.171929] 		_pieusb_scsi_command(): d7:Read Gain Offset
+Cmd	00000000: d7 00 00 00 67 00                               W...g.
+[pieusb+  4.185622] 		_pieusb_scsi_command usbstat 0x01
+[pieusb+  4.185696] 		_pieusb_scsi_command data in
+In	00000000: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+	00000010: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+	00000020: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ................
+	00000030: bc 00 9e 00 a2 00 00 00 00 00 00 00 04 10 04 10 <..."...........
+	00000040: 04 10 51 4e 6b 00 00 00 2f 21 24 05 04 10 df 2d ..QNk.../!$..._-
+	00000050: ab 1c e7 e2 a1 2c b3 e6 02 db 32 42 cf 82 8e e0 +.gb!,3f.[2BO..`
+	00000060: 9f be 04 10 4e 00 29                            .>..N.)
+[pieusb+  4.192717] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  4.193056] 	pieusb_command loop, status 0:Ok
+[pieusb+  4.193090] 	pieusb_command() finished with state 0
+[pieusb+  4.193107] pieusb_cmd_get_gain_offset() set:
+[pieusb+  4.193123]  saturationlevels = 0-0-0
+[pieusb+  4.193140]  minimumExposureTime = 0
+[pieusb+  4.193156]  ---
+[pieusb+  4.193171]  exposure times = 4100-4100-4100-4100
+[pieusb+  4.193189]  gain = 47-33-36-41
+[pieusb+  4.193206]  offset = 81-78-107-78
+[pieusb+  4.193222]  light = 05
+[pieusb+  4.193239]  double times = 00
+[pieusb+  4.193256]  extra entries = 00
+[pieusb+  4.193296] pieusb_cmd_set_gain_offset()
+[pieusb+  4.193317] pieusb_cmd_set_gain_offset() set:
+[pieusb+  4.193333]  exposure times = 4100-4100-4100-4100
+[pieusb+  4.193350]  gain = 47-33-36-41
+[pieusb+  4.193367]  offset = 81-78-107-78
+[pieusb+  4.193384]  light = 05
+[pieusb+  4.193400]  double times = 00
+[pieusb+  4.193420]  extra entries = 00
+[pieusb+  4.193438] *** pieusb_command(dc:Write Gain Offset): size 0x1d
+[pieusb+  4.193457] 	pieusb_command loop, status 8:Again
+[pieusb+  4.193475] 		_pieusb_scsi_command(): dc:Write Gain Offset
+Cmd	00000000: dc 00 00 00 1d 00                               \.....
+[pieusb+  4.205176] 		_pieusb_scsi_command usbstat 0x00
+Out	00000000: 04 10 04 10 04 10 51 4e 6b 00 00 00 2f 21 24 05 ......QNk.../!$.
+	00000010: 00 00 04 10 4e 00 29 00 00 00 00 00 00          ....N.)......
+[pieusb+  4.220341] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  4.220673] 	pieusb_command loop, status 0:Ok
+[pieusb+  4.220701] 	pieusb_command() finished with state 0
+[pieusb+  4.220719] pieusb_set_gain_offset(): status Success
+[pieusb+  4.220736] pieusb_wait_ready()
+[pieusb+  4.220786] pieusb_cmd_test_unit_ready()
+[pieusb+  4.220809] *** pieusb_command(00:Test Unit Ready): size 0x00
+[pieusb+  4.220828] 	pieusb_command loop, status 8:Again
+[pieusb+  4.220846] 		_pieusb_scsi_command(): 00:Test Unit Ready
+Cmd	00000000: 00 00 00 00 00 00                               ......
+[pieusb+  4.231298] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  4.231329] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  5.231707] 	pieusb_command loop, status 0:Ok
+[pieusb+  5.231862] 	pieusb_command() finished with state 0
+[pieusb+  5.231883] pieusb_cmd_test_unit_ready() return status = Success
+[pieusb+  5.231903] -> pieusb_cmd_test_unit_ready: 0
+[pieusb+  5.231939] pieusb_set_mode_from_options(): resolution from option setting (1000)
+[pieusb+  5.231960] pieusb_cmd_set_mode()
+[pieusb+  5.231977] pieusb_cmd_set_mode() set:
+[pieusb+  5.231993]  resolution = 1000
+[pieusb+  5.232010]  passes = 80
+[pieusb+  5.232029]  depth = 04
+[pieusb+  5.232045]  color format = 04
+[pieusb+  5.232064]  sharpen = 1
+[pieusb+  5.232080]  skip calibration = 0
+[pieusb+  5.232097]  fast infrared = 0
+[pieusb+  5.232116]  halftone pattern = 0
+[pieusb+  5.232133]  line threshold = 127
+[pieusb+  5.232151] *** pieusb_command(15:Mode Select): size 0x10
+[pieusb+  5.232168] 	pieusb_command loop, status 8:Again
+[pieusb+  5.232186] 		_pieusb_scsi_command(): 15:Mode Select
+Cmd	00000000: 15 00 00 00 10 00                               ......
+[pieusb+  5.244237] 		_pieusb_scsi_command usbstat 0x00
+Out	00000000: 00 0f e8 03 80 04 04 00 01 02 00 00 00 7f 10 00 ..h............
+[pieusb+  5.253867] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  5.254175] 	pieusb_command loop, status 0:Ok
+[pieusb+  5.254203] 	pieusb_command() finished with state 0
+[pieusb+  5.254222] pieusb_wait_ready()
+[pieusb+  5.254244] pieusb_cmd_test_unit_ready()
+[pieusb+  5.254260] *** pieusb_command(00:Test Unit Ready): size 0x00
+[pieusb+  5.254279] 	pieusb_command loop, status 8:Again
+[pieusb+  5.254296] 		_pieusb_scsi_command(): 00:Test Unit Ready
+Cmd	00000000: 00 00 00 00 00 00                               ......
+[pieusb+  5.265049] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  5.265079] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  6.265589] 	pieusb_command loop, status 0:Ok
+[pieusb+  6.265672] 	pieusb_command() finished with state 0
+[pieusb+  6.265691] pieusb_cmd_test_unit_ready() return status = Success
+[pieusb+  6.265707] -> pieusb_cmd_test_unit_ready: 0
+[pieusb+  6.265724] pieusb_set_mode_from_options(): pieusb_cmd_set_mode status Success
+[pieusb+  6.265755] pieusb_cmd_slide(0x10)
+[pieusb+  6.265774] *** pieusb_command(d1:Slide): size 0x04
+[pieusb+  6.265790] 	pieusb_command loop, status 8:Again
+[pieusb+  6.265806] 		_pieusb_scsi_command(): d1:Slide
+Cmd	00000000: d1 00 00 00 04 00                               Q.....
+[pieusb+  6.276677] 		_pieusb_scsi_command usbstat 0x00
+Out	00000000: 10 01 00 00                                     ....
+[pieusb+  6.278548] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  6.278800] 	pieusb_command loop, status 0:Ok
+[pieusb+  6.278826] 	pieusb_command() finished with state 0
+[pieusb+  6.278843] pieusb_wait_ready()
+[pieusb+  6.278859] pieusb_cmd_test_unit_ready()
+[pieusb+  6.278879] *** pieusb_command(00:Test Unit Ready): size 0x00
+[pieusb+  6.278897] 	pieusb_command loop, status 8:Again
+[pieusb+  6.278915] 		_pieusb_scsi_command(): 00:Test Unit Ready
+Cmd	00000000: 00 00 00 00 00 00                               ......
+[pieusb+  6.289553] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  6.289584] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.289961] 	pieusb_command loop, status 0:Ok
+[pieusb+  7.290032] 	pieusb_command() finished with state 0
+[pieusb+  7.290051] pieusb_cmd_test_unit_ready() return status = Success
+[pieusb+  7.290068] -> pieusb_cmd_test_unit_ready: 0
+[pieusb+  7.290090] sane_start(): scan phase 1
+[pieusb+  7.290117] pieusb_cmd_start_scan()
+[pieusb+  7.290133] *** pieusb_command(1b:Scan): size 0x00
+[pieusb+  7.290150] 	pieusb_command loop, status 8:Again
+[pieusb+  7.290170] 		_pieusb_scsi_command(): 1b:Scan
+Cmd	00000000: 1b 00 00 00 01 00                               ......
+[pieusb+  7.301485] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.301555] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.301804] 	pieusb_command loop, status 0:Ok
+[pieusb+  7.301831] 	pieusb_command() finished with state 0
+[pieusb+  7.301847] sane_start(): scan phase 2
+[pieusb+  7.301863] sane_start(): scan phase 3
+[pieusb+  7.301889] pieusb_get_ccd_mask()
+[pieusb+  7.301912] pieusb_cmd_get_ccd_mask()
+[pieusb+  7.301956] *** pieusb_command(18:Copy): size 0x1d1a
+[pieusb+  7.301979] 	pieusb_command loop, status 8:Again
+[pieusb+  7.301996] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.313245] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.313322] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.313588] 	pieusb_command loop, status 8:Again
+[pieusb+  7.313659] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.324927] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.324958] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.325176] 	pieusb_command loop, status 8:Again
+[pieusb+  7.325202] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.336303] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.336337] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.336549] 	pieusb_command loop, status 8:Again
+[pieusb+  7.336576] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.347986] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.348057] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.348306] 	pieusb_command loop, status 8:Again
+[pieusb+  7.348334] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.359605] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.359674] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.359964] 	pieusb_command loop, status 8:Again
+[pieusb+  7.360021] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.370712] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.370781] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.371172] 	pieusb_command loop, status 8:Again
+[pieusb+  7.371198] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.382177] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.382213] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.382670] 	pieusb_command loop, status 8:Again
+[pieusb+  7.382697] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.393537] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.393558] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.393786] 	pieusb_command loop, status 8:Again
+[pieusb+  7.393803] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.404419] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.404450] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.404667] 	pieusb_command loop, status 8:Again
+[pieusb+  7.404692] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.415292] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.415323] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.415540] 	pieusb_command loop, status 8:Again
+[pieusb+  7.415565] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.426854] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.426942] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.427311] 	pieusb_command loop, status 8:Again
+[pieusb+  7.427349] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.438542] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.438573] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.438916] 	pieusb_command loop, status 8:Again
+[pieusb+  7.438975] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.449402] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.449417] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.450073] 	pieusb_command loop, status 8:Again
+[pieusb+  7.450120] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.460411] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.460443] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.460659] 	pieusb_command loop, status 8:Again
+[pieusb+  7.460685] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.471524] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.471540] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.471929] 	pieusb_command loop, status 8:Again
+[pieusb+  7.471941] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.482660] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.482692] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.482908] 	pieusb_command loop, status 8:Again
+[pieusb+  7.482934] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.494034] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.494066] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.494280] 	pieusb_command loop, status 8:Again
+[pieusb+  7.494306] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.505707] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.505771] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.506030] 	pieusb_command loop, status 8:Again
+[pieusb+  7.506057] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.516779] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.516809] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.517323] 	pieusb_command loop, status 8:Again
+[pieusb+  7.517369] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.529095] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.529188] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.529530] 	pieusb_command loop, status 8:Again
+[pieusb+  7.529558] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.540403] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.540437] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.540692] 	pieusb_command loop, status 8:Again
+[pieusb+  7.540767] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.552192] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.552274] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.552526] 	pieusb_command loop, status 8:Again
+[pieusb+  7.552553] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.563640] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.563659] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.563901] 	pieusb_command loop, status 8:Again
+[pieusb+  7.563931] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.574406] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.574440] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.574776] 	pieusb_command loop, status 8:Again
+[pieusb+  7.574804] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.585648] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.585680] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.585896] 	pieusb_command loop, status 8:Again
+[pieusb+  7.585921] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.596264] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.596285] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.596513] 	pieusb_command loop, status 8:Again
+[pieusb+  7.596545] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.607833] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.607918] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.608145] 	pieusb_command loop, status 8:Again
+[pieusb+  7.608167] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.618758] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.618776] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.619424] 	pieusb_command loop, status 8:Again
+[pieusb+  7.619470] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.630268] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.630301] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.630960] 	pieusb_command loop, status 8:Again
+[pieusb+  7.631034] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.641890] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.641921] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.642581] 	pieusb_command loop, status 8:Again
+[pieusb+  7.642654] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.653394] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.653424] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.654163] 	pieusb_command loop, status 8:Again
+[pieusb+  7.654218] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.664887] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.664918] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.665135] 	pieusb_command loop, status 8:Again
+[pieusb+  7.665160] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.675889] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.675924] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.676260] 	pieusb_command loop, status 8:Again
+[pieusb+  7.676294] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.687385] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.687418] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.687633] 	pieusb_command loop, status 8:Again
+[pieusb+  7.687659] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.698383] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.698414] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.698632] 	pieusb_command loop, status 8:Again
+[pieusb+  7.698658] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.709830] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.709914] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.710256] 	pieusb_command loop, status 8:Again
+[pieusb+  7.710291] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.721505] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.721536] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.721753] 	pieusb_command loop, status 8:Again
+[pieusb+  7.721778] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.733069] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.733141] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.733378] 	pieusb_command loop, status 8:Again
+[pieusb+  7.733404] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.744697] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.744779] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.745129] 	pieusb_command loop, status 8:Again
+[pieusb+  7.745155] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.756304] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.756351] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.756675] 	pieusb_command loop, status 8:Again
+[pieusb+  7.756729] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.767860] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.767936] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.768269] 	pieusb_command loop, status 8:Again
+[pieusb+  7.768319] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.779413] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.779464] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.779742] 	pieusb_command loop, status 8:Again
+[pieusb+  7.779817] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.791056] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.791125] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.791373] 	pieusb_command loop, status 8:Again
+[pieusb+  7.791399] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.802675] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.802747] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.802994] 	pieusb_command loop, status 8:Again
+[pieusb+  7.803021] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.814294] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.814351] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.814620] 	pieusb_command loop, status 8:Again
+[pieusb+  7.814648] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.825803] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.825879] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.826118] 	pieusb_command loop, status 8:Again
+[pieusb+  7.826144] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.837357] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.837378] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.837606] 	pieusb_command loop, status 8:Again
+[pieusb+  7.837619] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.848242] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.848274] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.849064] 	pieusb_command loop, status 8:Again
+[pieusb+  7.849138] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.859866] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.859900] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.860678] 	pieusb_command loop, status 8:Again
+[pieusb+  7.860751] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.871486] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.871517] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.872112] 	pieusb_command loop, status 8:Again
+[pieusb+  7.872143] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.883111] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.883143] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.883826] 	pieusb_command loop, status 8:Again
+[pieusb+  7.883909] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.894735] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.894768] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.895424] 	pieusb_command loop, status 8:Again
+[pieusb+  7.895500] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.906370] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.906413] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.907051] 	pieusb_command loop, status 8:Again
+[pieusb+  7.907131] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.917856] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.917886] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.918664] 	pieusb_command loop, status 8:Again
+[pieusb+  7.918731] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.930158] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.930223] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.930517] 	pieusb_command loop, status 8:Again
+[pieusb+  7.930583] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.941723] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.941743] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.941972] 	pieusb_command loop, status 8:Again
+[pieusb+  7.941992] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.952728] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.952758] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.953410] 	pieusb_command loop, status 8:Again
+[pieusb+  7.953480] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.964227] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.964258] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.965046] 	pieusb_command loop, status 8:Again
+[pieusb+  7.965121] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.975856] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.975893] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.976681] 	pieusb_command loop, status 8:Again
+[pieusb+  7.976756] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.987472] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.987502] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.988097] 	pieusb_command loop, status 8:Again
+[pieusb+  7.988129] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  7.999098] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  7.999129] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  7.999875] 	pieusb_command loop, status 8:Again
+[pieusb+  7.999952] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.010721] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.010753] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.011418] 	pieusb_command loop, status 8:Again
+[pieusb+  8.011494] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.022219] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.022253] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.023029] 	pieusb_command loop, status 8:Again
+[pieusb+  8.023098] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.033843] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.033874] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.034661] 	pieusb_command loop, status 8:Again
+[pieusb+  8.034737] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.045341] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.045371] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.045589] 	pieusb_command loop, status 8:Again
+[pieusb+  8.045614] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.056715] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.056745] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.056964] 	pieusb_command loop, status 8:Again
+[pieusb+  8.056988] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.067966] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.068002] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.068337] 	pieusb_command loop, status 8:Again
+[pieusb+  8.068363] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.079463] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.079496] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.079844] 	pieusb_command loop, status 8:Again
+[pieusb+  8.079876] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.090335] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.090363] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.090584] 	pieusb_command loop, status 8:Again
+[pieusb+  8.090608] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.101333] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.101366] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.101880] 	pieusb_command loop, status 8:Again
+[pieusb+  8.101926] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.112709] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.112740] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.113526] 	pieusb_command loop, status 8:Again
+[pieusb+  8.113602] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.124343] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.124379] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.125001] 	pieusb_command loop, status 8:Again
+[pieusb+  8.125044] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.135699] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.135721] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.135949] 	pieusb_command loop, status 8:Again
+[pieusb+  8.135969] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.146705] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.146730] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.146950] 	pieusb_command loop, status 8:Again
+[pieusb+  8.146971] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.157702] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.157728] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.157948] 	pieusb_command loop, status 8:Again
+[pieusb+  8.157967] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.168566] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.168580] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.169109] 	pieusb_command loop, status 8:Again
+[pieusb+  8.169144] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.179952] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.179986] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.180769] 	pieusb_command loop, status 8:Again
+[pieusb+  8.180847] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.192391] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.192466] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.192699] 	pieusb_command loop, status 8:Again
+[pieusb+  8.192726] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.203895] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.203965] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.204323] 	pieusb_command loop, status 8:Again
+[pieusb+  8.204350] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.215571] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.215603] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.215822] 	pieusb_command loop, status 8:Again
+[pieusb+  8.215855] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.227138] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.227221] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.227569] 	pieusb_command loop, status 8:Again
+[pieusb+  8.227595] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.238751] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.238846] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.239194] 	pieusb_command loop, status 8:Again
+[pieusb+  8.239220] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.250318] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.250349] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.250566] 	pieusb_command loop, status 8:Again
+[pieusb+  8.250592] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.261893] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.261973] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.262315] 	pieusb_command loop, status 8:Again
+[pieusb+  8.262342] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.273500] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.273569] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.273814] 	pieusb_command loop, status 8:Again
+[pieusb+  8.273839] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.285129] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.285205] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.285437] 	pieusb_command loop, status 8:Again
+[pieusb+  8.285470] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.296755] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.296835] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.297186] 	pieusb_command loop, status 8:Again
+[pieusb+  8.297214] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.307855] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.307910] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.308371] 	pieusb_command loop, status 8:Again
+[pieusb+  8.308446] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.319183] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.319214] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.319904] 	pieusb_command loop, status 8:Again
+[pieusb+  8.319974] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.330807] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.330839] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.331503] 	pieusb_command loop, status 8:Again
+[pieusb+  8.331582] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.342431] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.342462] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.343130] 	pieusb_command loop, status 8:Again
+[pieusb+  8.343200] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.353929] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.353959] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.354739] 	pieusb_command loop, status 8:Again
+[pieusb+  8.354808] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.365429] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.365460] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.365677] 	pieusb_command loop, status 8:Again
+[pieusb+  8.365702] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.376805] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.376842] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.377176] 	pieusb_command loop, status 8:Again
+[pieusb+  8.377204] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.387968] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.388023] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.388306] 	pieusb_command loop, status 8:Again
+[pieusb+  8.388334] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.399795] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.399839] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.400039] 	pieusb_command loop, status 8:Again
+[pieusb+  8.400051] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.410673] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.410706] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.410922] 	pieusb_command loop, status 8:Again
+[pieusb+  8.410949] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.422046] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.422076] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.422295] 	pieusb_command loop, status 8:Again
+[pieusb+  8.422320] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.433615] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.433692] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.434046] 	pieusb_command loop, status 8:Again
+[pieusb+  8.434073] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.445293] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.445325] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.445542] 	pieusb_command loop, status 8:Again
+[pieusb+  8.445568] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.456733] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.456814] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.457176] 	pieusb_command loop, status 8:Again
+[pieusb+  8.457208] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.468321] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.468368] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.468666] 	pieusb_command loop, status 8:Again
+[pieusb+  8.468693] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.479914] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.479950] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.480288] 	pieusb_command loop, status 8:Again
+[pieusb+  8.480316] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.491037] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.491068] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.491584] 	pieusb_command loop, status 8:Again
+[pieusb+  8.491634] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.502415] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.502447] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.503201] 	pieusb_command loop, status 8:Again
+[pieusb+  8.503277] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.514726] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.514802] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.515034] 	pieusb_command loop, status 8:Again
+[pieusb+  8.515061] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.526332] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.526389] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.526653] 	pieusb_command loop, status 8:Again
+[pieusb+  8.526671] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.537163] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.537195] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.537954] 	pieusb_command loop, status 8:Again
+[pieusb+  8.538032] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.548646] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.548661] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.548895] 	pieusb_command loop, status 8:Again
+[pieusb+  8.548904] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.559394] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.559426] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.559644] 	pieusb_command loop, status 8:Again
+[pieusb+  8.559660] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.571654] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.571685] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.571901] 	pieusb_command loop, status 8:Again
+[pieusb+  8.571930] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.582904] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.582936] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.583151] 	pieusb_command loop, status 8:Again
+[pieusb+  8.583177] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.593777] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.593808] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.594024] 	pieusb_command loop, status 8:Again
+[pieusb+  8.594050] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.605205] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.605274] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.605524] 	pieusb_command loop, status 8:Again
+[pieusb+  8.605550] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.616823] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.616900] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.617147] 	pieusb_command loop, status 8:Again
+[pieusb+  8.617173] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.628461] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.628538] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.628771] 	pieusb_command loop, status 8:Again
+[pieusb+  8.628799] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.639520] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.639555] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.640020] 	pieusb_command loop, status 8:Again
+[pieusb+  8.640048] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.650893] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.650924] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.651583] 	pieusb_command loop, status 8:Again
+[pieusb+  8.651659] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.662518] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.662549] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.663211] 	pieusb_command loop, status 8:Again
+[pieusb+  8.663288] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.674016] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.674046] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.674827] 	pieusb_command loop, status 8:Again
+[pieusb+  8.674897] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.685514] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.685545] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.685763] 	pieusb_command loop, status 8:Again
+[pieusb+  8.685789] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.696889] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.696924] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.697180] 	pieusb_command loop, status 8:Again
+[pieusb+  8.697247] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.708512] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.708542] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.708760] 	pieusb_command loop, status 8:Again
+[pieusb+  8.708785] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.719815] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.719851] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.720135] 	pieusb_command loop, status 8:Again
+[pieusb+  8.720160] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.730760] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.730791] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.731008] 	pieusb_command loop, status 8:Again
+[pieusb+  8.731033] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.742132] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.742163] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.742381] 	pieusb_command loop, status 8:Again
+[pieusb+  8.742406] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.753130] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.753161] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.753670] 	pieusb_command loop, status 8:Again
+[pieusb+  8.753715] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.764504] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.764536] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.765219] 	pieusb_command loop, status 8:Again
+[pieusb+  8.765304] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.776177] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.776282] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.776770] 	pieusb_command loop, status 8:Again
+[pieusb+  8.776802] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.787753] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.787846] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.788422] 	pieusb_command loop, status 8:Again
+[pieusb+  8.788484] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.799376] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.799407] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.800001] 	pieusb_command loop, status 8:Again
+[pieusb+  8.800033] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.810875] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.810906] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.811715] 	pieusb_command loop, status 8:Again
+[pieusb+  8.811846] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.822499] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.822532] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.823310] 	pieusb_command loop, status 8:Again
+[pieusb+  8.823388] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.834123] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.834154] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.834816] 	pieusb_command loop, status 8:Again
+[pieusb+  8.834893] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.845745] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.845780] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.846442] 	pieusb_command loop, status 8:Again
+[pieusb+  8.846526] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.857243] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.857273] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.858056] 	pieusb_command loop, status 8:Again
+[pieusb+  8.858128] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.868867] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.868897] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.869675] 	pieusb_command loop, status 8:Again
+[pieusb+  8.869743] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.880491] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.880524] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.881310] 	pieusb_command loop, status 8:Again
+[pieusb+  8.881386] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.892749] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.892782] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.893118] 	pieusb_command loop, status 8:Again
+[pieusb+  8.893148] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.904436] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.904513] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.904863] 	pieusb_command loop, status 8:Again
+[pieusb+  8.904890] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.916109] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.916131] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.916355] 	pieusb_command loop, status 8:Again
+[pieusb+  8.916372] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.926866] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.926900] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.927658] 	pieusb_command loop, status 8:Again
+[pieusb+  8.927743] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.938223] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.938238] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.938472] 	pieusb_command loop, status 8:Again
+[pieusb+  8.938482] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.949360] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.949392] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.949607] 	pieusb_command loop, status 8:Again
+[pieusb+  8.949632] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.960370] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.960410] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.960732] 	pieusb_command loop, status 8:Again
+[pieusb+  8.960759] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.971889] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.971929] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.972219] 	pieusb_command loop, status 8:Again
+[pieusb+  8.972229] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.982718] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.982733] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.983272] 	pieusb_command loop, status 8:Again
+[pieusb+  8.983316] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  8.993979] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  8.993996] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  8.994225] 	pieusb_command loop, status 8:Again
+[pieusb+  8.994235] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.004482] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.004513] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.004870] 	pieusb_command loop, status 8:Again
+[pieusb+  9.004914] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.015907] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.015980] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.016225] 	pieusb_command loop, status 8:Again
+[pieusb+  9.016253] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.027480] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.027514] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.027859] 	pieusb_command loop, status 8:Again
+[pieusb+  9.027888] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.038896] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.038956] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.039216] 	pieusb_command loop, status 8:Again
+[pieusb+  9.039235] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.049587] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.049604] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.049836] 	pieusb_command loop, status 8:Again
+[pieusb+  9.049849] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.060722] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.060754] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.060968] 	pieusb_command loop, status 8:Again
+[pieusb+  9.060994] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.071594] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.071625] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.071842] 	pieusb_command loop, status 8:Again
+[pieusb+  9.071870] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.083026] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.083095] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.083343] 	pieusb_command loop, status 8:Again
+[pieusb+  9.083369] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.094658] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.094734] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.095091] 	pieusb_command loop, status 8:Again
+[pieusb+  9.095117] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.105714] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.105745] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.106261] 	pieusb_command loop, status 8:Again
+[pieusb+  9.106311] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.116960] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.116978] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.117203] 	pieusb_command loop, status 8:Again
+[pieusb+  9.117215] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.127848] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.127872] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.128079] 	pieusb_command loop, status 8:Again
+[pieusb+  9.128098] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.138880] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.138934] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.139203] 	pieusb_command loop, status 8:Again
+[pieusb+  9.139223] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.149833] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.149863] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.150206] 	pieusb_command loop, status 8:Again
+[pieusb+  9.150231] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.161899] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.161976] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.162208] 	pieusb_command loop, status 8:Again
+[pieusb+  9.162235] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.173517] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.173605] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.173966] 	pieusb_command loop, status 8:Again
+[pieusb+  9.173994] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.185117] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.185170] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.185448] 	pieusb_command loop, status 8:Again
+[pieusb+  9.185464] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.195697] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.195718] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.195945] 	pieusb_command loop, status 8:Again
+[pieusb+  9.195964] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.206829] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.206866] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.207111] 	pieusb_command loop, status 8:Again
+[pieusb+  9.207179] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.217694] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.217717] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.217942] 	pieusb_command loop, status 8:Again
+[pieusb+  9.217960] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.229138] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.229215] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.229451] 	pieusb_command loop, status 8:Again
+[pieusb+  9.229478] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.240760] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.240833] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.241072] 	pieusb_command loop, status 8:Again
+[pieusb+  9.241100] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.252333] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.252370] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.252701] 	pieusb_command loop, status 8:Again
+[pieusb+  9.252731] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.264507] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.264610] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.264952] 	pieusb_command loop, status 8:Again
+[pieusb+  9.264979] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.275727] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.275792] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.276059] 	pieusb_command loop, status 8:Again
+[pieusb+  9.276071] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.286561] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.286577] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.287058] 	pieusb_command loop, status 8:Again
+[pieusb+  9.287069] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.297569] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.297602] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.297816] 	pieusb_command loop, status 8:Again
+[pieusb+  9.297842] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.309062] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.309082] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.309310] 	pieusb_command loop, status 8:Again
+[pieusb+  9.309327] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.319566] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.319597] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.319814] 	pieusb_command loop, status 8:Again
+[pieusb+  9.319842] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.331240] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.331303] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.331560] 	pieusb_command loop, status 8:Again
+[pieusb+  9.331586] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.342871] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.342942] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.343186] 	pieusb_command loop, status 8:Again
+[pieusb+  9.343212] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.354506] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.354590] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.354934] 	pieusb_command loop, status 8:Again
+[pieusb+  9.354961] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.366183] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.366213] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.366431] 	pieusb_command loop, status 8:Again
+[pieusb+  9.366457] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.377628] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.377706] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.378057] 	pieusb_command loop, status 8:Again
+[pieusb+  9.378084] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.389241] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.389315] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.389560] 	pieusb_command loop, status 8:Again
+[pieusb+  9.389588] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.400864] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.400937] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.401179] 	pieusb_command loop, status 8:Again
+[pieusb+  9.401205] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.412499] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.412576] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.412927] 	pieusb_command loop, status 8:Again
+[pieusb+  9.412953] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.424053] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.424088] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.424300] 	pieusb_command loop, status 8:Again
+[pieusb+  9.424327] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.436629] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.436713] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.437093] 	pieusb_command loop, status 8:Again
+[pieusb+  9.437156] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.448817] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.448859] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.449593] 	pieusb_command loop, status 8:Again
+[pieusb+  9.449668] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.461109] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.461187] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.461421] 	pieusb_command loop, status 8:Again
+[pieusb+  9.461449] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.472795] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.472818] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.473039] 	pieusb_command loop, status 8:Again
+[pieusb+  9.473058] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.484328] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.484378] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.484706] 	pieusb_command loop, status 8:Again
+[pieusb+  9.484760] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.495954] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.496033] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.496294] 	pieusb_command loop, status 8:Again
+[pieusb+  9.496305] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.506531] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.506549] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.506785] 	pieusb_command loop, status 8:Again
+[pieusb+  9.506797] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.518039] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.518071] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.518288] 	pieusb_command loop, status 8:Again
+[pieusb+  9.518313] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.529290] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.529322] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.529538] 	pieusb_command loop, status 8:Again
+[pieusb+  9.529564] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.540163] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.540194] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.540421] 	pieusb_command loop, status 8:Again
+[pieusb+  9.540456] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.551584] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.551647] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.551935] 	pieusb_command loop, status 8:Again
+[pieusb+  9.551983] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.563223] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.563302] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.563535] 	pieusb_command loop, status 8:Again
+[pieusb+  9.563564] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.574859] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.574936] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.575282] 	pieusb_command loop, status 8:Again
+[pieusb+  9.575309] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.587656] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.587687] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.587904] 	pieusb_command loop, status 8:Again
+[pieusb+  9.587932] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.598780] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.598813] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.599028] 	pieusb_command loop, status 8:Again
+[pieusb+  9.599053] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.609654] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.609685] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.609902] 	pieusb_command loop, status 8:Again
+[pieusb+  9.609928] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.621164] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.621201] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.621533] 	pieusb_command loop, status 8:Again
+[pieusb+  9.621562] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.632788] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.632858] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.633151] 	pieusb_command loop, status 8:Again
+[pieusb+  9.633177] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.643902] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.643935] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.644399] 	pieusb_command loop, status 8:Again
+[pieusb+  9.644425] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.655285] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.655322] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.655939] 	pieusb_command loop, status 8:Again
+[pieusb+  9.655985] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.666772] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.666804] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.667021] 	pieusb_command loop, status 8:Again
+[pieusb+  9.667081] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.677892] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.677918] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.678141] 	pieusb_command loop, status 8:Again
+[pieusb+  9.678161] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.688528] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.688563] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.688894] 	pieusb_command loop, status 8:Again
+[pieusb+  9.688920] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.700019] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.700053] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.700392] 	pieusb_command loop, status 8:Again
+[pieusb+  9.700420] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.711704] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.711864] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.712143] 	pieusb_command loop, status 8:Again
+[pieusb+  9.712171] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.723277] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.723317] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.723688] 	pieusb_command loop, status 8:Again
+[pieusb+  9.723912] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.734764] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.734797] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.735012] 	pieusb_command loop, status 8:Again
+[pieusb+  9.735038] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.746454] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.746531] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.746763] 	pieusb_command loop, status 8:Again
+[pieusb+  9.746798] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.758085] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.758165] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.758512] 	pieusb_command loop, status 8:Again
+[pieusb+  9.758538] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.769135] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.769165] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.769677] 	pieusb_command loop, status 8:Again
+[pieusb+  9.769720] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.780547] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.780622] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.781274] 	pieusb_command loop, status 8:Again
+[pieusb+  9.781318] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.791918] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.791996] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.792256] 	pieusb_command loop, status 8:Again
+[pieusb+  9.792283] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.803126] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.803144] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.803372] 	pieusb_command loop, status 8:Again
+[pieusb+  9.803386] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.813926] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.814012] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.814262] 	pieusb_command loop, status 8:Again
+[pieusb+  9.814289] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.825244] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.825263] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.825493] 	pieusb_command loop, status 8:Again
+[pieusb+  9.825535] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.836887] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.836922] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.837256] 	pieusb_command loop, status 8:Again
+[pieusb+  9.837290] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.848610] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.848676] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.849003] 	pieusb_command loop, status 8:Again
+[pieusb+  9.849030] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.860247] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.860271] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.860495] 	pieusb_command loop, status 8:Again
+[pieusb+  9.860515] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.871122] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.871146] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.871875] 	pieusb_command loop, status 8:Again
+[pieusb+  9.871957] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.882863] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.882884] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.883237] 	pieusb_command loop, status 8:Again
+[pieusb+  9.883249] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.893751] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.893784] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.894126] 	pieusb_command loop, status 8:Again
+[pieusb+  9.894155] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.904995] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.905026] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.905242] 	pieusb_command loop, status 8:Again
+[pieusb+  9.905267] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.915742] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.915833] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.916118] 	pieusb_command loop, status 8:Again
+[pieusb+  9.916143] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.927441] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.927520] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.927867] 	pieusb_command loop, status 8:Again
+[pieusb+  9.927900] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+  9.939049] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+  9.939125] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+  9.939364] 	pieusb_command loop, status 8:Again
+[pieusb+  9.939391] 		_pieusb_scsi_command(): 18:Copy
+Cmd	00000000: 18 00 00 1d 1a 00                               ......
+[pieusb+ 20.130025] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+ 20.130062] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+ 20.130398] 	pieusb_command() finished with state 3
+[pieusb+ 20.130441] pieusb_cmd_stop_scan()
+[pieusb+ 20.130459] *** pieusb_command(1b:Scan): size 0x00
+[pieusb+ 20.130479] 	pieusb_command loop, status 8:Again
+[pieusb+ 20.130496] 		_pieusb_scsi_command(): 1b:Scan
+Cmd	00000000: 1b 00 00 00 00 00                               ......
+[pieusb+ 20.141143] 		_pieusb_scsi_command usbstat 0x03
+[pieusb+ 20.141173] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+ 20.141392] 	pieusb_command loop, status 2:Check
+[pieusb+ 20.141427] pieusb_cmd_get_sense()
+[pieusb+ 20.141447] *** pieusb_command(03:Request Sense): size 0x0e
+[pieusb+ 20.141465] 	pieusb_command loop, status 8:Again
+[pieusb+ 20.141482] 		_pieusb_scsi_command(): 03:Request Sense
+Cmd	00000000: 03 00 00 00 0e 00                               ......
+[pieusb+ 20.152303] 		_pieusb_scsi_command usbstat 0x01
+[pieusb+ 20.152373] 		_pieusb_scsi_command data in
+In	00000000: 70 00 05 00 00 00 00 06 00 00 00 00 20 00       p........... .
+[pieusb+ 20.155045] 	_pieusb_scsi_command returned 3:Busy
+[pieusb+ 20.155267] 	pieusb_command loop, status 0:Ok
+[pieusb+ 20.155293] 	pieusb_command() finished with state 0
+[pieusb+ 20.155334] 	pieusb_command(): CHECK CONDITION: Illegal Request: senseCode 0x20, senseQualifier 0x00
+[pieusb+ 20.155356] 	pieusb_command() finished with state 4
 scanimage: sane_start: Error during device I/O
-[pieusb+ 24.322352] sane_cancel
-[pieusb+ 24.322398] sane_close()
-[pieusb+ 24.322423] pieusb_on_cancel()
-[pieusb+ 24.322444] pieusb_cmd_stop_scan()
-[pieusb+ 24.322460] ***	pieusb_command(1b:Scan): size 0x00
-[pieusb+ 24.322479] pieusb_command loop, status 8:Again
-[pieusb+ 24.322496] _pieusb_scsi_command(): 1b:Scan
-[pieusb+ 34.440217] _pieusb_scsi_command fails status after command out: 4
-[pieusb+ 34.440303] _pieusb_scsi_command returned 255:Error
-[pieusb+ 34.440325] pieusb_command() finished with state 9
-[pieusb+ 34.440361] cmdSetScanHead()
-[pieusb+ 34.440390] ***	pieusb_command(d2:Set Scan Head): size 0x04
-[pieusb+ 34.440411] pieusb_command loop, status 8:Again
-[pieusb+ 34.440431] _pieusb_scsi_command(): d2:Set Scan Head
-[pieusb+ 44.441313] _pieusb_scsi_command can't prep scsi cmd: 4
-[pieusb+ 44.441398] _pieusb_scsi_command returned 255:Error
-[pieusb+ 44.441423] pieusb_command() finished with state 9
-[pieusb+ 44.441521] pieusb: Read buffer deleted
+[pieusb+ 20.155413] sane_cancel
+[pieusb+ 20.155452] sane_close()
+[pieusb+ 20.405484] sane_exit()
